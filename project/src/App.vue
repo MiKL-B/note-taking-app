@@ -1,18 +1,32 @@
 <template>
   <Titlebar name="Note" />
-  <Toolbar @action-clicked="handleAction" @toggle-notelist="toggleNoteList" />
+  <Toolbar
+    @action-clicked="handleAction"
+    @toggle-menu="toggleMenu"
+    @toggle-notelist="toggleNoteList"
+    @toggle-notebar="toggleNoteBar"
+  />
   <div id="container">
-    <div class="colonne col1" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
+    <div
+      class="colonne col1"
+      :style="{ flex: isVisibleNoteList ? '1' : '2' }"
+      :class="{ invisible: !isVisibleMenu }"
+    >
       <Menu />
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
-      <input type="search" placeholder="Filter notes..." />
+      <div id="filter-note">
+        <input type="search" placeholder="Filter notes..." />
+      </div>
 
       <Notelist />
     </div>
-    <div class="colonne" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
-      <p>Notebar</p>
-      <Note />
+    <div class="colonne col3" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
+      <div :class="{ invisible: !isVisibleNoteBar }">
+        <Notebar />
+      </div>
+
+      <Note :style="{ height: noteHeight }" />
     </div>
   </div>
   <!-- <RouterLink to="/">go home</RouterLink> -->
@@ -28,7 +42,7 @@ import Menu from "./components/Menu.vue";
 import Notelist from "./components/Notelist.vue";
 import Note from "./components/Note.vue";
 import Statusbar from "./components/Statusbar.vue";
-
+import Notebar from "./components/Notebar.vue";
 
 export default {
   name: "App",
@@ -38,14 +52,21 @@ export default {
     Toolbar,
     Menu,
     Notelist,
+    Notebar,
     Note,
     Statusbar,
-
   },
   data() {
     return {
+      isVisibleMenu: true,
       isVisibleNoteList: true,
+      isVisibleNoteBar: true,
     };
+  },
+  computed: {
+    noteHeight() {
+      return this.isVisibleNoteBar ? 'calc(100% - 42px)' : '100%'; 
+    }
   },
   methods: {
     handleAction(action) {
@@ -102,8 +123,14 @@ export default {
     pasteText() {
       alert("Pasting the text...");
     },
+    toggleMenu(isVisible) {
+      this.isVisibleMenu = isVisible;
+    },
     toggleNoteList(isVisible) {
       this.isVisibleNoteList = isVisible;
+    },
+    toggleNoteBar(isVisible) {
+      this.isVisibleNoteBar = isVisible;
     },
   },
 };
@@ -116,17 +143,23 @@ export default {
 }
 
 .colonne {
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
 }
 .col1 {
-  max-width: 200px;
+  min-width: 200px;
+  max-width: 250px;
   background: var(--lightgrey);
   border-right: var(--border);
 }
 .col2 {
   border-right: var(--border);
 }
+
 .invisible {
   display: none;
+}
+#filter-note {
+  border-bottom: var(--border);
+  padding: 0.2rem;
 }
 </style>

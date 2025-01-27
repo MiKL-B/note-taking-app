@@ -28,8 +28,14 @@
       class="sub-menu"
       :style="{ top: '2rem', left: '8rem' }"
     >
+      <div @click="toggleMenuVisibility">
+        {{ isVisibleMenu ? "Hide menu" : "Show menu" }}
+      </div>
       <div @click="toggleNoteListVisibility">
-        {{ isVisibleNoteList ? 'Hide notelist' : 'Show notelist' }}
+        {{ isVisibleNoteList ? "Hide notelist" : "Show notelist" }}
+      </div>
+      <div @click="toggleNoteBarVisibility">
+        {{ isVisibleNoteBar ? "Hide notebar" : "Show notebar" }}
       </div>
     </div>
   </div>
@@ -38,15 +44,17 @@
 <script>
 export default {
   name: "Toolbar",
-  data(){
-    return{
+  data() {
+    return {
       isSubMenuVisible: {
         file: false,
         edit: false,
         view: false,
       },
+      isVisibleMenu: true,
       isVisibleNoteList: true,
-    }
+      isVisibleNoteBar: true,
+    };
   },
   methods: {
     toggleSubMenu(menu) {
@@ -58,12 +66,20 @@ export default {
       this.isSubMenuVisible[menu] = !this.isSubMenuVisible[menu];
     },
     onSubMenuClick(action) {
-      this.$emit('action-clicked', action);
+      this.$emit("action-clicked", action);
       this.resetSubMenus();
+    },
+    toggleMenuVisibility() {
+      this.isVisibleMenu = !this.isVisibleMenu;
+      this.$emit("toggle-menu", this.isVisibleMenu);
     },
     toggleNoteListVisibility() {
       this.isVisibleNoteList = !this.isVisibleNoteList;
-      this.$emit('toggle-notelist', this.isVisibleNoteList);
+      this.$emit("toggle-notelist", this.isVisibleNoteList);
+    },
+    toggleNoteBarVisibility() {
+      this.isVisibleNoteBar = !this.isVisibleNoteBar;
+      this.$emit("toggle-notebar", this.isVisibleNoteBar);
     },
     resetSubMenus() {
       this.isSubMenuVisible = {
@@ -120,7 +136,6 @@ export default {
   background: #f4f4f5;
   cursor: pointer;
 }
-
 
 .sub-menu {
   background-color: white; /* Couleur de fond des sous-menus */
