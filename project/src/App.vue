@@ -140,6 +140,7 @@ export default {
   /* border: 1px solid red; */
   height: calc(100vh - 95px);
   display: flex;
+
 }
 
 .colonne {

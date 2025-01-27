@@ -1,6 +1,6 @@
 <template>
   <div id="notebar">
-
+    
       <select name="" id="">
         <option value="">Normal</option>
         <option value="">Heading 1</option>
@@ -58,6 +58,7 @@ export default {
   border-bottom: var(--border);
   padding: 0.2rem;
   display: flex;
+  flex-wrap: wrap;
   gap:0.2rem;
 }
 
