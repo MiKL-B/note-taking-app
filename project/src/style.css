@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+:root {
+  --white: #ffffff;
+  --lightgrey: #f9f9fa;
+  --border: 1px solid #e4e4e7;
+  --grey: #bbb;
+  --dark: #282c34;
+  --red: #e06c75;
+  --green: #98c379;
+  --yellow: #e5c07b;
+  --blue: #61afef;
+  --purple: #c678dd;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  color: var(--dark);
+}
+
+body {
+  overflow: hidden;
+}
+
+input {
+  border: 1px solid #e4e4e7;
+  padding: 0.5rem;
+  border-radius: 5px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  outline: none;
+  font-family: "Inter", serif;
+}
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--lightgrey);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e4e4e7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grey);
+  cursor: pointer;
+}
+::-webkit-scrollbar:horizontal {
+  height: 5px;
+}
+
+::-webkit-scrollbar-track:horizontal {
+  background: var(--lightgrey);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background:  #e4e4e7;
+}
