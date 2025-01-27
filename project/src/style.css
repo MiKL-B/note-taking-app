@@ -25,39 +25,41 @@ body {
   overflow: hidden;
 }
 
-input,select {
+input,
+select {
   border: 1px solid #e4e4e7;
   color: var(--dark);
   padding: 0.5rem;
   border-radius: 5px;
-  height:35px;
+  height: 35px;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   outline: none;
   font-family: "Inter", serif;
 }
-textarea{
-  outline:none;
-  resize:none;
-  width:100%;
-  height:calc(100% - 42px);
-  border:none;
-  padding:0.5rem;
+textarea {
+  outline: none;
+  resize: none;
+  width: 100%;
+  height: calc(100% - 42px);
+  border: none;
+  padding: 0.5rem;
 }
-button{
-  border:var(--border);
+button {
+  border: var(--border);
   border-radius: 5px;
-  outline:none;
-  background:transparent;
+  height: 35px;
+  outline: none;
+  background: transparent;
   padding: 0.5rem 0.75rem;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   color: var(--dark);
 }
-button:hover{
+button:hover {
   cursor: pointer;
-  background:var(--lightgrey);
+  background: var(--lightgrey);
 }
-.bt-symbol{
-  width:40px;
+.bt-symbol {
+  width: 40px;
 }
 /* scrollbar */
 ::-webkit-scrollbar {
@@ -85,9 +87,16 @@ button:hover{
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
-  background:  #e4e4e7;
+  background: #e4e4e7;
 }
-.separator-y{
-border-right:var(--border);
-margin:0 0.5rem;
+.separator-y {
+  border-right: var(--border);
+  margin: 0 0.5rem;
+}
+.separator-x {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: var(--border);
+  margin: 0 0.2rem;
 }

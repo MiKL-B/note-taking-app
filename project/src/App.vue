@@ -16,7 +16,9 @@
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
       <div id="filter-note">
+        <button><i class="fa-solid fa-filter"></i></button>
         <input type="search" placeholder="Filter notes..." />
+        <button><i class="fa-solid fa-plus"></i></button>
       </div>
 
       <Notelist />
@@ -65,8 +67,8 @@ export default {
   },
   computed: {
     noteHeight() {
-      return this.isVisibleNoteBar ? 'calc(100% - 42px)' : '100%'; 
-    }
+      return this.isVisibleNoteBar ? "calc(100% - 42px)" : "100%";
+    },
   },
   methods: {
     handleAction(action) {
@@ -140,7 +142,6 @@ export default {
   /* border: 1px solid red; */
   height: calc(100vh - 95px);
   display: flex;
-
 }
 
 .colonne {
@@ -154,6 +155,7 @@ export default {
 }
 .col2 {
   border-right: var(--border);
+  max-width: 300px;
 }
 
 .invisible {
@@ -162,5 +164,8 @@ export default {
 #filter-note {
   border-bottom: var(--border);
   padding: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2rem;
 }
 </style>

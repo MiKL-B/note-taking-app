@@ -37,9 +37,10 @@
         <i class="fa-solid fa-align-justify"></i>
       </button>
       <span class="separator-y"></span>
-      <span class="bt-toolbar">
+      <button>
+
         <i class="fa-solid fa-eye"></i>
-      </span>
+      </button>
 
 
   </div>

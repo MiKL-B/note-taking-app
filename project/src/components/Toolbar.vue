@@ -9,6 +9,9 @@
       <div @click="onSubMenuClick('new')">New</div>
       <div @click="onSubMenuClick('open')">Open</div>
       <div @click="onSubMenuClick('save')">Save</div>
+      <div @click="onSubMenuClick('export')">Export as PDF</div>
+      <hr class="separator-x">
+      <div @click="onSubMenuClick('exit')">Exit</div>
     </div>
     <span class="bt-toolbar" @click="toggleSubMenu('edit')">Edit</span>
     <div
@@ -138,10 +141,10 @@ export default {
 }
 
 .sub-menu {
-  background-color: white; /* Couleur de fond des sous-menus */
-  position: absolute; /* Positionnement absolu pour le sous-menu */
-  z-index: 1; /* Placer le sous-menu au-dessus */
-  margin-top: 5px; /* Espacement au-dessus du sous-menu */
+  background-color: white;
+  position: absolute; 
+  z-index: 1; 
+  margin-top: 5px; 
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   width: 200px;
@@ -151,7 +154,7 @@ export default {
   padding: 0.2rem 0.5rem;
   margin: 0.2rem;
   border-radius: 5px;
-  cursor: pointer; /* Changer le curseur en pointeur */
+  cursor: pointer;
 }
 
 .sub-menu div:hover {

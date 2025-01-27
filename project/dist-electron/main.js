@@ -26,7 +26,9 @@ function createWindow() {
       height: 30
     },
     minWidth: 800,
-    minHeight: 600
+    minHeight: 600,
+    width: 1300,
+    height: 820
   });
   win.webContents.on("before-input-event", (_, input) => {
     if (input.type === "keyDown" && input.key === "F12") {
