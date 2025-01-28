@@ -12,37 +12,52 @@
       :style="{ flex: isVisibleNoteList ? '1' : '2' }"
       :class="{ invisible: !isVisibleMenu }"
     >
-      <Menu />
+      <Menubar />
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
       <div id="filter-note">
-        <button><i class="fa-solid fa-filter"></i></button>
-        <input type="search" placeholder="Filter notes..." />
-        <button><i class="fa-solid fa-plus"></i></button>
+        <input
+          type="text"
+          v-model="searchNote"
+          placeholder="Filter notes by name..."
+        />
+        <button @click="createNote"><i class="fa-solid fa-plus"></i></button>
       </div>
 
-      <Notelist />
+      <Notelist
+        :notes="filteredNotes"
+        @select-note="selectNote"
+        @delete-note="deleteNote"
+      />
     </div>
     <div class="colonne col3" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
       <div :class="{ invisible: !isVisibleNoteBar }">
         <Notebar />
       </div>
-
-      <Note :style="{ height: noteHeight }" />
+      <div class="sub-col3" v-if="selectedNote">
+        <input
+          id="input-note-name"
+          type="text"
+          v-model="selectedNote.name"
+          placeholder="Note name here..."
+        />
+        <textarea
+          v-model="selectedNote.content"
+          :style="{ height: noteHeight }"
+          placeholder="Note content here..."
+        ></textarea>
+      </div>
     </div>
   </div>
-  <!-- <RouterLink to="/">go home</RouterLink> -->
-  <!-- <RouterLink to="/about">about</RouterLink> -->
-  <!-- <RouterView></RouterView> -->
-  <Statusbar />
+
+  <Statusbar :noteLength="getContentNoteLength" />
 </template>
 <script>
 import { RouterLink } from "vue-router";
 import Titlebar from "./components/Titlebar.vue";
 import Toolbar from "./components/Toolbar.vue";
-import Menu from "./components/Menu.vue";
+import Menubar from "./components/Menubar.vue";
 import Notelist from "./components/Notelist.vue";
-import Note from "./components/Note.vue";
 import Statusbar from "./components/Statusbar.vue";
 import Notebar from "./components/Notebar.vue";
 
@@ -52,10 +67,9 @@ export default {
     RouterLink,
     Titlebar,
     Toolbar,
-    Menu,
+    Menubar,
     Notelist,
     Notebar,
-    Note,
     Statusbar,
   },
   data() {
@@ -63,13 +77,39 @@ export default {
       isVisibleMenu: true,
       isVisibleNoteList: true,
       isVisibleNoteBar: true,
+      notes: [],
+      searchNote: "",
     };
   },
   computed: {
     noteHeight() {
-      return this.isVisibleNoteBar ? "calc(100% - 42px)" : "100%";
+      return this.isVisibleNoteBar ? "calc(100% - 78px)" : "calc(100% - 36px)";
+    },
+    selectedNote() {
+      const selectedNote = this.notes.find((note) => note.selected);
+      return selectedNote ? selectedNote : "";
+    },
+    getContentNoteLength() {
+      const selectedNote = this.notes.find((note) => note.selected);
+      return selectedNote ? selectedNote.content.length : "";
+    },
+    getContentNoteLine() {
+      let count = 0;
+      const a = document.querySelector("textarea");
+      for (let i = 0; i < this.selectedNote.content.length; i++) {
+        if (this.selectedNote.content[i] == "\n") {
+          count++;
+        }
+      }
+      return count;
+    },
+    filteredNotes() {
+      return this.notes.filter((note) => {
+        return note.name.toLowerCase().includes(this.searchNote.toLowerCase());
+      });
     },
   },
+
   methods: {
     handleAction(action) {
       switch (action) {
@@ -134,6 +174,30 @@ export default {
     toggleNoteBar(isVisible) {
       this.isVisibleNoteBar = isVisible;
     },
+    // note
+    createNote() {
+      let newNote = {
+        id: Date.now(),
+        name: "New note",
+        date: new Date().toLocaleString("fr-FR"),
+        content: "",
+        selected: false,
+      };
+      this.notes.push(newNote);
+    },
+    selectNote(note) {
+      this.notes.forEach((n) => {
+        n.selected = false;
+      });
+      note.selected = true;
+    },
+    deleteNote(note) {
+      const index = this.notes.findIndex((n) => n.id === note.id);
+      console.log(index);
+      if (index > -1) {
+        this.notes.splice(index, 1);
+      }
+    },
   },
 };
 </script>
@@ -148,14 +212,16 @@ export default {
   /* padding: 0.5rem; */
 }
 .col1 {
-  min-width: 200px;
-  max-width: 250px;
+  max-width: 200px;
   background: var(--lightgrey);
   border-right: var(--border);
 }
 .col2 {
   border-right: var(--border);
-  max-width: 300px;
+  max-width: 320px;
+}
+.sub-col3 {
+  height: 100%;
 }
 
 .invisible {
@@ -167,5 +233,11 @@ export default {
   display: flex;
   justify-content: space-between;
   gap: 0.2rem;
+}
+#input-note-name {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  font-size: 20px;
 }
 </style>

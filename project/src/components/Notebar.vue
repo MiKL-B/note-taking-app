@@ -1,56 +1,59 @@
 <template>
   <div id="notebar">
-    
-      <select name="" id="">
-        <option value="">Normal</option>
-        <option value="">Heading 1</option>
-        <option value="">Heading 2</option>
-        <option value="">Heading 3</option>
-      </select>
-      <select name="" id="">
-        <option value="">Arial</option>
-        <option value="">Time New Roman</option>
-        <option value="">Roboto</option>
-        <option value="">Ubuntu</option>
-      </select>
-      <select name="" id="">
-        <option value="">12</option>
-        <option value="">14</option>
-        <option value="">16</option>
-        <option value="">18</option>
-      </select>
-      <span class="separator-y"></span>
-      <button class="bt-symbol">B</button>
-      <button class="bt-symbol">I</button>
-      <button class="bt-symbol">U</button>
-      <span class="separator-y"></span>
-      <button class="bt-symbol">
-        <i class="fa-solid fa-align-left"></i>
-      </button>
-      <button class="bt-symbol">
-        <i class="fa-solid fa-align-center"></i>
-      </button>
-      <button class="bt-symbol">
-        <i class="fa-solid fa-align-right"></i>
-      </button>
-      <button class="bt-symbol">
-        <i class="fa-solid fa-align-justify"></i>
-      </button>
-      <span class="separator-y"></span>
-      <button>
+    <select name="" id="">
+      <option value="" disabled selected>Font</option>
+      <option value="">Arial</option>
+      <option value="">Time New Roman</option>
+      <option value="">Roboto</option>
+      <option value="">Ubuntu</option>
+    </select>
+    <select name="" id="">
+      <option value="" disabled selected>Font size</option>
+      <option value="">12</option>
+      <option value="">14</option>
+      <option value="">16</option>
+      <option value="">18</option>
+    </select>
+    <span class="separator-y"></span>
+    <button class="bt-symbol">B</button>
+    <button class="bt-symbol">I</button>
+    <button class="bt-symbol">U</button>
+    <input type="color" />
+    <span class="separator-y"></span>
+    <button class="bt-symbol">
+      <i class="fa-solid fa-align-left"></i>
+    </button>
+    <button class="bt-symbol">
+      <i class="fa-solid fa-align-center"></i>
+    </button>
+    <button class="bt-symbol">
+      <i class="fa-solid fa-align-right"></i>
+    </button>
+    <button class="bt-symbol">
+      <i class="fa-solid fa-align-justify"></i>
+    </button>
+    <span class="separator-y"></span>
 
-        <i class="fa-solid fa-eye"></i>
-      </button>
-
-
+    <button @click="togglePreviewMode">
+      <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
+      <i class="fa-solid fa-eye" v-else></i>
+    </button>
   </div>
 </template>
 
 <script>
 export default {
   name: "Notebar",
-  components: {},
- 
+  data(){
+    return{
+      isPreviewMode:false
+    }
+  },
+  methods:{
+    togglePreviewMode(){
+      this.isPreviewMode = !this.isPreviewMode
+    }
+  }
 };
 </script>
 
@@ -60,7 +63,6 @@ export default {
   padding: 0.2rem;
   display: flex;
   flex-wrap: wrap;
-  gap:0.2rem;
+  gap: 0.2rem;
 }
-
 </style>

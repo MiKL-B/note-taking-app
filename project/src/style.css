@@ -36,18 +36,33 @@ select {
   outline: none;
   font-family: "Inter", serif;
 }
+input[type="color"]{
+  background:none;
+  padding:0;
+  width:40px;
+  height:35px;
+  border:var(--border);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  padding:0.2rem;
+}
+input[type="color"]:hover{
+  cursor: pointer;
+  background: var(--lightgrey);
+}
+
 textarea {
   outline: none;
   resize: none;
   width: 100%;
-  height: calc(100% - 42px);
   border: none;
   padding: 0.5rem;
+
 }
 button {
   border: var(--border);
   border-radius: 5px;
   height: 35px;
+  min-width: 45px;
   outline: none;
   background: transparent;
   padding: 0.5rem 0.75rem;
@@ -91,7 +106,8 @@ button:hover {
 }
 .separator-y {
   border-right: var(--border);
-  margin: 0 0.5rem;
+  height:1rem;
+  margin:auto 0.5rem;
 }
 .separator-x {
   border-top: none;

@@ -1,5 +1,6 @@
 <template>
   <div id="toolbar">
+    <!-- File -->
     <span class="bt-toolbar" @click="toggleSubMenu('file')">File</span>
     <div
       v-if="isSubMenuVisible.file"
@@ -7,12 +8,17 @@
       :style="{ top: '2rem', left: '0.5rem' }"
     >
       <div @click="onSubMenuClick('new')">New</div>
-      <div @click="onSubMenuClick('open')">Open</div>
+      <div @click="onSubMenuClick('open')">Open...</div>
+      <hr class="separator-x" />
       <div @click="onSubMenuClick('save')">Save</div>
+      <div @click="onSubMenuClick('saveas')">Save As...</div>
+      <hr class="separator-x" />
       <div @click="onSubMenuClick('export')">Export as PDF</div>
-      <hr class="separator-x">
+      <div @click="onSubMenuClick('print')">Print...</div>
+      <hr class="separator-x" />
       <div @click="onSubMenuClick('exit')">Exit</div>
     </div>
+    <!-- Edit -->
     <span class="bt-toolbar" @click="toggleSubMenu('edit')">Edit</span>
     <div
       v-if="isSubMenuVisible.edit"
@@ -25,21 +31,67 @@
       <div @click="onSubMenuClick('copy')">Copy</div>
       <div @click="onSubMenuClick('paste')">Paste</div>
     </div>
+
+    <!-- View -->
     <span class="bt-toolbar" @click="toggleSubMenu('view')">View</span>
     <div
       v-if="isSubMenuVisible.view"
       class="sub-menu"
       :style="{ top: '2rem', left: '8rem' }"
     >
-      <div @click="toggleMenuVisibility">
-        {{ isVisibleMenu ? "Hide menu" : "Show menu" }}
+      <div class="sub-menu-toggle" @click="toggleMenuVisibility">
+        <span v-if="isVisibleMenu">
+          <i class="fa-solid fa-check"></i>
+        </span>
+        <span>Menu</span>
       </div>
-      <div @click="toggleNoteListVisibility">
-        {{ isVisibleNoteList ? "Hide notelist" : "Show notelist" }}
+      <div class="sub-menu-toggle" @click="toggleNoteListVisibility">
+        <span v-if="isVisibleNoteList">
+          <i class="fa-solid fa-check"></i>
+        </span>
+        <span>Note list</span>
       </div>
-      <div @click="toggleNoteBarVisibility">
-        {{ isVisibleNoteBar ? "Hide notebar" : "Show notebar" }}
+      <div class="sub-menu-toggle" @click="toggleNoteBarVisibility">
+        <span v-if="isVisibleNoteBar">
+          <i class="fa-solid fa-check"></i>
+        </span>
+        <span>Notebar</span>
       </div>
+    </div>
+    <!-- Settings -->
+    <span class="bt-toolbar" @click="toggleSubMenu('settings')">Settings</span>
+    <div
+      v-if="isSubMenuVisible.settings"
+      class="sub-menu"
+      :style="{ top: '2rem', left: '12.2rem' }"
+    >
+      <div class="sub-menu-toggle">
+        <span>
+          <i class="fa-solid fa-check"></i>
+        </span>
+        <span>Markdown</span>
+      </div>
+      <div class="sub-menu-toggle">
+        <span>
+          <i class="fa-solid fa-check"></i>
+        </span>
+        <span>Theme dark</span>
+      </div>
+      <div class="sub-menu-toggle">
+        <span>
+          <i class="fa-solid fa-check"></i>
+        </span>
+        <span>Langue</span>
+      </div>
+    </div>
+    <!-- About -->
+    <span class="bt-toolbar" @click="toggleSubMenu('about')">?</span>
+    <div
+      v-if="isSubMenuVisible.about"
+      class="sub-menu"
+      :style="{ top: '2rem', left: '18rem' }"
+    >
+      <div @click="onSubMenuClick('about')">About...</div>
     </div>
   </div>
 </template>
@@ -53,6 +105,8 @@ export default {
         file: false,
         edit: false,
         view: false,
+        setting: false,
+        about: false,
       },
       isVisibleMenu: true,
       isVisibleNoteList: true,
@@ -89,6 +143,8 @@ export default {
         file: false,
         edit: false,
         view: false,
+        setting: false,
+        about: false,
       };
     },
   },
@@ -142,9 +198,9 @@ export default {
 
 .sub-menu {
   background-color: white;
-  position: absolute; 
-  z-index: 1; 
-  margin-top: 5px; 
+  position: absolute;
+  z-index: 1;
+  margin-top: 5px;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   width: 200px;
@@ -159,5 +215,9 @@ export default {
 
 .sub-menu div:hover {
   background-color: #f4f4f5; /* Couleur sur survol */
+}
+.sub-menu-toggle {
+  display: flex;
+  gap: 0.5rem;
 }
 </style>

@@ -1,17 +1,20 @@
 <template>
   <div id="notelist">
-    <div id="note" v-for="i in 50">
+    <div
+      id="note"
+      :class="note.selected ? 'note-selected' : ''"
+      @click="selectNote(note)"
+      v-for="note in notes"
+    >
       <div class="note-content">
-        <h4>Welcome note {{ i }}</h4>
-        <p class="note-description">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti,
-          fugiat! Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Corrupti, fugiat!
+        <h4>{{ note.name }}</h4>
+        <p class="note-content">
+          {{ note.content }}
         </p>
-        <span>Jan 25, 2025</span>
+        <span>{{ note.date }}</span>
       </div>
       <div class="note-trash">
-        <i class="fa-solid fa-trash-can"></i>
+        <i class="fa-solid fa-trash-can" @click="deleteNote(note)"></i>
       </div>
     </div>
   </div>
@@ -20,11 +23,19 @@
 <script>
 export default {
   name: "Notelist",
+  props: ["notes"],
+  methods: {
+    selectNote(note) {
+      this.$emit("select-note", note);
+    },
+    deleteNote(note) {
+      this.$emit("delete-note", note);
+    },
+  },
 };
 </script>
 <style>
 #notelist {
-  /* border: 1px solid red; */
   margin-top: 0.5rem;
   height: calc(100vh - 150px);
   overflow-y: auto;
@@ -38,6 +49,9 @@ export default {
   grid-template-columns: 200px auto;
   transition: 0.3s ease;
 }
+.note-selected {
+  background: #f4f4f5;
+}
 #note:hover .note-trash {
   opacity: 1;
   pointer-events: auto;
@@ -46,16 +60,16 @@ export default {
   background: #f4f4f5;
   cursor: pointer;
 }
-.note-description {
+.note-content {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .note-trash {
   display: flex;
-  margin:auto;
-  opacity: 0; 
-  transition: opacity 0.3s ease; 
+  margin: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 .note-trash i {

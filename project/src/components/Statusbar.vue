@@ -1,10 +1,17 @@
 <template>
-  <div id="statusbar">Status</div>
+  <div id="statusbar">
+    <span>Status</span>
+    <span class="separator-y"></span>
+    <span v-if="noteLength !== ''">{{ noteLength }} caractères</span>
+  </div>
 </template>
 
 <script>
+import Notelist from './Notelist.vue';
+
 export default {
   name: "Statusbar",
+  props:["noteLength"]
 };
 </script>
 <style>
@@ -17,6 +24,7 @@ export default {
   background: var(--lightgrey);
   color: var(--dark);
   display: flex;
+  gap:1rem;
   user-select: none;
   align-items: center;
   border-top:var(--border);
