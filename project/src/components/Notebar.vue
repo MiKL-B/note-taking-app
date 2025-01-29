@@ -34,11 +34,12 @@
       <i class="fa-solid fa-align-justify"></i>
     </button>
     <span class="separator-y"></span>
-    <select name="" id="">
-      <option value="" disabled selected>Status</option>
-      <option value="">Todo</option>
-      <option value="">In progress</option>
-      <option value="">Finished</option>
+    <!-- status -->
+    <select v-model="status" @change="changeStatus">
+      <option disabled selected>Status</option>
+      <option value="todo">Todo</option>
+      <option value="inprogress">In progress</option>
+      <option value="finished">Finished</option>
     </select>
     <button @click="togglePreviewMode">
       <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
@@ -52,10 +53,14 @@ export default {
   name: "Notebar",
   data() {
     return {
+      status:"todo",
       isPreviewMode: false,
     };
   },
   methods: {
+    changeStatus(){
+      this.$emit("change-status",this.status);
+    },
     togglePreviewMode() {
       this.isPreviewMode = !this.isPreviewMode;
     },

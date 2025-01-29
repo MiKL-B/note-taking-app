@@ -11,7 +11,7 @@
           <div class="color-circle" :class="getColorNoteStatus(note)"></div>
           {{ note.name }}
         </h4>
-        <span class="tag" :style="`background:var(--${randomTagColor()})`">tag</span>
+        <!-- <span class="tag" :style="`background:var(--${randomTagColor()})`">tag</span> -->
         <p class="note-content">
           {{ note.content }}
         </p>

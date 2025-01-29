@@ -60,8 +60,7 @@ export default {
   position: relative;
   align-items: center;
   gap: 0.2rem;
-  padding-left: 1rem;
-  padding: 0.5rem;
+  padding: 0.7rem 0.5rem;
 }
 .menubar-item:hover,
 .menubar-sub-item:hover {
