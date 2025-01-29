@@ -1,37 +1,57 @@
 <template>
   <ul id="menubar">
-    <li class="menubar-item" @click="selectFilter('allnotes')">
+    <li
+      class="menubar-item"
+      @click="selectFilter('allnotes')"
+      :class="{ filterselected: selectedFilter === 'allnotes' }"
+    >
       <span class="menubar-sub-label">
         <i class="fa-solid fa-file-lines"></i>
         <span>All notes</span>
       </span>
       <span class="text-grey">{{ countAllNotes }}</span>
     </li>
-    <li class="menubar-item" @click="selectFilter('todo')">
+    <li
+      class="menubar-item"
+      @click="selectFilter('todo')"
+      :class="{ filterselected: selectedFilter === 'todo' }"
+    >
       <span class="menubar-sub-label">
         <div class="color-circle bg-red"></div>
         <span>Todo</span>
       </span>
       <span class="text-grey">{{ countTodo }}</span>
     </li>
-    <li class="menubar-item" @click="selectFilter('inprogress')">
+    <li
+      class="menubar-item"
+      @click="selectFilter('inprogress')"
+      :class="{ filterselected: selectedFilter === 'inprogress' }"
+    >
       <span class="menubar-sub-label">
         <div class="color-circle bg-yellow"></div>
         <span>In progress</span>
       </span>
       <span class="text-grey">{{ countInProgress }}</span>
     </li>
-    <li class="menubar-item" @click="selectFilter('finished')">
+    <li
+      class="menubar-item"
+      @click="selectFilter('finished')"
+      :class="{ filterselected: selectedFilter === 'finished' }"
+    >
       <span class="menubar-sub-label">
         <div class="color-circle bg-green"></div>
         <span>Finished</span>
       </span>
       <span class="text-grey">{{ countFinished }}</span>
     </li>
-    <li class="menubar-item" @click="selectFilter('archived')">
+    <li
+      class="menubar-item"
+      @click="selectFilter('archived')"
+      :class="{ filterselected: selectedFilter === 'archived' }"
+    >
       <span class="menubar-sub-label">
-        <i class="fa-solid fa-trash-can"></i>
-        <span>Trash</span>
+        <i class="fa-solid fa-box-archive"></i>
+        <span>Archived</span>
       </span>
       <span class="text-grey">{{ countArchived }}</span>
     </li>
@@ -48,7 +68,6 @@
       <ul id="menubar-tags-list">
         <li
           id="menubar-tag"
-          :class="tag.selected ? 'tag-selected' : ''"
           @click="selectTag(tag)"
           class="menubar-sub-item"
           v-for="tag in tags"
@@ -65,7 +84,6 @@
           <div class="tag-trash">
             <i class="fa-solid fa-trash-can" @click="deleteTag(tag)"></i>
           </div>
-          <span class="text-grey">0</span>
         </li>
       </ul>
     </div>
@@ -82,17 +100,19 @@ export default {
     "countTodo",
     "countInProgress",
     "countFinished",
-    "countArchived"
+    "countArchived",
   ],
   data() {
     return {
       showDetails: false,
       noteCounters: {},
+      selectedFilter: "allnotes",
     };
   },
 
   methods: {
     selectFilter(filter) {
+      this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
     addTag() {
@@ -225,7 +245,8 @@ details[open] summary::after {
 .tag-trash i:hover {
   cursor: pointer;
 }
-.tag-selected {
+.tag-selected,
+.filterselected {
   background: #e4e4e7;
 }
 .menubar-input-tag {

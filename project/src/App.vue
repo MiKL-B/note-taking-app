@@ -317,7 +317,7 @@ export default {
         content: "",
         tags: [],
         selected: false,
-        deleted:false
+        deleted: false,
       };
       this.notes.push(newNote);
     },
@@ -333,7 +333,7 @@ export default {
     },
     deleteNote(note) {
       // const index = this.notes.findIndex((n) => n.id === note.id);
-      note.status = "archived"
+      note.status = "archived";
       // if (index > -1) {
       //   this.notes.splice(index, 1);
       // }
@@ -412,9 +412,16 @@ export default {
       this.tags = this.tags.map((tag) => {
         return tag.id === updatedTag.id ? updatedTag : tag;
       });
-      this.selectedNote.tags = this.selectedNote.tags.map((tag) => {
-        return tag.id === updatedTag.id ? updatedTag : tag;
-      });
+      for (let i = 0; i < this.notes.length; i++) {
+        for (let j = 0; j < this.notes[i].tags.length; j++) {
+          this.notes[i].tags = this.notes[i].tags.map((tag) => {
+            return tag.id === updatedTag.id ? updatedTag : tag;
+          });
+        }
+      }
+      // this.notes.tags = this.notes.tags.map((tag) => {
+      //   return tag.id === updatedTag.id ? updatedTag : tag;
+      // });
     },
     // markdown
     getMarkdownHtml() {
