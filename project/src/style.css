@@ -129,6 +129,9 @@ button:hover {
 .bg-green {
   background: var(--green);
 }
+.text-grey{
+  color:var(--grey);
+}
 .tag{
   font-size: 12px;
   color:var(--lightgrey);

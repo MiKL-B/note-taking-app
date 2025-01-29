@@ -1,7 +1,7 @@
 <template>
   <div id="toolbar">
     <!-- File -->
-    <details @click="handleClickOnDetails">
+    <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">File</summary>
       <ul class="toolbar-menu">
         <li @click="onSubMenuClick('new')">New</li>
@@ -17,7 +17,7 @@
       </ul>
     </details>
     <!-- Edit -->
-    <details @click="handleClickOnDetails">
+    <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">Edit</summary>
       <ul class="toolbar-menu">
         <li>Undo</li>
@@ -28,7 +28,7 @@
       </ul>
     </details>
     <!-- View -->
-    <details @click="handleClickOnDetails">
+    <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">View</summary>
       <ul class="toolbar-menu">
         <li class="toolbar-toggle" @click="toggleMenuVisibility">
@@ -52,7 +52,7 @@
       </ul>
     </details>
     <!-- Settings -->
-    <details @click="handleClickOnDetails">
+    <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">Settings</summary>
       <ul class="toolbar-menu">
         <li class="toolbar-toggle">
@@ -76,7 +76,7 @@
       </ul>
     </details>
     <!-- About -->
-    <details @click="handleClickOnDetails">
+    <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">?</summary>
       <ul class="toolbar-menu">
         <li>About...</li>
@@ -113,7 +113,7 @@ export default {
     },
 
     handleClickOnDetails() {
-      let detailsOpened = document.querySelectorAll("details[open]");
+      let detailsOpened = document.querySelectorAll(".toolbar-details");
       for (const item of detailsOpened) {
         if (this != item) {
           item.removeAttribute("open");
@@ -123,7 +123,7 @@ export default {
     closeDetails(event) {
       // Vérifiez si le clic se produit en dehors de tous les éléments <details>
       if (!event.target.closest('details')) {
-        let detailsOpened = document.querySelectorAll("details[open]");
+        let detailsOpened = document.querySelectorAll(".toolbar-details");
         detailsOpened.forEach((item) => {
           item.removeAttribute("open");
         });
