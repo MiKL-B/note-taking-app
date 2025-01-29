@@ -12,7 +12,7 @@
       :style="{ flex: isVisibleNoteList ? '1' : '2' }"
       :class="{ invisible: !isVisibleMenu }"
     >
-      <Menubar />
+      <Menubar :tags="tags" @select-tag="selectTag" @delete-tag="deleteTag" />
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
       <div id="filter-note">
@@ -32,7 +32,7 @@
     </div>
     <div class="colonne col3" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
       <div v-if="selectedNote" :class="{ invisible: !isVisibleNoteBar }">
-        <Notebar @change-status="changeNoteStatus"/>
+        <Notebar @change-status="changeNoteStatus" />
       </div>
       <div class="sub-col3" v-if="selectedNote">
         <input
@@ -79,6 +79,7 @@ export default {
       isVisibleNoteBar: true,
       notes: [],
       searchNote: "",
+      tags: [],
     };
   },
   computed: {
@@ -194,13 +195,27 @@ export default {
     },
     deleteNote(note) {
       const index = this.notes.findIndex((n) => n.id === note.id);
-      console.log(index);
+
       if (index > -1) {
         this.notes.splice(index, 1);
       }
     },
     changeNoteStatus(newStatus) {
       this.selectedNote.status = newStatus;
+    },
+    // tag
+    selectTag(tag) {
+      this.tags.forEach((t) => {
+        t.selected = false;
+      });
+      tag.selected = true;
+    },
+    deleteTag(tag) {
+      const index = this.tags.findIndex((t) => t.id === tag.id);
+
+      if (index > -1) {
+        this.tags.splice(index, 1);
+      }
     },
   },
 };

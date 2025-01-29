@@ -61,6 +61,7 @@
           <div class="tag-trash">
             <i class="fa-solid fa-trash-can" @click="deleteTag(tag)"></i>
           </div>
+          <span class="text-grey">0</span>
         </li>
       </ul>
     </div>
@@ -74,16 +75,14 @@ export default {
   data() {
     return {
       showDetails: false,
-      tags: [],
-      // colors: ["blue", "red", "yellow", "purple", "green"],
+      colors: ["blue", "red", "yellow", "purple", "green"],
     };
   },
-  computed: {
-    colors: () => ["blue", "red", "yellow", "purple", "green"],
-  },
+
   methods: {
     addTag() {
       let tag = {
+        id: Date.now(),
         name:"New tag",
         color:this.getColor(),
         selected:false,
@@ -203,6 +202,6 @@ details[open] summary::after {
   cursor: pointer;
 }
 .tag-selected {
-  background: #f4f4f5;
+  background: #e4e4e7;
 }
 </style>
