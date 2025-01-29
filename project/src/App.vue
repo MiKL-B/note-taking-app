@@ -15,9 +15,15 @@
     >
       <Menubar
         :tags="tags"
+        :countAllNotes="notes.length"
+        :countTodo="getCountTodo"
+        :countInProgress="getCountInProgress"
+        :countFinished="getCountFinished"
+        :countArchived="getCountArchived"
         @select-tag="selectTag"
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
+        @select-filter="handleFilter"
       />
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
@@ -49,7 +55,7 @@
           <div
             id="col3-header-status"
             class="color-circle"
-            :class="getColorNoteStatus(selectedNote)"
+            :class="`bg-${selectedNote.color}`"
           ></div>
           <input
             id="input-note-name"
@@ -62,13 +68,14 @@
             <option value="todo">Todo</option>
             <option value="inprogress">In progress</option>
             <option value="finished">Finished</option>
+            <option value="archived">Archived</option>
           </select>
           <input
             v-if="isVisibleMenu"
             id="input-note-tag"
             type="text"
             @keyup.enter="addTagToNote"
-            v-model="inputValue"
+            v-model="inputTagValue"
             placeholder="Add tags"
           />
           <button v-if="isMarkdownMode" @click="togglePreviewMode">
@@ -141,9 +148,12 @@ export default {
       isPreviewMode: false,
       notes: [],
       status: "",
+      color: "",
       searchNote: "",
       tags: [],
-      inputValue: "",
+      inputTagValue: "",
+      noteCounters: {},
+      filter: "",
     };
   },
   computed: {
@@ -169,9 +179,35 @@ export default {
       return count;
     },
     filteredNotes() {
-      return this.notes.filter((note) => {
-        return note.name.toLowerCase().includes(this.searchNote.toLowerCase());
-      });
+      switch (this.filter) {
+        case "todo":
+          return this.notes.filter((note) => note.status === "todo");
+        case "inprogress":
+          return this.notes.filter((note) => note.status === "inprogress");
+        case "finished":
+          return this.notes.filter((note) => note.status === "finished");
+        case "archived":
+          return this.notes.filter((note) => note.status === "archived");
+        case "allnotes":
+        default:
+          return this.notes.filter((note) => {
+            return note.name
+              .toLowerCase()
+              .includes(this.searchNote.toLowerCase());
+          });
+      }
+    },
+    getCountTodo() {
+      return this.notes.filter((note) => note.status === "todo").length;
+    },
+    getCountInProgress() {
+      return this.notes.filter((note) => note.status === "inprogress").length;
+    },
+    getCountFinished() {
+      return this.notes.filter((note) => note.status === "finished").length;
+    },
+    getCountArchived() {
+      return this.notes.filter((note) => note.status === "archived").length;
     },
     getDocumentName() {
       let name = "Untitled";
@@ -187,6 +223,9 @@ export default {
   },
 
   methods: {
+    handleFilter(filter) {
+      this.filter = filter;
+    },
     handleAction(action) {
       switch (action) {
         case "new":
@@ -259,16 +298,26 @@ export default {
     togglePreviewMode() {
       this.isPreviewMode = !this.isPreviewMode;
     },
+    generateIncrementedName(baseTitle) {
+      if (!this.noteCounters[baseTitle]) {
+        this.noteCounters[baseTitle] = 1;
+      } else {
+        this.noteCounters[baseTitle] += 1;
+      }
+      return `${baseTitle} ${this.noteCounters[baseTitle]}`;
+    },
     // note
     createNote() {
       let newNote = {
         id: Date.now(),
-        name: "New note",
+        name: this.generateIncrementedName("New note"),
         date: new Date().toLocaleString("fr-FR"),
         status: "todo",
+        color: "red",
         content: "",
         tags: [],
         selected: false,
+        deleted:false
       };
       this.notes.push(newNote);
     },
@@ -283,33 +332,31 @@ export default {
       }
     },
     deleteNote(note) {
-      const index = this.notes.findIndex((n) => n.id === note.id);
-
-      if (index > -1) {
-        this.notes.splice(index, 1);
-      }
+      // const index = this.notes.findIndex((n) => n.id === note.id);
+      note.status = "archived"
+      // if (index > -1) {
+      //   this.notes.splice(index, 1);
+      // }
     },
     changeNoteStatus() {
       this.status = this.selectedNote.status;
-    },
-    getColorNoteStatus(note) {
-      let color = "bg-";
-      switch (note.status) {
+      switch (this.status) {
         case "todo":
-          color += "red";
+          this.color = "red";
           break;
         case "inprogress":
-          color += "yellow";
+          this.color = "yellow";
           break;
         case "finished":
-          color += "green";
+          this.color = "green";
           break;
-        default:
-          color += "red";
+        case "archived":
+          this.color = "grey";
           break;
       }
-      return color;
+      this.selectedNote.color = this.color;
     },
+
     // tag
     selectTag(tag) {
       this.tags.forEach((t) => {
@@ -332,7 +379,7 @@ export default {
     },
     addTagToNote() {
       const existingTag = this.tags.find(
-        (t) => t.name.toLowerCase() === this.inputValue.toLowerCase()
+        (t) => t.name.toLowerCase() === this.inputTagValue.toLowerCase()
       );
       if (!existingTag) {
         return;
@@ -352,7 +399,7 @@ export default {
       };
 
       this.selectedNote.tags.push(newTag);
-      this.inputValue = "";
+      this.inputTagValue = "";
     },
     deleteTagNote(tag) {
       const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
@@ -457,6 +504,6 @@ export default {
 }
 #textedit-preview {
   margin: 1rem;
-  overflow-y: scroll ;
+  overflow-y: scroll;
 }
 </style>

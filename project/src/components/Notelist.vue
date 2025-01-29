@@ -1,5 +1,9 @@
 <template>
   <div id="notelist">
+    <span id="notelist-nonotes" v-if="notes.length <= 0"
+      >Create your first note!</span
+    >
+
     <div
       id="note"
       :class="note.selected ? 'note-selected' : ''"
@@ -8,11 +12,18 @@
     >
       <div class="note-content">
         <h4 class="note-title">
-          <div class="color-circle" :class="getColorNoteStatus(note)"></div>
-          {{ note.name }}
+          <div class="color-circle" :class="`bg-${note.color}`"></div>
+          <span>
+            {{ note.name }}
+          </span>
         </h4>
         <div class="notelist-tag">
-          <span class="tag" v-for="tag in note.tags" :style="{ background: tag.color }">{{tag.name}}</span>
+          <span
+            class="tag"
+            v-for="tag in note.tags"
+            :style="{ background: tag.color }"
+            >{{ tag.name }}</span
+          >
         </div>
         <p class="note-content">
           {{ note.content }}
@@ -27,42 +38,17 @@
 </template>
 
 <script>
+
 export default {
   name: "Notelist",
   props: ["notes"],
-  data(){
-    return{
-      colors: ["blue", "red", "yellow", "purple", "green"],
-    }
-  },
+
   methods: {
     selectNote(note) {
       this.$emit("select-note", note);
     },
     deleteNote(note) {
       this.$emit("delete-note", note);
-    },
-    getColorNoteStatus(note) {
-      let color = "bg-";
-      switch (note.status) {
-        case "todo":
-          color += "red";
-          break;
-        case "inprogress":
-          color += "yellow";
-          break;
-        case "finished":
-          color += "green";
-          break;
-        default:
-          color += "red";
-          break;
-      }
-      return color;
-    },
-    getColor() {
-      let randomID = Math.floor(Math.random() * this.colors.length);
-      return `var(--${this.colors[randomID]})`;
     },
   },
 };
@@ -116,9 +102,14 @@ export default {
   align-items: center;
   gap: 0.2rem;
 }
-.notelist-tag{
+.notelist-tag {
   display: flex;
   flex-wrap: wrap;
-  gap:0.2rem;
+  gap: 0.2rem;
+}
+#notelist-nonotes {
+  padding: 0.5rem;
+  color: var(--grey);
+  user-select: none;
 }
 </style>

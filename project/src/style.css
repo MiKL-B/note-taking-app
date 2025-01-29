@@ -132,6 +132,9 @@ button:hover {
 .bg-green {
   background: var(--green);
 }
+.bg-grey{
+  background:var(--grey);
+}
 .text-grey {
   color: var(--grey);
 }
@@ -148,7 +151,7 @@ details {
   cursor: pointer;
 }
 pre{
-  background:var(--dark);
+  background:var(--lightgrey);
   border-radius: 5px;
   padding:0.5rem;
   overflow-x: auto;
@@ -156,5 +159,5 @@ pre{
   tab-size: 2;
 }
 code{
-  color: var(--lightgrey) ;
+  color: var(--dark) ;
 }

@@ -1,39 +1,39 @@
 <template>
   <ul id="menubar">
-    <li class="menubar-item">
+    <li class="menubar-item" @click="selectFilter('allnotes')">
       <span class="menubar-sub-label">
         <i class="fa-solid fa-file-lines"></i>
         <span>All notes</span>
       </span>
-      <span class="text-grey">0</span>
+      <span class="text-grey">{{ countAllNotes }}</span>
     </li>
-    <li class="menubar-item">
+    <li class="menubar-item" @click="selectFilter('todo')">
       <span class="menubar-sub-label">
         <div class="color-circle bg-red"></div>
         <span>Todo</span>
       </span>
-      <span class="text-grey">0</span>
+      <span class="text-grey">{{ countTodo }}</span>
     </li>
-    <li class="menubar-item">
+    <li class="menubar-item" @click="selectFilter('inprogress')">
       <span class="menubar-sub-label">
         <div class="color-circle bg-yellow"></div>
         <span>In progress</span>
       </span>
-      <span class="text-grey">0</span>
+      <span class="text-grey">{{ countInProgress }}</span>
     </li>
-    <li class="menubar-item">
+    <li class="menubar-item" @click="selectFilter('finished')">
       <span class="menubar-sub-label">
         <div class="color-circle bg-green"></div>
         <span>Finished</span>
       </span>
-      <span class="text-grey">0</span>
+      <span class="text-grey">{{ countFinished }}</span>
     </li>
-    <li class="menubar-item">
+    <li class="menubar-item" @click="selectFilter('archived')">
       <span class="menubar-sub-label">
         <i class="fa-solid fa-trash-can"></i>
         <span>Trash</span>
       </span>
-      <span class="text-grey">0</span>
+      <span class="text-grey">{{ countArchived }}</span>
     </li>
     <li class="menubar-item menubar-label">
       <span class="menubar-sub-label">
@@ -73,28 +73,38 @@
 </template>
 
 <script>
+import getColor from "../utils.js";
 export default {
   name: "Menubar",
-  props: ["tags"],
+  props: [
+    "tags",
+    "countAllNotes",
+    "countTodo",
+    "countInProgress",
+    "countFinished",
+    "countArchived"
+  ],
   data() {
     return {
       showDetails: false,
-      colors: ["blue", "red", "yellow", "purple", "green"],
       noteCounters: {},
     };
   },
 
   methods: {
+    selectFilter(filter) {
+      this.$emit("select-filter", filter);
+    },
     addTag() {
       let tag = {
         id: Date.now(),
-        name: this.generateIncrementedTagName("New tag"),
-        color: this.getColor(),
+        name: this.generateIncrementedName("New tag"),
+        color: getColor(),
         selected: false,
       };
       this.tags.push(tag);
     },
-    generateIncrementedTagName(baseTitle) {
+    generateIncrementedName(baseTitle) {
       if (!this.noteCounters[baseTitle]) {
         this.noteCounters[baseTitle] = 1;
       } else {
@@ -107,10 +117,6 @@ export default {
     },
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
-    },
-    getColor() {
-      let randomID = Math.floor(Math.random() * this.colors.length);
-      return `var(--${this.colors[randomID]})`;
     },
     updateTagName(tag) {
       this.$emit("update-tag-name", { ...tag });
@@ -226,8 +232,8 @@ details[open] summary::after {
   background: none;
   border: none;
   box-shadow: none;
-  width:90%;
-  padding:0;
-  height:50%;
+  width: 90%;
+  padding: 0;
+  height: 50%;
 }
 </style>
