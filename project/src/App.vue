@@ -13,7 +13,12 @@
       :style="{ flex: isVisibleNoteList ? '1' : '2' }"
       :class="{ invisible: !isVisibleMenu }"
     >
-      <Menubar :tags="tags" @select-tag="selectTag" @delete-tag="deleteTag" />
+      <Menubar
+        :tags="tags"
+        @select-tag="selectTag"
+        @delete-tag="deleteTag"
+        @update-tag-name="handleUpdateTagName"
+      />
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
       <div id="filter-note">
@@ -35,7 +40,7 @@
       <div v-if="selectedNote" :class="{ invisible: !isVisibleNoteBar }">
         <Notebar @change-status="changeNoteStatus" />
       </div>
-      <div class="sub-col3" v-if="selectedNote">
+      <div class="sub-col3">
         <div id="col3-header-note">
           <input
             id="input-note-name"
@@ -43,16 +48,40 @@
             v-model="selectedNote.name"
             placeholder="Note name here..."
           />
-          <select v-model="selectedNote.status" @change="changeNoteStatus">
+          <select
+            v-if="selectedNote"
+            v-model="selectedNote.status"
+            @change="changeNoteStatus"
+          >
             <option disabled selected>Status</option>
             <option value="todo">Todo</option>
             <option value="inprogress">In progress</option>
             <option value="finished">Finished</option>
           </select>
+          <input
+            id="input-note-tag"
+            v-if="selectedNote"
+            type="text"
+            @keyup.enter="addTagToNote"
+            v-model="inputValue"
+            placeholder="Add tags"
+          />
           <button v-if="isMarkdownMode" @click="togglePreviewMode">
             <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
             <i class="fa-solid fa-eye" v-else></i>
           </button>
+        </div>
+        <div class="note-tag-list" style="padding-left: 0.5rem">
+          <span
+            class="tag"
+            v-for="tag in selectedNote.tags"
+            :style="{ background: tag.color }"
+          >
+            {{ tag.name }}
+            <span class="delete-tag-btn" @click="deleteTagNote(tag)"
+              ><i class="fa-solid fa-xmark"></i
+            ></span>
+          </span>
         </div>
         <textarea
           v-model="selectedNote.content"
@@ -93,9 +122,10 @@ export default {
       isMarkdownMode: true,
       isPreviewMode: false,
       notes: [],
-      status:"",
+      status: "",
       searchNote: "",
       tags: [],
+      inputValue: "",
     };
   },
   computed: {
@@ -205,6 +235,7 @@ export default {
         date: new Date().toLocaleString("fr-FR"),
         status: "todo",
         content: "",
+        tags: [],
         selected: false,
       };
       this.notes.push(newNote);
@@ -223,7 +254,7 @@ export default {
       }
     },
     changeNoteStatus() {
-      this.status = this.selectedNote.status
+      this.status = this.selectedNote.status;
     },
     // tag
     selectTag(tag) {
@@ -236,8 +267,53 @@ export default {
       const index = this.tags.findIndex((t) => t.id === tag.id);
 
       if (index > -1) {
+        for (let i = 0; i < this.notes.length; i++) {
+          this.notes[i].tags = this.notes[i].tags.filter(
+            (t) => t.id !== tag.id
+          );
+        }
+
         this.tags.splice(index, 1);
       }
+    },
+    addTagToNote() {
+      const existingTag = this.tags.find(
+        (t) => t.name.toLowerCase() === this.inputValue.toLowerCase()
+      );
+      if (!existingTag) {
+        return;
+      }
+
+      const tagExistsInNote = this.selectedNote.tags.find(
+        (t) => t.name.toLowerCase() === existingTag.name.toLowerCase()
+      );
+      if (tagExistsInNote) {
+        return;
+      }
+
+      let newTag = {
+        id: existingTag.id,
+        name: existingTag.name,
+        color: existingTag.color,
+      };
+
+      this.selectedNote.tags.push(newTag);
+      this.inputValue = "";
+    },
+    deleteTagNote(tag) {
+      const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
+
+      if (index > -1) {
+        this.selectedNote.tags.splice(index, 1);
+      }
+    },
+    handleUpdateTagName(updatedTag) {
+      this.tags = this.tags.map((tag) => {
+        return tag.id === updatedTag.id ? updatedTag : tag;
+      });
+      this.selectedNote.tags = this.selectedNote.tags.map((tag) => {
+        return tag.id === updatedTag.id ? updatedTag : tag;
+      });
     },
   },
 };
@@ -267,7 +343,10 @@ export default {
 #col3-header-note {
   display: flex;
   padding: 0.2rem 0.2rem 0 0.2rem;
-  gap:0.2rem;
+  gap: 0.2rem;
+}
+#input-note-tag {
+  width: 100px;
 }
 .invisible {
   display: none;
@@ -284,5 +363,8 @@ export default {
   border: none;
   box-shadow: none;
   font-size: 20px;
+}
+.delete-tag-btn {
+  cursor: pointer;
 }
 </style>

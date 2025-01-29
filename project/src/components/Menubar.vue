@@ -55,7 +55,12 @@
         >
           <span class="menubar-sub-label">
             <i class="fa-solid fa-tag" :style="{ color: tag.color }"></i>
-            <span>{{ tag.name }}</span>
+            <input
+              class="menubar-input-tag"
+              type="text"
+              v-model="tag.name"
+              @input="updateTagName(tag)"
+            />
           </span>
           <div class="tag-trash">
             <i class="fa-solid fa-trash-can" @click="deleteTag(tag)"></i>
@@ -75,6 +80,7 @@ export default {
     return {
       showDetails: false,
       colors: ["blue", "red", "yellow", "purple", "green"],
+      noteCounters: {},
     };
   },
 
@@ -82,11 +88,19 @@ export default {
     addTag() {
       let tag = {
         id: Date.now(),
-        name: "New tag",
+        name: this.generateIncrementedTagName("New tag"),
         color: this.getColor(),
         selected: false,
       };
       this.tags.push(tag);
+    },
+    generateIncrementedTagName(baseTitle) {
+      if (!this.noteCounters[baseTitle]) {
+        this.noteCounters[baseTitle] = 1;
+      } else {
+        this.noteCounters[baseTitle] += 1;
+      }
+      return `${baseTitle} ${this.noteCounters[baseTitle]}`;
     },
     selectTag(tag) {
       this.$emit("select-tag", tag);
@@ -97,6 +111,9 @@ export default {
     getColor() {
       let randomID = Math.floor(Math.random() * this.colors.length);
       return `var(--${this.colors[randomID]})`;
+    },
+    updateTagName(tag) {
+      this.$emit("update-tag-name", { ...tag });
     },
   },
 };
@@ -204,5 +221,11 @@ details[open] summary::after {
 }
 .tag-selected {
   background: #e4e4e7;
+}
+.menubar-input-tag {
+  background: none;
+  border: none;
+  box-shadow: none;
+  width:90%;
 }
 </style>

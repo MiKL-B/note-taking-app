@@ -41,7 +41,6 @@ export default {
   name: "Notebar",
   data() {
     return {
-
     };
   },
   methods: {

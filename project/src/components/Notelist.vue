@@ -11,7 +11,9 @@
           <div class="color-circle" :class="getColorNoteStatus(note)"></div>
           {{ note.name }}
         </h4>
-        <!-- <span class="tag" :style="`background:var(--${randomTagColor()})`">tag</span> -->
+        <div class="note-tag-list">
+          <span class="tag" v-for="tag in note.tags" :style="{ background: tag.color }">{{tag.name}}</span>
+        </div>
         <p class="note-content">
           {{ note.content }}
         </p>
@@ -28,6 +30,11 @@
 export default {
   name: "Notelist",
   props: ["notes"],
+  data(){
+    return{
+      colors: ["blue", "red", "yellow", "purple", "green"],
+    }
+  },
   methods: {
     selectNote(note) {
       this.$emit("select-note", note);
@@ -53,11 +60,10 @@ export default {
       }
       return color;
     },
-    randomTagColor(){
-      let colors = ["blue","red","yellow","purple","green"]
-      let randomID = Math.floor(Math.random() * colors.length)
-      return colors[randomID]
-    }
+    getColor() {
+      let randomID = Math.floor(Math.random() * this.colors.length);
+      return `var(--${this.colors[randomID]})`;
+    },
   },
 };
 </script>
@@ -109,5 +115,9 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.2rem;
+}
+.note-tag-list{
+  display: flex;
+  gap:0.2rem;
 }
 </style>
