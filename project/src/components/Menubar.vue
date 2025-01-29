@@ -44,32 +44,61 @@
         ><i class="fa-solid fa-plus"></i
       ></span>
     </li>
-    <ul id="menubar-tags-list">
-      <li id="menubar-tag" class="menubar-sub-item" v-for="tag in tags">
-        <span class="menubar-sub-label">
-          <i class="fa-solid fa-tag"></i>
-          <span>{{ tag }}</span>
-        </span>
-        <div class="tag-trash">
-          <i class="fa-solid fa-trash-can"></i>
-        </div>
-      </li>
-    </ul>
+    <div id="menubar-container-list">
+
+      <ul id="menubar-tags-list">
+        <li
+          id="menubar-tag"
+          :class="tag.selected ? 'tag-selected' : ''"
+          @click="selectTag(tag)"
+          class="menubar-sub-item"
+          v-for="tag in tags"
+        >
+          <span class="menubar-sub-label">
+            <i class="fa-solid fa-tag" :style="{ color: tag.color }"></i>
+            <span>{{ tag.name }}</span>
+          </span>
+          <div class="tag-trash">
+            <i class="fa-solid fa-trash-can" @click="deleteTag(tag)"></i>
+          </div>
+        </li>
+      </ul>
+    </div>
   </ul>
 </template>
 
 <script>
 export default {
   name: "Menubar",
+  props: ["tags"],
   data() {
     return {
       showDetails: false,
       tags: [],
+      // colors: ["blue", "red", "yellow", "purple", "green"],
     };
+  },
+  computed: {
+    colors: () => ["blue", "red", "yellow", "purple", "green"],
   },
   methods: {
     addTag() {
-      this.tags.push("New tag");
+      let tag = {
+        name:"New tag",
+        color:this.getColor(),
+        selected:false,
+      }
+      this.tags.push(tag);
+    },
+    selectTag(tag) {
+      this.$emit("select-tag", tag);
+    },
+    deleteTag(tag) {
+      this.$emit("delete-tag", tag);
+    },
+    getColor() {
+      let randomID = Math.floor(Math.random() * this.colors.length);
+      return `var(--${this.colors[randomID]})`;
     },
   },
 };
@@ -134,11 +163,16 @@ summary::after {
 details[open] summary::after {
   content: "▲";
 }
-
+#menubar-container-list{
+  position: relative;
+  height:calc(100vh - 355px)
+}
 #menubar-tags-list {
-  max-height: 675px;
   overflow: auto;
   width: 100%;
+  position:absolute;
+  bottom:0;
+  top:0;
 }
 #menubar-tags-btn {
   height: 24px;
@@ -167,5 +201,8 @@ details[open] summary::after {
 }
 .tag-trash i:hover {
   cursor: pointer;
+}
+.tag-selected {
+  background: #f4f4f5;
 }
 </style>
