@@ -4,48 +4,54 @@
       <i class="fa-solid fa-file-lines"></i>
       <span>All notes</span>
     </li>
-    <details>
-      <summary class="menubar-item">
-        <i class="fa-solid fa-list-check"></i>
-        <span>Status</span>
-      </summary>
-      <ul>
-        <li class="menubar-sub-item">
-          <div class="color-circle bg-red"></div>
-          <span>Todo</span>
-        </li>
-        <li class="menubar-sub-item">
-          <div class="color-circle bg-yellow"></div>
-          <span>In progress</span>
-        </li>
-        <li class="menubar-sub-item">
-          <div class="color-circle bg-green"></div>
-          <span>Finished</span>
-        </li>
-      </ul>
-    </details>
-    <details>
-      <summary class="menubar-item">
-        <i class="fa-solid fa-tags"></i>
-        <span>Tags</span>
-      </summary>
-      <ul>
-        <li class="menubar-sub-item">
-          <i class="fa-solid fa-tag"></i>
-          <span>Tag</span>
-        </li>
-      </ul>
-    </details>
+    <li class="menubar-item">
+      <div class="color-circle bg-red"></div>
+      <span>Todo</span>
+    </li>
+    <li class="menubar-item">
+      <div class="color-circle bg-yellow"></div>
+      <span>In progress</span>
+    </li>
+    <li class="menubar-item">
+      <div class="color-circle bg-green"></div>
+      <span>Finished</span>
+    </li>
     <li class="menubar-item">
       <i class="fa-solid fa-trash-can"></i>
       <span>Trash</span>
     </li>
+    <div id="details-tags">
+      <details>
+        <summary class="menubar-item">
+          <i class="fa-solid fa-tags"></i>
+          <span>Tags</span>
+        </summary>
+        <ul id="tags-list">
+          <li class="menubar-sub-item" v-for="tag in tags">
+            <i class="fa-solid fa-tag"></i>
+            <span>{{tag}}</span>
+          </li>
+        </ul>
+      </details>
+      <span id="details-tags-btn" @click="addTag"><i class="fa-solid fa-plus"></i></span>
+    </div>
+    
   </ul>
 </template>
 
 <script>
 export default {
   name: "Menubar",
+  data(){
+    return{
+      tags:[]
+    }
+  },
+  methods:{
+    addTag(){
+      this.tags.push("New tag")
+    }
+  }
 };
 </script>
 <style scoped>
@@ -84,5 +90,26 @@ summary::after {
 details[open] summary::after {
   content: "▲";
 }
-
+#tags-list{
+  max-height:650px;
+  overflow: auto;
+  width:100%;
+  padding:0;
+}
+#details-tags {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+#details-tags details {
+  flex-grow: 1;
+}
+#details-tags-btn {
+  padding: 0.6rem 0.5rem;
+  cursor: pointer;
+  height:42px;
+}
+#details-tags-btn:hover {
+  background: #e4e4e7;
+}
 </style>
