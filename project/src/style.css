@@ -36,16 +36,16 @@ select {
   outline: none;
   font-family: "Inter", serif;
 }
-input[type="color"]{
-  background:none;
-  padding:0;
-  width:40px;
-  height:35px;
-  border:var(--border);
+input[type="color"] {
+  background: none;
+  padding: 0;
+  width: 40px;
+  height: 35px;
+  border: var(--border);
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
-  padding:0.2rem;
+  padding: 0.2rem;
 }
-input[type="color"]:hover{
+input[type="color"]:hover {
   cursor: pointer;
   background: var(--lightgrey);
 }
@@ -56,6 +56,9 @@ textarea {
   width: 100%;
   border: none;
   padding: 0.5rem;
+  position: absolute;
+  top: 4.5rem;
+  bottom: 0;
 }
 button {
   border: var(--border);
@@ -105,8 +108,8 @@ button:hover {
 }
 .separator-y {
   border-right: var(--border);
-  height:1rem;
-  margin:auto 0.5rem;
+  height: 1rem;
+  margin: auto 0.5rem;
 }
 .separator-x {
   border-top: none;
@@ -129,15 +132,15 @@ button:hover {
 .bg-green {
   background: var(--green);
 }
-.text-grey{
-  color:var(--grey);
+.text-grey {
+  color: var(--grey);
 }
-.tag{
+.tag {
   font-size: 12px;
-  color:var(--lightgrey);
+  color: var(--lightgrey);
   display: inline-block;
-  margin:0.2rem 0;
-  padding:0.1rem 0.2rem;
+  margin: 0.2rem 0;
+  padding: 0.1rem 0.2rem;
   border-radius: 5px;
 }
 

@@ -40,7 +40,7 @@
       <div v-if="selectedNote" :class="{ invisible: !isVisibleNoteBar }">
         <Notebar @change-status="changeNoteStatus" />
       </div>
-      <div class="sub-col3">
+      <div class="sub-col3" :style="{ height: noteHeight }">
         <div id="col3-header-note">
           <input
             id="input-note-name"
@@ -76,8 +76,7 @@
             class="tag"
             v-for="tag in selectedNote.tags"
             :style="{ background: tag.color }"
-          >
-            {{ tag.name }}
+            >{{ tag.name }}
             <span class="delete-tag-btn" @click="deleteTagNote(tag)"
               ><i class="fa-solid fa-xmark"></i
             ></span>
@@ -85,7 +84,6 @@
         </div>
         <textarea
           v-model="selectedNote.content"
-          :style="{ height: noteHeight }"
           placeholder="Note content here..."
         ></textarea>
       </div>
@@ -130,7 +128,7 @@ export default {
   },
   computed: {
     noteHeight() {
-      return this.isVisibleNoteBar ? "calc(100% - 78px)" : "calc(100% - 36px)";
+      return this.isVisibleNoteBar ? "calc(100% - 48px)" : "calc(100% - 5px)";
     },
     selectedNote() {
       const selectedNote = this.notes.find((note) => note.selected);
@@ -338,7 +336,7 @@ export default {
   max-width: 320px;
 }
 .sub-col3 {
-  height: 100%;
+  position: relative;
 }
 #col3-header-note {
   display: flex;
@@ -366,5 +364,10 @@ export default {
 }
 .delete-tag-btn {
   cursor: pointer;
+}
+.note-tag-list {
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 28px;
 }
 </style>
