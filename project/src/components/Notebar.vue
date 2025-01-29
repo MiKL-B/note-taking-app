@@ -1,5 +1,6 @@
 <template>
-  <div id="notebar">
+  <div id="notebar" @wheel.prevent="handleScroll">
+  
     <select name="" id="">
       <option value="" disabled selected>Font</option>
       <option value="">Arial</option>
@@ -44,16 +45,28 @@
 <script>
 export default {
   name: "Notebar",
-  data(){
-    return{
-      isPreviewMode:false
+  data() {
+    return {
+      isPreviewMode: false,
+    };
+  },
+  methods: {
+    togglePreviewMode() {
+      this.isPreviewMode = !this.isPreviewMode;
+    },
+    handleScroll(event) {
+      const scrollSpeed = 0.2;
+      const deltaY = event.deltaY * scrollSpeed;
+      
+      const notebar = this.$el;
+
+      notebar.scrollBy({
+        top: deltaY,
+        left: 0,
+        behavior: 'smooth'
+      });
     }
   },
-  methods:{
-    togglePreviewMode(){
-      this.isPreviewMode = !this.isPreviewMode
-    }
-  }
 };
 </script>
 
@@ -64,5 +77,8 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 0.2rem;
+  height:42px;
+  overflow-y: auto;
 }
+
 </style>

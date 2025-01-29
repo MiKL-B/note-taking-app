@@ -7,7 +7,11 @@
       v-for="note in notes"
     >
       <div class="note-content">
-        <h4>{{ note.name }}</h4>
+        <h4 class="note-title">
+          <div class="color-circle" :class="getColorNoteStatus(note)"></div>
+          {{ note.name }}
+        </h4>
+        <span class="tag" :style="`background:var(--${randomTagColor()})`">tag</span>
         <p class="note-content">
           {{ note.content }}
         </p>
@@ -31,6 +35,29 @@ export default {
     deleteNote(note) {
       this.$emit("delete-note", note);
     },
+    getColorNoteStatus(note) {
+      let color = "bg-";
+      switch (note.status) {
+        case "todo":
+          color += "red";
+          break;
+        case "inprogress":
+          color += "yellow";
+          break;
+        case "finished":
+          color += "green";
+          break;
+        default:
+          color += "red";
+          break;
+      }
+      return color;
+    },
+    randomTagColor(){
+      let colors = ["blue","red","yellow","purple","green"]
+      let randomID = Math.floor(Math.random() * colors.length)
+      return colors[randomID]
+    }
   },
 };
 </script>
@@ -77,5 +104,10 @@ export default {
 }
 .note-trash i:hover {
   cursor: pointer;
+}
+.note-title {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 </style>

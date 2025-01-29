@@ -56,7 +56,6 @@ textarea {
   width: 100%;
   border: none;
   padding: 0.5rem;
-
 }
 button {
   border: var(--border);
@@ -115,4 +114,27 @@ button:hover {
   border-right: none;
   border-bottom: var(--border);
   margin: 0 0.2rem;
+}
+.color-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.bg-red {
+  background: var(--red);
+}
+.bg-yellow {
+  background: var(--yellow);
+}
+.bg-green {
+  background: var(--green);
+}
+.tag{
+  font-size: 12px;
+  color:var(--lightgrey);
+  display: inline-block;
+  margin:0.2rem 0;
+  padding:0.1rem 0.2rem;
+  border-radius: 5px;
+
 }

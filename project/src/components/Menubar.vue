@@ -103,18 +103,5 @@ details[open] summary::after {
   gap: 0.2rem;
   padding: 0.5rem 0.5rem 0.5rem 2rem;
 }
-.color-circle {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.bg-red {
-  background: var(--red);
-}
-.bg-yellow {
-  background: var(--yellow);
-}
-.bg-green {
-  background: var(--green);
-}
+
 </style>

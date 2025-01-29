@@ -31,7 +31,7 @@
       />
     </div>
     <div class="colonne col3" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
-      <div :class="{ invisible: !isVisibleNoteBar }">
+      <div :class="{ invisible: !isVisibleNoteBar }" >
         <Notebar />
       </div>
       <div class="sub-col3" v-if="selectedNote">
@@ -111,6 +111,7 @@ export default {
   },
 
   methods: {
+
     handleAction(action) {
       switch (action) {
         case "new":
@@ -180,6 +181,7 @@ export default {
         id: Date.now(),
         name: "New note",
         date: new Date().toLocaleString("fr-FR"),
+        status:"todo",
         content: "",
         selected: false,
       };
