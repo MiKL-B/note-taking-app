@@ -45,7 +45,6 @@
       ></span>
     </li>
     <div id="menubar-container-list">
-
       <ul id="menubar-tags-list">
         <li
           id="menubar-tag"
@@ -83,10 +82,10 @@ export default {
     addTag() {
       let tag = {
         id: Date.now(),
-        name:"New tag",
-        color:this.getColor(),
-        selected:false,
-      }
+        name: "New tag",
+        color: this.getColor(),
+        selected: false,
+      };
       this.tags.push(tag);
     },
     selectTag(tag) {
@@ -108,6 +107,7 @@ export default {
   height: calc(100vh - 95px);
   overflow-y: hidden;
 }
+
 .menubar-item {
   list-style: none;
   display: flex;
@@ -118,6 +118,7 @@ export default {
   padding: 0.7rem 0.5rem;
   transition: 0.3s ease;
 }
+
 .menubar-item i,
 .menubar-item div {
   width: 16px;
@@ -162,16 +163,16 @@ summary::after {
 details[open] summary::after {
   content: "▲";
 }
-#menubar-container-list{
+#menubar-container-list {
   position: relative;
-  height:calc(100vh - 355px)
+  height: calc(100vh - 355px);
 }
 #menubar-tags-list {
   overflow: auto;
   width: 100%;
-  position:absolute;
-  bottom:0;
-  top:0;
+  position: absolute;
+  bottom: 0;
+  top: 0;
 }
 #menubar-tags-btn {
   height: 24px;

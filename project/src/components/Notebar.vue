@@ -33,18 +33,6 @@
     <button class="bt-symbol">
       <i class="fa-solid fa-align-justify"></i>
     </button>
-    <span class="separator-y"></span>
-    <!-- status -->
-    <select v-model="status" @change="changeStatus">
-      <option disabled selected>Status</option>
-      <option value="todo">Todo</option>
-      <option value="inprogress">In progress</option>
-      <option value="finished">Finished</option>
-    </select>
-    <button @click="togglePreviewMode">
-      <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
-      <i class="fa-solid fa-eye" v-else></i>
-    </button>
   </div>
 </template>
 
@@ -53,17 +41,11 @@ export default {
   name: "Notebar",
   data() {
     return {
-      status:"todo",
-      isPreviewMode: false,
+
     };
   },
   methods: {
-    changeStatus(){
-      this.$emit("change-status",this.status);
-    },
-    togglePreviewMode() {
-      this.isPreviewMode = !this.isPreviewMode;
-    },
+
     handleScroll(event) {
       const scrollSpeed = 0.2;
       const deltaY = event.deltaY * scrollSpeed;

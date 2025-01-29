@@ -5,6 +5,7 @@
     @toggle-menu="toggleMenu"
     @toggle-notelist="toggleNoteList"
     @toggle-notebar="toggleNoteBar"
+    @toggle-markdownmode="toggleMarkdownMode"
   />
   <div id="container">
     <div
@@ -35,12 +36,24 @@
         <Notebar @change-status="changeNoteStatus" />
       </div>
       <div class="sub-col3" v-if="selectedNote">
-        <input
-          id="input-note-name"
-          type="text"
-          v-model="selectedNote.name"
-          placeholder="Note name here..."
-        />
+        <div id="col3-header-note">
+          <input
+            id="input-note-name"
+            type="text"
+            v-model="selectedNote.name"
+            placeholder="Note name here..."
+          />
+          <select v-model="selectedNote.status" @change="changeNoteStatus">
+            <option disabled selected>Status</option>
+            <option value="todo">Todo</option>
+            <option value="inprogress">In progress</option>
+            <option value="finished">Finished</option>
+          </select>
+          <button v-if="isMarkdownMode" @click="togglePreviewMode">
+            <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
+            <i class="fa-solid fa-eye" v-else></i>
+          </button>
+        </div>
         <textarea
           v-model="selectedNote.content"
           :style="{ height: noteHeight }"
@@ -77,7 +90,10 @@ export default {
       isVisibleMenu: true,
       isVisibleNoteList: true,
       isVisibleNoteBar: true,
+      isMarkdownMode: true,
+      isPreviewMode: false,
       notes: [],
+      status:"",
       searchNote: "",
       tags: [],
     };
@@ -175,6 +191,12 @@ export default {
     toggleNoteBar(isVisible) {
       this.isVisibleNoteBar = isVisible;
     },
+    toggleMarkdownMode(isMarkdownMode) {
+      this.isMarkdownMode = isMarkdownMode;
+    },
+    togglePreviewMode() {
+      this.isPreviewMode = !this.isPreviewMode;
+    },
     // note
     createNote() {
       let newNote = {
@@ -200,8 +222,8 @@ export default {
         this.notes.splice(index, 1);
       }
     },
-    changeNoteStatus(newStatus) {
-      this.selectedNote.status = newStatus;
+    changeNoteStatus() {
+      this.status = this.selectedNote.status
     },
     // tag
     selectTag(tag) {
@@ -242,7 +264,11 @@ export default {
 .sub-col3 {
   height: 100%;
 }
-
+#col3-header-note {
+  display: flex;
+  padding: 0.2rem 0.2rem 0 0.2rem;
+  gap:0.2rem;
+}
 .invisible {
   display: none;
 }

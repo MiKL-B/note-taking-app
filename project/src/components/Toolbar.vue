@@ -55,8 +55,8 @@
     <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">Settings</summary>
       <ul class="toolbar-menu">
-        <li class="toolbar-toggle">
-          <span>
+        <li class="toolbar-toggle" @click="toggleMarkdownMode">
+          <span v-if="isMarkdownMode">
             <i class="fa-solid fa-check"></i>
           </span>
           <span>Markdown</span>
@@ -93,6 +93,7 @@ export default {
       isVisibleMenu: true,
       isVisibleNoteList: true,
       isVisibleNoteBar: true,
+      isMarkdownMode:true,
     };
   },
   methods: {
@@ -110,6 +111,10 @@ export default {
     toggleNoteBarVisibility() {
       this.isVisibleNoteBar = !this.isVisibleNoteBar;
       this.$emit("toggle-notebar", this.isVisibleNoteBar);
+    },
+    toggleMarkdownMode(){
+      this.isMarkdownMode = !this.isMarkdownMode;
+      this.$emit("toggle-markdownmode",this.isMarkdownMode)
     },
 
     handleClickOnDetails() {
