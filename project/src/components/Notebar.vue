@@ -34,7 +34,12 @@
       <i class="fa-solid fa-align-justify"></i>
     </button>
     <span class="separator-y"></span>
-
+    <select name="" id="">
+      <option value="" disabled selected>Status</option>
+      <option value="">Todo</option>
+      <option value="">In progress</option>
+      <option value="">Finished</option>
+    </select>
     <button @click="togglePreviewMode">
       <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
       <i class="fa-solid fa-eye" v-else></i>
@@ -70,7 +75,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #notebar {
   border-bottom: var(--border);
   padding: 0.2rem;
@@ -80,5 +85,6 @@ export default {
   height:42px;
   overflow-y: auto;
 }
+
 
 </style>
