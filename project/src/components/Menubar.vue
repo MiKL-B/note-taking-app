@@ -1,44 +1,43 @@
 <template>
   <ul id="menubar">
-    <li class="menu-item">
+    <li class="menubar-item">
       <i class="fa-solid fa-file-lines"></i>
       <span>All notes</span>
     </li>
     <details>
-      <summary>
+      <summary class="menubar-item">
         <i class="fa-solid fa-list-check"></i>
         <span>Status</span>
       </summary>
       <ul>
-        <li class="sub-item">
+        <li class="menubar-sub-item">
           <div class="color-circle bg-red"></div>
           <span>Todo</span>
         </li>
-        <li class="sub-item">
+        <li class="menubar-sub-item">
           <div class="color-circle bg-yellow"></div>
           <span>In progress</span>
         </li>
-        <li class="sub-item">
+        <li class="menubar-sub-item">
           <div class="color-circle bg-green"></div>
           <span>Finished</span>
         </li>
       </ul>
     </details>
     <details>
-      <summary>
+      <summary class="menubar-item">
         <i class="fa-solid fa-tags"></i>
         <span>Tags</span>
       </summary>
       <ul>
-        <li class="sub-item">
+        <li class="menubar-sub-item">
           <i class="fa-solid fa-tag"></i>
           <span>Tag</span>
         </li>
       </ul>
     </details>
-    <li class="menu-item">
+    <li class="menubar-item">
       <i class="fa-solid fa-trash-can"></i>
-
       <span>Trash</span>
     </li>
   </ul>
@@ -55,36 +54,25 @@ export default {
   height: calc(100vh - 95px);
   overflow-y: auto;
 }
-.menu-item {
+.menubar-item {
+  list-style: none;
   display: flex;
+  position: relative;
   align-items: center;
   gap: 0.2rem;
   padding-left: 1rem;
-}
-
-li {
   padding: 0.5rem;
 }
-li:hover {
+.menubar-item:hover,
+.menubar-sub-item:hover {
   background: #e4e4e7;
   cursor: pointer;
 }
-
-details {
-  cursor: pointer;
-}
-
-summary:hover {
-  background: #e4e4e7;
-}
-
-summary {
-  list-style: none;
-  position: relative;
+.menubar-sub-item {
   display: flex;
   align-items: center;
-  gap:0.2rem;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  gap: 0.2rem;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
 }
 
 summary::after {
@@ -96,12 +84,6 @@ summary::after {
 
 details[open] summary::after {
   content: "▲";
-}
-.sub-item {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  padding: 0.5rem 0.5rem 0.5rem 2rem;
 }
 
 </style>

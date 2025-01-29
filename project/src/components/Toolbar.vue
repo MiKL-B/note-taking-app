@@ -120,7 +120,22 @@ export default {
         }
       }
     },
+    closeDetails(event) {
+      // Vérifiez si le clic se produit en dehors de tous les éléments <details>
+      if (!event.target.closest('details')) {
+        let detailsOpened = document.querySelectorAll("details[open]");
+        detailsOpened.forEach((item) => {
+          item.removeAttribute("open");
+        });
+      }
+    }
   },
+  mounted() {
+    document.addEventListener('click', this.closeDetails);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.closeDetails);
+  }
 };
 </script>
 <style scoped>
@@ -163,5 +178,8 @@ export default {
 .toolbar-toggle{
   display:flex;
   gap:0.5rem;
+}
+summary{
+  list-style-type: none;
 }
 </style>

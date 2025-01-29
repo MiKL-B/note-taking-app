@@ -136,5 +136,8 @@ button:hover {
   margin:0.2rem 0;
   padding:0.1rem 0.2rem;
   border-radius: 5px;
+}
 
+details {
+  cursor: pointer;
 }
