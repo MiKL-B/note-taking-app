@@ -1,5 +1,5 @@
 <template>
-  <Titlebar name="Note" />
+  <Titlebar :name="getDocumentName" />
   <Toolbar
     @action-clicked="handleAction"
     @toggle-menu="toggleMenu"
@@ -36,31 +36,36 @@
         @delete-note="deleteNote"
       />
     </div>
-    <div class="colonne col3" :style="{ flex: isVisibleNoteList ? '1' : '2' }">
-      <div v-if="selectedNote" :class="{ invisible: !isVisibleNoteBar }">
+    <div
+      class="colonne col3"
+      :style="{ flex: isVisibleNoteList ? '1' : '2' }"
+      v-if="selectedNote"
+    >
+      <div :class="{ invisible: !isVisibleNoteBar }">
         <Notebar @change-status="changeNoteStatus" />
       </div>
       <div class="sub-col3" :style="{ height: noteHeight }">
         <div id="col3-header-note">
+          <div
+            id="col3-header-status"
+            class="color-circle"
+            :class="getColorNoteStatus(selectedNote)"
+          ></div>
           <input
             id="input-note-name"
             type="text"
             v-model="selectedNote.name"
             placeholder="Note name here..."
           />
-          <select
-            v-if="selectedNote"
-            v-model="selectedNote.status"
-            @change="changeNoteStatus"
-          >
+          <select v-model="selectedNote.status" @change="changeNoteStatus">
             <option disabled selected>Status</option>
             <option value="todo">Todo</option>
             <option value="inprogress">In progress</option>
             <option value="finished">Finished</option>
           </select>
           <input
+            v-if="isVisibleMenu"
             id="input-note-tag"
-            v-if="selectedNote"
             type="text"
             @keyup.enter="addTagToNote"
             v-model="inputValue"
@@ -71,7 +76,7 @@
             <i class="fa-solid fa-eye" v-else></i>
           </button>
         </div>
-        <div class="note-tag-list" style="padding-left: 0.5rem">
+        <div class="note-tag-list">
           <span
             class="tag"
             v-for="tag in selectedNote.tags"
@@ -82,11 +87,26 @@
             ></span>
           </span>
         </div>
+        <div
+          id="textedit-preview"
+          v-if="isPreviewMode && isMarkdownMode"
+          v-html="getMarkdownHtml()"
+          style="height: calc(100% - 55px)"
+        ></div>
         <textarea
+          v-else
+          class="contentToExport"
           v-model="selectedNote.content"
           placeholder="Note content here..."
         ></textarea>
       </div>
+    </div>
+    <div class="colonne col3" v-else>
+      <textarea
+        class="contentToExport"
+        style="height: calc(100% - 110px)"
+        placeholder="Enter text here..."
+      ></textarea>
     </div>
   </div>
 
@@ -100,7 +120,7 @@ import Menubar from "./components/Menubar.vue";
 import Notelist from "./components/Notelist.vue";
 import Statusbar from "./components/Statusbar.vue";
 import Notebar from "./components/Notebar.vue";
-
+import { marked } from "marked";
 export default {
   name: "App",
   components: {
@@ -153,6 +173,17 @@ export default {
         return note.name.toLowerCase().includes(this.searchNote.toLowerCase());
       });
     },
+    getDocumentName() {
+      let name = "Untitled";
+      let extension = ".txt";
+      if (this.selectedNote) {
+        name = this.selectedNote.name;
+      }
+      if (this.isMarkdownMode && this.selectedNote) {
+        extension = ".md";
+      }
+      return name + extension;
+    },
   },
 
   methods: {
@@ -181,9 +212,12 @@ export default {
           break;
         case "paste":
           this.pasteText();
+        case "export":
+          this.exportASPDF();
           break;
         default:
           alert(`Unknown action: ${action}`);
+          break;
       }
     },
     createNewDocument() {
@@ -239,10 +273,14 @@ export default {
       this.notes.push(newNote);
     },
     selectNote(note) {
-      this.notes.forEach((n) => {
-        n.selected = false;
-      });
-      note.selected = true;
+      if (note.selected) {
+        note.selected = false;
+      } else {
+        this.notes.forEach((n) => {
+          n.selected = false;
+        });
+        note.selected = true;
+      }
     },
     deleteNote(note) {
       const index = this.notes.findIndex((n) => n.id === note.id);
@@ -253,6 +291,24 @@ export default {
     },
     changeNoteStatus() {
       this.status = this.selectedNote.status;
+    },
+    getColorNoteStatus(note) {
+      let color = "bg-";
+      switch (note.status) {
+        case "todo":
+          color += "red";
+          break;
+        case "inprogress":
+          color += "yellow";
+          break;
+        case "finished":
+          color += "green";
+          break;
+        default:
+          color += "red";
+          break;
+      }
+      return color;
     },
     // tag
     selectTag(tag) {
@@ -313,6 +369,26 @@ export default {
         return tag.id === updatedTag.id ? updatedTag : tag;
       });
     },
+    // markdown
+    getMarkdownHtml() {
+      return marked(this.selectedNote.content, { sanitize: true });
+    },
+    // exportASPDF
+    exportASPDF() {
+      let name = this.selectedNote.name || "Untitled";
+      let extension = ".pdf";
+      const element = document.querySelector(".contentToExport");
+      console.log(element);
+      const opt = {
+        filename: name,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
+      };
+
+      // Générer le PDF
+      html2pdf().from(element).set(opt).save();
+    },
   },
 };
 </script>
@@ -343,6 +419,12 @@ export default {
   padding: 0.2rem 0.2rem 0 0.2rem;
   gap: 0.2rem;
 }
+#col3-header-status {
+  width: 12px;
+  height: 14px;
+  padding: 0 0.4rem;
+  margin: auto;
+}
 #input-note-tag {
   width: 100px;
 }
@@ -369,5 +451,12 @@ export default {
   flex-wrap: wrap;
   overflow-y: scroll;
   max-height: 28px;
+  display: flex;
+  gap: 0.2rem;
+  padding-left: 0.2rem;
+}
+#textedit-preview {
+  margin: 1rem;
+  overflow-y: scroll ;
 }
 </style>

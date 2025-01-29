@@ -227,5 +227,7 @@ details[open] summary::after {
   border: none;
   box-shadow: none;
   width:90%;
+  padding:0;
+  height:50%;
 }
 </style>

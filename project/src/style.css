@@ -147,3 +147,14 @@ button:hover {
 details {
   cursor: pointer;
 }
+pre{
+  background:var(--dark);
+  border-radius: 5px;
+  padding:0.5rem;
+  overflow-x: auto;
+  -moz-tab-size: 2;
+  tab-size: 2;
+}
+code{
+  color: var(--lightgrey) ;
+}

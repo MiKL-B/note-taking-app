@@ -10,7 +10,7 @@
         <li>Save</li>
         <li>Save as...</li>
         <hr class="separator-x" />
-        <li>Export as PDF</li>
+        <li @click="onSubMenuClick('export')">Export as PDF</li>
         <li>Print...</li>
         <hr class="separator-x" />
         <li>Exit</li>

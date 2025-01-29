@@ -11,7 +11,7 @@
           <div class="color-circle" :class="getColorNoteStatus(note)"></div>
           {{ note.name }}
         </h4>
-        <div class="note-tag-list">
+        <div class="notelist-tag">
           <span class="tag" v-for="tag in note.tags" :style="{ background: tag.color }">{{tag.name}}</span>
         </div>
         <p class="note-content">
@@ -116,8 +116,9 @@ export default {
   align-items: center;
   gap: 0.2rem;
 }
-.note-tag-list{
+.notelist-tag{
   display: flex;
+  flex-wrap: wrap;
   gap:0.2rem;
 }
 </style>
