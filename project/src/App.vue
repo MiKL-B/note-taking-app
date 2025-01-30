@@ -62,7 +62,6 @@
             />
           </div>
           <div class="flex gap-4">
-        
             <details v-if="isVisibleMenu" class="toolbar-details">
               <summary class="app-btn">Add tag</summary>
               <ul class="toolbar-menu">
@@ -139,6 +138,7 @@ import Notelist from "./components/Notelist.vue";
 import Statusbar from "./components/Statusbar.vue";
 import Notebar from "./components/Notebar.vue";
 import { marked } from "marked";
+// import { ipcRenderer } from 'electron';
 export default {
   name: "App",
   components: {
@@ -226,6 +226,7 @@ export default {
     getCountArchived() {
       return this.notes.filter((note) => note.status === "archived").length;
     },
+
     getDocumentName() {
       let name = "Untitled";
       let extension = ".txt";
@@ -271,19 +272,63 @@ export default {
         case "export":
           this.exportASPDF();
           break;
+        case "exit":
+          this.exit();
+          break;
         default:
           alert(`Unknown action: ${action}`);
           break;
       }
     },
     createNewDocument() {
-      alert("Creating a new document...");
+      this.createNote()
     },
-    openDocument() {
-      alert("Opening a document...");
+    exit(){
+      ipcRenderer.send('app:quit');
     },
-    saveDocument() {
-      alert("Saving the document...");
+    async openDocument() {
+      const filePath = await ipcRenderer.invoke("dialog:openFile");
+      if (filePath) {
+        const content = await ipcRenderer.invoke("file:read", filePath);
+        const fileName = filePath.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '');
+        let newNote = {
+          id: Date.now(),
+          name: fileName,
+          date: new Date().toLocaleString("fr-FR"),
+          status: "todo",
+          color: "red",
+          content: content,
+          tags: [],
+          selected: false,
+          deleted: false,
+        };
+        this.notes.push(newNote);
+      } else {
+        console.error("Aucun fichier sélectionné.");
+      }
+    },
+
+    async saveDocument() {
+      const defaultFileName = this.getDocumentName; // Utilisez la variable d'extension ici
+
+      const filePath = await ipcRenderer.invoke(
+        "dialog:saveAs",
+        defaultFileName
+      ); // Passer le nom du fichier par défaut
+
+      if (filePath) {
+        const content = this.selectedNote.content; // Remplacez ceci par le contenu que vous souhaitez sauvegarder
+        const result = await ipcRenderer.invoke("file:save", {
+          filePath,
+          content,
+        });
+
+        if (result && result.success) {
+          console.log("Fichier enregistré à :", filePath);
+        } else {
+          console.error("Erreur lors de l'enregistrement du fichier.");
+        }
+      }
     },
     undoAction() {
       alert("Undoing the last action...");
@@ -516,5 +561,4 @@ export default {
 .align-center {
   align-items: center;
 }
-
 </style>

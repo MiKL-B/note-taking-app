@@ -1,10 +1,10 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow , ipcMain, dialog} from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const fs = require('fs'); // Importez fs ici
 
 // The built directory structure
 //
@@ -86,3 +86,48 @@ app.on("activate", () => {
 });
 
 app.whenReady().then(createWindow);
+
+
+// save as
+ipcMain.handle('dialog:saveAs', async (event, defaultFileName) => {
+  const result = await dialog.showSaveDialog(win, {
+      title: 'Save As',
+      defaultPath: defaultFileName, // Utilisez le nom de fichier par défaut reçu
+      buttonLabel: 'Save',
+      filters: [
+          { name: 'Text Files', extensions: ['txt', 'md'] }, // Ajoutez d'autres types de fichiers si nécessaire
+          { name: 'All Files', extensions: ['*'] }
+      ]
+  });
+  return result.filePath;
+});
+ipcMain.handle('file:save', async (event, { filePath, content }) => {
+  fs.writeFileSync(filePath, content);
+  return { success: true };
+});
+// open
+ipcMain.handle('dialog:openFile', async () => {
+  const result = await dialog.showOpenDialog(win, {
+      properties: ['openFile'],
+      filters: [
+          { name: 'Text Files', extensions: ['txt', 'md', 'json'] },
+          { name: 'All Files', extensions: ['*'] }
+      ]
+  });
+  
+  if (result.canceled) {
+      return null;
+  } else {
+      return result.filePaths[0]; // Renvoie le chemin du fichier sélectionné
+  }
+});
+
+ipcMain.handle('file:read', async (event, filePath) => {
+  // Lire le contenu du fichier
+  return fs.readFileSync(filePath, 'utf-8'); // Assurez-vous d'importer le module fs
+});
+
+// exit
+ipcMain.on('app:quit', () => {
+  app.quit(); // Quitter l'application
+});

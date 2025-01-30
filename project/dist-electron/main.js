@@ -1,9 +1,10 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-createRequire(import.meta.url);
+const require2 = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const fs = require2("fs");
 process.env.APP_ROOT = path.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -56,6 +57,44 @@ app.on("activate", () => {
   }
 });
 app.whenReady().then(createWindow);
+ipcMain.handle("dialog:saveAs", async (event, defaultFileName) => {
+  const result = await dialog.showSaveDialog(win, {
+    title: "Save As",
+    defaultPath: defaultFileName,
+    // Utilisez le nom de fichier par défaut reçu
+    buttonLabel: "Save",
+    filters: [
+      { name: "Text Files", extensions: ["txt", "md"] },
+      // Ajoutez d'autres types de fichiers si nécessaire
+      { name: "All Files", extensions: ["*"] }
+    ]
+  });
+  return result.filePath;
+});
+ipcMain.handle("file:save", async (event, { filePath, content }) => {
+  fs.writeFileSync(filePath, content);
+  return { success: true };
+});
+ipcMain.handle("dialog:openFile", async () => {
+  const result = await dialog.showOpenDialog(win, {
+    properties: ["openFile"],
+    filters: [
+      { name: "Text Files", extensions: ["txt", "md", "json"] },
+      { name: "All Files", extensions: ["*"] }
+    ]
+  });
+  if (result.canceled) {
+    return null;
+  } else {
+    return result.filePaths[0];
+  }
+});
+ipcMain.handle("file:read", async (event, filePath) => {
+  return fs.readFileSync(filePath, "utf-8");
+});
+ipcMain.on("app:quit", () => {
+  app.quit();
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,

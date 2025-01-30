@@ -5,15 +5,14 @@
       <summary class="toolbar-btn">File</summary>
       <ul class="toolbar-menu">
         <li @click="onSubMenuClick('new')">New</li>
-        <li>Open</li>
+        <li @click="onSubMenuClick('open')">Open</li>
         <hr class="separator-x" />
-        <li>Save</li>
-        <li>Save as...</li>
+        <li @click="onSubMenuClick('save')">Save</li>
         <hr class="separator-x" />
         <li @click="onSubMenuClick('export')">Export as PDF</li>
         <li>Print...</li>
         <hr class="separator-x" />
-        <li>Exit</li>
+        <li @click="onSubMenuClick('exit')">Exit</li>
       </ul>
     </details>
     <!-- Edit -->

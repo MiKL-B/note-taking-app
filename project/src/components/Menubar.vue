@@ -89,6 +89,7 @@
                 >
                   <div class="color-circle" :class="`bg-${color}`"></div>
                   <span>{{ color }}</span>
+          
                 </li>
               </ul>
             </details>
