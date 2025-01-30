@@ -143,7 +143,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style >
 #toolbar {
   border-top: var(--border);
   border-bottom: var(--border);

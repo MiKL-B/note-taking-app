@@ -52,36 +52,43 @@
       </div>
       <div class="sub-col3" :style="{ height: noteHeight }">
         <div id="col3-header-note">
-          <div
-            id="col3-header-status"
-            class="color-circle"
-            :class="`bg-${selectedNote.color}`"
-          ></div>
-          <input
-            id="input-note-name"
-            type="text"
-            v-model="selectedNote.name"
-            placeholder="Note name here..."
-          />
-          <select v-model="selectedNote.status" @change="changeNoteStatus">
-            <option disabled selected>Status</option>
-            <option value="todo">Todo</option>
-            <option value="inprogress">In progress</option>
-            <option value="finished">Finished</option>
-            <option value="archived">Archived</option>
-          </select>
-          <input
-            v-if="isVisibleMenu"
-            id="input-note-tag"
-            type="text"
-            @keyup.enter="addTagToNote"
-            v-model="inputTagValue"
-            placeholder="Add tags"
-          />
-          <button v-if="isMarkdownMode" @click="togglePreviewMode">
-            <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
-            <i class="fa-solid fa-eye" v-else></i>
-          </button>
+          <div class="flex">
+
+            <div
+              id="col3-header-status"
+              class="color-circle"
+              :class="`bg-${selectedNote.color}`"
+            ></div>
+            <input
+              id="input-note-name"
+              type="text"
+              v-model="selectedNote.name"
+              placeholder="Note name here..."
+            />
+          </div>
+          <div class="flex gap-4">
+            <details v-if="isVisibleMenu" class="toolbar-details">
+              <summary class="app-btn">Add tag</summary>
+              <ul class="toolbar-menu">
+                <li class="flex gap-4 align-center" v-for="tag in tags" :key="tag.id" @click="addTagToNote(tag)">
+                  <i class="fa-solid fa-tag" :style="{ color: tag.color }"></i>
+                  <span>{{ tag.name }}</span>
+                </li>
+              </ul>
+            </details>
+            <select v-model="selectedNote.status" @change="changeNoteStatus">
+              <option disabled selected>Status</option>
+              <option value="todo">Todo</option>
+              <option value="inprogress">In progress</option>
+              <option value="finished">Finished</option>
+              <option value="archived">Archived</option>
+            </select>
+
+            <button v-if="isMarkdownMode" @click="togglePreviewMode">
+              <i class="fa-solid fa-eye-slash" v-if="isPreviewMode"></i>
+              <i class="fa-solid fa-eye" v-else></i>
+            </button>
+          </div>
         </div>
         <div class="note-tag-list">
           <span
@@ -151,7 +158,6 @@ export default {
       color: "",
       searchNote: "",
       tags: [],
-      inputTagValue: "",
       noteCounters: {},
       filter: "",
     };
@@ -332,8 +338,8 @@ export default {
       }
     },
     deleteNote(note) {
-      // const index = this.notes.findIndex((n) => n.id === note.id);
       note.status = "archived";
+      // const index = this.notes.findIndex((n) => n.id === note.id);
       // if (index > -1) {
       //   this.notes.splice(index, 1);
       // }
@@ -377,29 +383,15 @@ export default {
         this.tags.splice(index, 1);
       }
     },
-    addTagToNote() {
-      const existingTag = this.tags.find(
-        (t) => t.name.toLowerCase() === this.inputTagValue.toLowerCase()
+    addTagToNote(tag) {
+      const existingTag = this.selectedNote.tags.find(
+        (t) => t.name.toLowerCase() === tag.name.toLowerCase()
       );
-      if (!existingTag) {
+      if (existingTag) {
         return;
       }
 
-      const tagExistsInNote = this.selectedNote.tags.find(
-        (t) => t.name.toLowerCase() === existingTag.name.toLowerCase()
-      );
-      if (tagExistsInNote) {
-        return;
-      }
-
-      let newTag = {
-        id: existingTag.id,
-        name: existingTag.name,
-        color: existingTag.color,
-      };
-
-      this.selectedNote.tags.push(newTag);
-      this.inputTagValue = "";
+      this.selectedNote.tags.push(tag);
     },
     deleteTagNote(tag) {
       const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
@@ -419,9 +411,6 @@ export default {
           });
         }
       }
-      // this.notes.tags = this.notes.tags.map((tag) => {
-      //   return tag.id === updatedTag.id ? updatedTag : tag;
-      // });
     },
     // markdown
     getMarkdownHtml() {
@@ -472,12 +461,14 @@ export default {
   display: flex;
   padding: 0.2rem 0.2rem 0 0.2rem;
   gap: 0.2rem;
+  justify-content: space-between;
 }
 #col3-header-status {
   width: 12px;
   height: 14px;
   padding: 0 0.4rem;
   margin: auto;
+  display:inline-block
 }
 #input-note-tag {
   width: 100px;
@@ -512,5 +503,14 @@ export default {
 #textedit-preview {
   margin: 1rem;
   overflow-y: scroll;
+}
+.flex{
+  display: flex;
+}
+.gap-4{
+  gap:0.2rem;
+}
+.align-center{
+  align-items: center;
 }
 </style>

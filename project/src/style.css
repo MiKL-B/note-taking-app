@@ -60,7 +60,7 @@ textarea {
   top: 4.5rem;
   bottom: 0;
 }
-button {
+button,.app-btn {
   border: var(--border);
   border-radius: 5px;
   height: 35px;
