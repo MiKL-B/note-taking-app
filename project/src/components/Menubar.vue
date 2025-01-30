@@ -73,7 +73,17 @@
           v-for="tag in tags"
         >
           <span class="menubar-sub-label">
-            <i class="fa-solid fa-tag" :style="{ color: tag.color }"></i>
+            <details class="toolbar-details">
+              <summary>
+                <i class="fa-solid fa-tag" :style="`color: var(--${tag.color}`"></i>
+              </summary>
+              <ul class="toolbar-menu">
+                <li class="flex gap-4 align-center" v-for="color in colors" @click="setColor(tag,color)">
+                  <div class="color-circle" :class="`bg-${color}`"></div>
+                  <span>{{ color }}</span>
+                </li>
+              </ul>
+            </details>
             <input
               class="menubar-input-tag"
               type="text"
@@ -91,7 +101,6 @@
 </template>
 
 <script>
-import getColor from "../utils.js";
 export default {
   name: "Menubar",
   props: [
@@ -107,6 +116,7 @@ export default {
       showDetails: false,
       noteCounters: {},
       selectedFilter: "allnotes",
+      colors: ["blue","red","yellow","green","purple"],
     };
   },
 
@@ -115,11 +125,14 @@ export default {
       this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
+    setColor(tag,color){
+      this.$emit("set-color", tag,color);
+    },
     addTag() {
       let tag = {
         id: Date.now(),
         name: this.generateIncrementedName("New tag"),
-        color: getColor(),
+        color: "blue",
         selected: false,
       };
       this.tags.push(tag);
@@ -196,16 +209,7 @@ export default {
   padding: 0.7rem 0.5rem 0.7rem 2rem;
 }
 
-summary::after {
-  content: "▼";
-  position: absolute;
-  right: 0.5rem;
-  color: var(--grey);
-}
 
-details[open] summary::after {
-  content: "▲";
-}
 #menubar-container-list {
   position: relative;
   height: calc(100vh - 355px);

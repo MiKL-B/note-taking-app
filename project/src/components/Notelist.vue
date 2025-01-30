@@ -21,7 +21,8 @@
           <span
             class="tag"
             v-for="tag in note.tags"
-            :style="{ background: tag.color }"
+            
+            :style="` background: var(--${tag.color} `"
             >{{ tag.name }}</span
           >
         </div>

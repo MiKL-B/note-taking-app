@@ -135,6 +135,12 @@ button:hover {
 .bg-grey{
   background:var(--grey);
 }
+.bg-blue{
+  background:var(--blue);
+}
+.bg-purple{
+  background:var(--purple);
+}
 .text-grey {
   color: var(--grey);
 }

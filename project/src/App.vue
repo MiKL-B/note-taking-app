@@ -24,6 +24,7 @@
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
         @select-filter="handleFilter"
+        @set-color="setColorTag"
       />
     </div>
     <div class="colonne col2" :class="{ invisible: !isVisibleNoteList }">
@@ -53,7 +54,6 @@
       <div class="sub-col3" :style="{ height: noteHeight }">
         <div id="col3-header-note">
           <div class="flex">
-
             <div
               id="col3-header-status"
               class="color-circle"
@@ -70,8 +70,16 @@
             <details v-if="isVisibleMenu" class="toolbar-details">
               <summary class="app-btn">Add tag</summary>
               <ul class="toolbar-menu">
-                <li class="flex gap-4 align-center" v-for="tag in tags" :key="tag.id" @click="addTagToNote(tag)">
-                  <i class="fa-solid fa-tag" :style="{ color: tag.color }"></i>
+                <li
+                  class="flex gap-4 align-center"
+                  v-for="tag in tags"
+                  :key="tag.id"
+                  @click="addTagToNote(tag)"
+                >
+                  <i
+                    class="fa-solid fa-tag"
+                    :style="` color: var(--${tag.color} `"
+                  ></i>
                   <span>{{ tag.name }}</span>
                 </li>
               </ul>
@@ -94,7 +102,7 @@
           <span
             class="tag"
             v-for="tag in selectedNote.tags"
-            :style="{ background: tag.color }"
+            :style="` background: var(--${tag.color} `"
             >{{ tag.name }}
             <span class="delete-tag-btn" @click="deleteTagNote(tag)"
               ><i class="fa-solid fa-xmark"></i
@@ -412,6 +420,10 @@ export default {
         }
       }
     },
+    setColorTag(tag, color) {
+      const index = this.tags.findIndex((t) => t.id === tag.id);
+      this.tags[index].color = color;
+    },
     // markdown
     getMarkdownHtml() {
       return marked(this.selectedNote.content, { sanitize: true });
@@ -468,7 +480,7 @@ export default {
   height: 14px;
   padding: 0 0.4rem;
   margin: auto;
-  display:inline-block
+  display: inline-block;
 }
 #input-note-tag {
   width: 100px;
@@ -504,13 +516,13 @@ export default {
   margin: 1rem;
   overflow-y: scroll;
 }
-.flex{
+.flex {
   display: flex;
 }
-.gap-4{
-  gap:0.2rem;
+.gap-4 {
+  gap: 0.2rem;
 }
-.align-center{
+.align-center {
   align-items: center;
 }
 </style>
