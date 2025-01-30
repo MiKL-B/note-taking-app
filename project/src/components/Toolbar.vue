@@ -36,13 +36,13 @@
           </span>
           <span>Menu</span>
         </li>
-        <li class="toolbar-toggle" @click="toggleNoteListVisibility">
+        <li class="toolbar-toggle" @click="toggleNoteListVisibility" v-if="isNoteSelected">
           <span v-if="isVisibleNoteList">
             <i class="fa-solid fa-check"></i>
           </span>
           <span>Note list</span>
         </li>
-        <li class="toolbar-toggle" @click="toggleNoteBarVisibility">
+        <li class="toolbar-toggle" @click="toggleNoteBarVisibility" v-if="isNoteSelected">
           <span v-if="isVisibleNoteBar">
             <i class="fa-solid fa-check"></i>
           </span>
@@ -87,6 +87,7 @@
 <script>
 export default {
   name: "Toolbar",
+  props:["isNoteSelected"],
   data() {
     return {
       isVisibleMenu: true,

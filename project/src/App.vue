@@ -1,6 +1,7 @@
 <template>
   <Titlebar :name="selectedNote.name" />
   <Toolbar
+    :isNoteSelected="selectedNote"
     @action-clicked="handleAction"
     @toggle-menu="toggleMenu"
     @toggle-notelist="toggleNoteList"
@@ -36,7 +37,11 @@
         <button @click="createNote"><i class="fa-solid fa-plus"></i></button>
       </div>
 
-      <Notelist :notes="filteredNotes" @select-note="selectNote" />
+      <Notelist
+        :notes="filteredNotes"
+        @select-note="selectNote"
+        @delete-note="deleteNote"
+      />
     </div>
     <div
       class="colonne col3"
@@ -411,7 +416,12 @@ export default {
         note.selected = true;
       }
     },
-
+    deleteNote(note) {
+      const index = this.notes.findIndex((n) => n.id === note.id);
+      if (index > -1) {
+        this.notes.splice(index, 1);
+      }
+    },
     changeNoteStatus() {
       this.status = this.selectedNote.status;
       switch (this.status) {

@@ -89,7 +89,6 @@
                 >
                   <div class="color-circle" :class="`bg-${color}`"></div>
                   <span>{{ color }}</span>
-          
                 </li>
               </ul>
             </details>
@@ -154,9 +153,7 @@ export default {
       }
       return `${baseTitle} ${this.noteCounters[baseTitle]}`;
     },
-    // selectTag(tag) {
-    //   this.$emit("select-tag", tag);
-    // },
+
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
     },
