@@ -1,5 +1,5 @@
 <template>
-  <Titlebar :name="getDocumentName" />
+  <Titlebar :name="selectedNote.name" />
   <Toolbar
     @action-clicked="handleAction"
     @toggle-menu="toggleMenu"
@@ -118,12 +118,8 @@
         ></textarea>
       </div>
     </div>
-    <div class="colonne col3" v-else>
-      <textarea
-        class="contentToExport"
-        style="height: calc(100% - 110px)"
-        placeholder="Enter text here..."
-      ></textarea>
+    <div class="colonne col3 img" v-else>
+      <img src="../public/image2.jpg" />
     </div>
   </div>
 
@@ -138,7 +134,7 @@ import Notelist from "./components/Notelist.vue";
 import Statusbar from "./components/Statusbar.vue";
 import Notebar from "./components/Notebar.vue";
 import { marked } from "marked";
-// import { ipcRenderer } from 'electron';
+
 export default {
   name: "App",
   components: {
@@ -189,7 +185,6 @@ export default {
       return count;
     },
     filteredNotes() {
-      console.log(this.filter);
       switch (this.filter) {
         case "todo":
           return this.notes.filter((note) => note.status === "todo");
@@ -281,26 +276,48 @@ export default {
       }
     },
     createNewDocument() {
-      this.createNote()
+      this.createNote();
     },
-    exit(){
-      ipcRenderer.send('app:quit');
+    exit() {
+      ipcRenderer.send("app:quit");
     },
     async openDocument() {
       const filePath = await ipcRenderer.invoke("dialog:openFile");
       if (filePath) {
         const content = await ipcRenderer.invoke("file:read", filePath);
-        const fileName = filePath.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '');
+        const fileName = filePath
+          .replace(/^.*[\\\/]/, "")
+          .replace(/\.[^/.]+$/, "");
+
+        // set status, tags
+        let firstLine = content.split("\n")[0].trim();
+
+        let text = content.split("\n")[1].trim();
+        console.log(firstLine);
+
+        let colorStatus = "";
+
+        switch (firstLine) {
+          case "todo":
+            colorStatus = "red";
+            break;
+          case "inprogress":
+            colorStatus = "yellow";
+            break;
+          case "finished":
+            colorStatus = "green";
+            break;
+        }
+
         let newNote = {
           id: Date.now(),
           name: fileName,
           date: new Date().toLocaleString("fr-FR"),
-          status: "todo",
-          color: "red",
-          content: content,
+          status: firstLine,
+          color: colorStatus || "red",
+          content: text,
           tags: [],
           selected: false,
-          deleted: false,
         };
         this.notes.push(newNote);
       } else {
@@ -317,7 +334,9 @@ export default {
       ); // Passer le nom du fichier par défaut
 
       if (filePath) {
-        const content = this.selectedNote.content; // Remplacez ceci par le contenu que vous souhaitez sauvegarder
+        const status = this.selectedNote.status;
+        const content = status + "\r\n" + this.selectedNote.content;
+
         const result = await ipcRenderer.invoke("file:save", {
           filePath,
           content,
@@ -379,7 +398,6 @@ export default {
         content: "",
         tags: [],
         selected: false,
-        deleted: false,
       };
       this.notes.push(newNote);
     },
@@ -560,5 +578,16 @@ export default {
 }
 .align-center {
   align-items: center;
+}
+.img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: auto;
+}
+img {
+  width: 100%;
 }
 </style>
