@@ -20,7 +20,6 @@
         :countInProgress="getCountInProgress"
         :countFinished="getCountFinished"
         :countArchived="getCountArchived"
-        @select-tag="selectTag"
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
         @select-filter="handleFilter"
@@ -37,11 +36,7 @@
         <button @click="createNote"><i class="fa-solid fa-plus"></i></button>
       </div>
 
-      <Notelist
-        :notes="filteredNotes"
-        @select-note="selectNote"
-        @delete-note="deleteNote"
-      />
+      <Notelist :notes="filteredNotes" @select-note="selectNote" />
     </div>
     <div
       class="colonne col3"
@@ -67,6 +62,7 @@
             />
           </div>
           <div class="flex gap-4">
+        
             <details v-if="isVisibleMenu" class="toolbar-details">
               <summary class="app-btn">Add tag</summary>
               <ul class="toolbar-menu">
@@ -193,6 +189,7 @@ export default {
       return count;
     },
     filteredNotes() {
+      console.log(this.filter);
       switch (this.filter) {
         case "todo":
           return this.notes.filter((note) => note.status === "todo");
@@ -202,12 +199,18 @@ export default {
           return this.notes.filter((note) => note.status === "finished");
         case "archived":
           return this.notes.filter((note) => note.status === "archived");
+        case "":
         case "allnotes":
-        default:
           return this.notes.filter((note) => {
             return note.name
               .toLowerCase()
               .includes(this.searchNote.toLowerCase());
+          });
+        default:
+          return this.notes.filter((note) => {
+            return note.tags.some((tag) =>
+              tag.name.toLowerCase().includes(this.filter.toLowerCase())
+            );
           });
       }
     },
@@ -345,13 +348,7 @@ export default {
         note.selected = true;
       }
     },
-    deleteNote(note) {
-      note.status = "archived";
-      // const index = this.notes.findIndex((n) => n.id === note.id);
-      // if (index > -1) {
-      //   this.notes.splice(index, 1);
-      // }
-    },
+
     changeNoteStatus() {
       this.status = this.selectedNote.status;
       switch (this.status) {
@@ -372,12 +369,6 @@ export default {
     },
 
     // tag
-    selectTag(tag) {
-      this.tags.forEach((t) => {
-        t.selected = false;
-      });
-      tag.selected = true;
-    },
     deleteTag(tag) {
       const index = this.tags.findIndex((t) => t.id === tag.id);
 
@@ -525,4 +516,5 @@ export default {
 .align-center {
   align-items: center;
 }
+
 </style>

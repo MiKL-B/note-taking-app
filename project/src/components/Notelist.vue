@@ -3,12 +3,11 @@
     <span id="notelist-nonotes" v-if="notes.length <= 0"
       >Create your first note!</span
     >
-
     <div
       id="note"
       :class="note.selected ? 'note-selected' : ''"
-      @click="selectNote(note)"
       v-for="note in notes"
+      @click="selectNote(note)"
     >
       <div class="note-content">
         <h4 class="note-title">
@@ -21,7 +20,6 @@
           <span
             class="tag"
             v-for="tag in note.tags"
-            
             :style="` background: var(--${tag.color} `"
             >{{ tag.name }}</span
           >
@@ -31,15 +29,11 @@
         </p>
         <span>{{ note.date }}</span>
       </div>
-      <div class="note-trash">
-        <i class="fa-solid fa-trash-can" @click="deleteNote(note)"></i>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "Notelist",
   props: ["notes"],
@@ -47,9 +41,6 @@ export default {
   methods: {
     selectNote(note) {
       this.$emit("select-note", note);
-    },
-    deleteNote(note) {
-      this.$emit("delete-note", note);
     },
   },
 };
@@ -85,19 +76,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.note-trash {
-  display: flex;
-  margin: auto;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.note-trash i {
-  color: var(--red);
-}
-.note-trash i:hover {
-  cursor: pointer;
-}
+
 .note-title {
   display: flex;
   align-items: center;

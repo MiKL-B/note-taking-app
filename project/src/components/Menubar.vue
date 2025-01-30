@@ -68,17 +68,25 @@
       <ul id="menubar-tags-list">
         <li
           id="menubar-tag"
-          @click="selectTag(tag)"
+          @click="selectFilter(tag.name)"
+          :class="{ filterselected: selectedFilter === tag.name }"
           class="menubar-sub-item"
           v-for="tag in tags"
         >
           <span class="menubar-sub-label">
             <details class="toolbar-details">
               <summary>
-                <i class="fa-solid fa-tag" :style="`color: var(--${tag.color}`"></i>
+                <i
+                  class="fa-solid fa-tag"
+                  :style="`color: var(--${tag.color}`"
+                ></i>
               </summary>
               <ul class="toolbar-menu">
-                <li class="flex gap-4 align-center" v-for="color in colors" @click="setColor(tag,color)">
+                <li
+                  class="flex gap-4 align-center"
+                  v-for="color in colors"
+                  @click="setColor(tag, color)"
+                >
                   <div class="color-circle" :class="`bg-${color}`"></div>
                   <span>{{ color }}</span>
                 </li>
@@ -116,7 +124,7 @@ export default {
       showDetails: false,
       noteCounters: {},
       selectedFilter: "allnotes",
-      colors: ["blue","red","yellow","green","purple"],
+      colors: ["blue", "red", "yellow", "green", "purple"],
     };
   },
 
@@ -125,8 +133,8 @@ export default {
       this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
-    setColor(tag,color){
-      this.$emit("set-color", tag,color);
+    setColor(tag, color) {
+      this.$emit("set-color", tag, color);
     },
     addTag() {
       let tag = {
@@ -145,9 +153,9 @@ export default {
       }
       return `${baseTitle} ${this.noteCounters[baseTitle]}`;
     },
-    selectTag(tag) {
-      this.$emit("select-tag", tag);
-    },
+    // selectTag(tag) {
+    //   this.$emit("select-tag", tag);
+    // },
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
     },
@@ -208,7 +216,6 @@ export default {
   gap: 0.5rem;
   padding: 0.7rem 0.5rem 0.7rem 2rem;
 }
-
 
 #menubar-container-list {
   position: relative;
