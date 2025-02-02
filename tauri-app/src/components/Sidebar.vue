@@ -7,9 +7,9 @@
     >
       <span class="sidebar-sub-label">
         <File />
-        <span>All notes</span>
+        <span>{{ $t("allnotes") }}</span>
       </span>
-      <span class="text-grey">{{ countAllNotes }}</span>
+      <span class="text-dark">{{ countAllNotes }}</span>
     </li>
     <li
       class="sidebar-item"
@@ -18,9 +18,9 @@
     >
       <span class="sidebar-sub-label">
         <div class="color-circle bg-red"></div>
-        <span>Todo</span>
+        <span>{{ $t("todo") }}</span>
       </span>
-      <span class="text-grey">{{ countTodo }}</span>
+      <span class="text-dark">{{ countTodo }}</span>
     </li>
     <li
       class="sidebar-item"
@@ -29,9 +29,9 @@
     >
       <span class="sidebar-sub-label">
         <div class="color-circle bg-yellow"></div>
-        <span>In progress</span>
+        <span>{{ $t("inprogress") }}</span>
       </span>
-      <span class="text-grey">{{ countInProgress }}</span>
+      <span class="text-dark">{{ countInProgress }}</span>
     </li>
     <li
       class="sidebar-item"
@@ -40,9 +40,9 @@
     >
       <span class="sidebar-sub-label">
         <div class="color-circle bg-green"></div>
-        <span>Finished</span>
+        <span>{{ $t("finished") }}</span>
       </span>
-      <span class="text-grey">{{ countFinished }}</span>
+      <span class="text-dark">{{ countFinished }}</span>
     </li>
     <li
       class="sidebar-item"
@@ -51,16 +51,16 @@
     >
       <span class="sidebar-sub-label">
         <Archive />
-        <span>Archived</span>
+        <span>{{ $t("archived") }}</span>
       </span>
-      <span class="text-grey">{{ countArchived }}</span>
+      <span class="text-dark">{{ countArchived }}</span>
     </li>
     <li class="sidebar-item sidebar-label">
       <span class="sidebar-sub-label">
         <Tags />
         <span>Tags</span>
       </span>
-      <span id="sidebar-tags-btn" @click="addTag"><Plus /></span>
+      <span id="sidebar-tags-btn" @click="addTag"><Plus class="text-dark"/></span>
     </li>
     <div id="sidebar-container-list">
       <ul id="sidebar-tags-list">

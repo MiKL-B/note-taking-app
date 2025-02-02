@@ -32,7 +32,7 @@
         <input
           type="text"
           v-model="searchNote"
-          placeholder="Filter notes by name..."
+          :placeholder="$t('filter_note_by_name')"
         />
         <button @click="createNote"><Plus /></button>
       </div>
@@ -62,7 +62,7 @@
               id="input-note-name"
               type="text"
               v-model="selectedNote.name"
-              placeholder="Note name here..."
+              :placeholder="$t('note_name_here')"
             />
           </div>
           <div class="flex gap-4">
@@ -75,17 +75,17 @@
                   :key="tag.id"
                   @click="addTagToNote(tag)"
                 >
-                  <Tag :style="` color: var(--${tag.color} `" />
+                  <Tag :style="`color: var(--${tag.color} `" />
                   <span>{{ tag.name }}</span>
                 </li>
               </ul>
             </details>
             <select v-model="selectedNote.status" @change="changeNoteStatus">
-              <option disabled selected>Status</option>
-              <option value="todo">Todo</option>
-              <option value="inprogress">In progress</option>
-              <option value="finished">Finished</option>
-              <option value="archived">Archived</option>
+              <option disabled selected>{{$t('status')}}</option>
+              <option value="todo">{{$t('todo')}}</option>
+              <option value="inprogress">{{$t('inprogress')}}</option>
+              <option value="finished">{{$t('finished')}}</option>
+              <option value="archived">{{$t('archived')}}</option>
             </select>
 
             <button v-if="isMarkdownMode" @click="togglePreviewMode">
@@ -102,26 +102,10 @@
             >{{ tag.name }}
             <span class="delete-tag-btn" @click="deleteTagNote(tag)"
               ><X />
-            
-          </span>
+            </span>
           </span>
         </div>
-        <!-- <div
-          id="textedit-preview"
-          v-if="isPreviewMode && isMarkdownMode"
-          v-html="getMarkdownHtml()"
-          style="height: calc(100% - 55px)"
-        ></div>
-        <textarea
-          v-else
-          class="contentToExport"
-          v-model="selectedNote.content"
-          placeholder="Note content here..."
-        ></textarea> -->
-        <!-- <MarkdownEditor
-          :selectedNoteContent="selectedNote.content"
-          :isPreviewMode="isPreviewMode && isMarkdownMode"
-        /> -->
+
         <div
           id="markdown-container"
           v-if="isPreviewMode && isMarkdownMode"
@@ -129,9 +113,8 @@
         ></div>
         <textarea
           v-else
-          placeholder="Enter text here..."
+          :placeholder="$t('enter_text_here')"
           v-model="selectedNote.content"
-        
         ></textarea>
       </div>
     </div>
@@ -174,7 +157,7 @@ export default {
     Eye,
     EyeOff,
     Tag,
-    X
+    X,
   },
   data() {
     return {
@@ -612,13 +595,13 @@ export default {
 }
 .delete-tag-btn {
   cursor: pointer;
-  color:var(--dark2)
+  color: var(--dark2);
 }
 .note-tag-list {
   flex-wrap: wrap;
   overflow-y: scroll;
   max-height: 26px;
-  height:26px;
+  height: 26px;
   display: flex;
   gap: 0.2rem;
   padding-left: 0.2rem;

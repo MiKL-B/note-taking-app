@@ -1,7 +1,7 @@
 <template>
   <div id="notelist">
     <span id="notelist-nonotes" v-if="notes.length <= 0"
-      >Create your first note!</span
+      >{{ $t("create_first_note") }}</span
     >
     <div
       id="note-container"

@@ -163,8 +163,8 @@ button:hover {
 .bg-purple {
   background: var(--purple);
 }
-.text-grey {
-  color: var(--grey);
+.text-dark {
+  color: var(--dark);
 }
 .tag {
   font-size: 12px;
@@ -181,7 +181,9 @@ button:hover {
   height: calc(100% - 60px);
   overflow-y: auto;
 }
-
+#markdown-container img{
+  width: 75%;
+}
 #markdown-container h1 {
   color: blue;
 }

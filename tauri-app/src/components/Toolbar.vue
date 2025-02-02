@@ -27,7 +27,7 @@
       </ul>
     </details>
     <!-- View -->
-    <details class="toolbar-details" @click="handleClickOnDetails">
+    <!-- <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">{{ $t("view") }}</summary>
       <ul class="toolbar-menu">
         <li class="toolbar-toggle" @click="toggleMenuVisibility">
@@ -57,7 +57,7 @@
           <span>{{ $t("notebar") }}</span>
         </li>
       </ul>
-    </details>
+    </details> -->
     <!-- Settings -->
     <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">{{ $t("settings") }}</summary>
