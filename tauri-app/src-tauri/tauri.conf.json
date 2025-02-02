@@ -14,7 +14,7 @@
       {
         "title": "tauri-app",
         "minHeight": 600,
-        "minWidth": 800,
+        "minWidth": 1020,
         "decorations": false
       }
     ],

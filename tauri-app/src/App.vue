@@ -36,7 +36,6 @@
         />
         <button @click="createNote"><Plus /></button>
       </div>
-
       <Notelist
         :notes="filteredNotes"
         @select-note="selectNote"
@@ -68,7 +67,7 @@
           </div>
           <div class="flex gap-4">
             <details v-if="isVisibleMenu" class="toolbar-details">
-              <summary class="app-btn">Add tag</summary>
+              <summary class="app-btn" style="font-size: 14px">Add tag</summary>
               <ul class="toolbar-menu">
                 <li
                   class="flex gap-4 align-center"
@@ -102,8 +101,9 @@
             :style="` background: var(--${tag.color} `"
             >{{ tag.name }}
             <span class="delete-tag-btn" @click="deleteTagNote(tag)"
-              ><i class="fa-solid fa-xmark"></i
-            ></span>
+              ><X />
+            
+          </span>
           </span>
         </div>
         <!-- <div
@@ -118,19 +118,33 @@
           v-model="selectedNote.content"
           placeholder="Note content here..."
         ></textarea> -->
-        <MarkdownEditor
-          :initialMarkdown="selectedNote.content"
+        <!-- <MarkdownEditor
+          :selectedNoteContent="selectedNote.content"
           :isPreviewMode="isPreviewMode && isMarkdownMode"
-        />
+        /> -->
+        <div
+          id="markdown-container"
+          v-if="isPreviewMode && isMarkdownMode"
+          v-html="getMarkdownHtml()"
+        ></div>
+        <textarea
+          v-else
+          placeholder="Enter text here..."
+          v-model="selectedNote.content"
+        
+        ></textarea>
       </div>
     </div>
     <div class="column-note img" v-else>
       <img src="/image3.png" />
     </div>
   </div>
-  <!-- 
-  <button @click="toggleMarkdown">toggle markdown</button> -->
-  <Statusbar />
+  <Notification
+    :message="messageNotification"
+    :color="colorNotification"
+    :showNotification="isVisibleNotification"
+  />
+  <Statusbar :noteLengt="getContentNoteLength" />
 </template>
 
 <script>
@@ -139,9 +153,13 @@ import Toolbar from "./components/Toolbar.vue";
 import Sidebar from "./components/Sidebar.vue";
 import Notelist from "./components/Notelist.vue";
 import Notebar from "./components/Notebar.vue";
-import MarkdownEditor from "./components/MarkdownEditor.vue";
 import Statusbar from "./components/Statusbar.vue";
-import { Plus, Eye, EyeOff, Tag } from "lucide-vue-next";
+import { Plus, Eye, EyeOff, Tag, X } from "lucide-vue-next";
+import { open } from "@tauri-apps/plugin-dialog";
+import { readTextFile } from "@tauri-apps/plugin-fs";
+import Notification from "./components/Notification.vue";
+import { marked } from "marked";
+
 export default {
   name: "App",
   components: {
@@ -150,12 +168,13 @@ export default {
     Sidebar,
     Notelist,
     Notebar,
-    MarkdownEditor,
+    Notification,
     Statusbar,
     Plus,
     Eye,
     EyeOff,
     Tag,
+    X
   },
   data() {
     return {
@@ -171,7 +190,10 @@ export default {
       tags: [],
       noteCounters: {},
       filter: "",
-      oldFilter: "",
+      timerNotification: null,
+      isVisibleNotification: false,
+      messageNotification: "",
+      colorNotification: "",
     };
   },
   computed: {
@@ -235,6 +257,9 @@ export default {
     },
   },
   methods: {
+    getMarkdownHtml() {
+      return marked(this.selectedNoteContent, { sanitize: true });
+    },
     toggleMarkdown() {
       this.isPreviewMode = !this.isPreviewMode;
     },
@@ -280,58 +305,63 @@ export default {
     createNewDocument() {
       this.createNote();
     },
+    async openDocument() {
+      const selectedFile = await open({
+        multiple: false,
+        filters: [{ name: "Fichiers texte", extensions: ["txt", "md"] }],
+      });
+      const fileName = selectedFile
+        .replace(/^.*[\\\/]/, "")
+        .replace(/\.[^/.]+$/, "");
+      // let firstLine = content.split("\n")[0].trim();
+      // let text = "";
+      // if (
+      //   firstLine === "todo" ||
+      //   firstLine === "inprogress" ||
+      //   firstLine === "finished" ||
+      //   firstLine === "archived"
+      // ) {
+      //   text = content.split("\n")[1].trim();
+      // }
+      // text = content
+      // console.log(firstLine);
 
-    // async openDocument() {
-    //   const filePath = await ipcRenderer.invoke("dialog:openFile");
-    //   if (filePath) {
-    //     const content = await ipcRenderer.invoke("file:read", filePath);
-    //     const fileName = filePath
-    //       .replace(/^.*[\\\/]/, "")
-    //       .replace(/\.[^/.]+$/, "");
+      // let colorStatus = "";
 
-    //     let firstLine = content.split("\n")[0].trim();
-    //     let text = "";
-    //     if (
-    //       firstLine === "todo" ||
-    //       firstLine === "inprogress" ||
-    //       firstLine === "finished" ||
-    //       firstLine === "archived"
-    //     ) {
-    //       text = content.split("\n")[1].trim();
-    //     }
-    //     text = content
-    //     console.log(firstLine);
+      // switch (firstLine) {
+      //   case "todo":
+      //     colorStatus = "red";
+      //     break;
+      //   case "inprogress":
+      //     colorStatus = "yellow";
+      //     break;
+      //   case "finished":
+      //     colorStatus = "green";
+      //     break;
+      // }
 
-    //     let colorStatus = "";
+      if (selectedFile) {
+        try {
+          const content = await readTextFile(selectedFile);
+          console.log(content);
+          let newNote = {
+            id: Date.now(),
+            name: fileName,
+            date: new Date().toLocaleString("fr-FR"),
+            status: "",
+            color: "red",
+            content: content,
+            tags: [],
+            selected: false,
+          };
 
-    //     switch (firstLine) {
-    //       case "todo":
-    //         colorStatus = "red";
-    //         break;
-    //       case "inprogress":
-    //         colorStatus = "yellow";
-    //         break;
-    //       case "finished":
-    //         colorStatus = "green";
-    //         break;
-    //     }
-
-    //     let newNote = {
-    //       id: Date.now(),
-    //       name: fileName,
-    //       date: new Date().toLocaleString("fr-FR"),
-    //       status: firstLine,
-    //       color: colorStatus || "red",
-    //       content: text,
-    //       tags: [],
-    //       selected: false,
-    //     };
-
-    //     this.notes.push(newNote);
-    //   } else {
-    //     console.error("Aucun fichier sélectionné.");
-    //   }
-    // },
+          this.notes.push(newNote);
+          this.showNotification(newNote.name + " well created!", "green");
+        } catch (error) {
+          console.error("Erreur lors de la lecture du fichier : ", error);
+        }
+      }
+    },
 
     // async saveDocument() {
     //   if (!this.selectedNote) {
@@ -410,6 +440,16 @@ export default {
         selected: false,
       };
       this.notes.push(newNote);
+      this.showNotification(newNote.name + " well created!", "green");
+    },
+    showNotification(message, color) {
+      this.isVisibleNotification = true;
+      this.messageNotification = message;
+      this.colorNotification = color;
+      const duration = 2000;
+      this.timerNotification = setTimeout(() => {
+        this.isVisibleNotification = false;
+      }, duration);
     },
     selectNote(note) {
       if (note.selected) {
@@ -514,6 +554,9 @@ export default {
       html2pdf().from(element).set(opt).save();
     },
   },
+  beforeDestroy() {
+    clearTimeout(this.timerNotification);
+  },
 };
 </script>
 <style>
@@ -533,6 +576,7 @@ export default {
 }
 .sub-col3 {
   position: relative;
+  max-width: calc(100vw - 460px);
 }
 #col3-header-note {
   display: flex;
@@ -568,11 +612,13 @@ export default {
 }
 .delete-tag-btn {
   cursor: pointer;
+  color:var(--dark2)
 }
 .note-tag-list {
   flex-wrap: wrap;
   overflow-y: scroll;
-  max-height: 28px;
+  max-height: 26px;
+  height:26px;
   display: flex;
   gap: 0.2rem;
   padding-left: 0.2rem;
@@ -597,6 +643,7 @@ export default {
   align-items: center;
   width: 50%;
   margin: auto;
+  user-select: none;
 }
 img {
   width: 100%;

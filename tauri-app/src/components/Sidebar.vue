@@ -114,6 +114,7 @@ export default {
     "countFinished",
     "countArchived",
   ],
+  emits: ["select-filter", "set-color","delete-tag","update-tag-name"],
   components: {
     File,
     Archive,
@@ -246,12 +247,13 @@ export default {
 }
 .tag-trash {
   display: flex;
+  width: 24px;
   justify-content: space-between;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-.tag-trash  {
+.tag-trash {
   color: var(--red);
 }
 .tag-trash:hover {

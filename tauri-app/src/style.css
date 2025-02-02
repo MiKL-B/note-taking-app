@@ -16,15 +16,15 @@
 [data-theme="light"] {
   --bg-titlebar: var(--lightgrey);
   --bg-color: var(--white);
-  --text-color:var(--dark2);
-  --border:1px solid #e4e4e7;
+  --text-color: var(--dark2);
+  --border: 1px solid #e4e4e7;
 }
 
 [data-theme="dark"] {
   --bg-titlebar: var(--dark2);
   --bg-color: var(--dark2);
-  --text-color:var(--dark);
-  --border:1px solid var(--dark);
+  --text-color: var(--dark);
+  --border: 1px solid var(--dark);
 }
 * {
   margin: 0;
@@ -37,11 +37,13 @@
 
 body {
   overflow: hidden;
-  background:var(--bg-color);
+  background: var(--bg-color);
 }
-svg {
+.lucide {
+  display: flex;
   width: 16px;
-  height:14px;
+  height: 16px;
+  align-items: center;
 }
 input,
 select {
@@ -78,7 +80,8 @@ textarea {
   top: 4.5rem;
   bottom: 0;
 }
-button,.app-btn {
+button,
+.app-btn {
   border: var(--border);
   border-radius: 5px;
   height: 35px;
@@ -89,6 +92,7 @@ button,.app-btn {
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   color: var(--dark2);
 }
+
 button:hover {
   cursor: pointer;
   background: var(--lightgrey);
@@ -150,14 +154,14 @@ button:hover {
 .bg-green {
   background: var(--green);
 }
-.bg-grey{
-  background:var(--grey);
+.bg-grey {
+  background: var(--grey);
 }
-.bg-blue{
-  background:var(--blue);
+.bg-blue {
+  background: var(--blue);
 }
-.bg-purple{
-  background:var(--purple);
+.bg-purple {
+  background: var(--purple);
 }
 .text-grey {
   color: var(--grey);
@@ -165,27 +169,30 @@ button:hover {
 .tag {
   font-size: 12px;
   color: var(--lightgrey);
-  display: inline-block;
+  display: flex;
+  gap:0.2rem;
   margin: 0.2rem 0;
   padding: 0.1rem 0.2rem;
   border-radius: 5px;
 }
 /* markdown editor */
-#markdown-container
-{
-    border:1px solid red;
+#markdown-container {
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow-y: auto;
 }
-#markdown-container h1{
-  color:blue;
+
+#markdown-container h1 {
+  color: blue;
 }
-#markdown-container pre{
-  background:var(--lightgrey);
+#markdown-container pre {
+  background: var(--lightgrey);
   border-radius: 5px;
-  padding:0.5rem;
+  padding: 0.5rem;
   overflow-x: auto;
   -moz-tab-size: 2;
   tab-size: 2;
 }
-#markdown-container code{
-  color: var(--dark2) ;
+#markdown-container code {
+  color: var(--dark2);
 }

@@ -113,10 +113,9 @@ export default {
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-}
-.note-trash {
   color: var(--red);
 }
+
 .note-trash:hover {
   cursor: pointer;
 }
