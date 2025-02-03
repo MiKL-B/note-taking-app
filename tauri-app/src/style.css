@@ -1,7 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import "./markdown.css";
 :root {
   --white: #ffffff;
   --lightgrey: #f9f9fa;
+  --lightgrey2:#f4f4f5;
+  --lightgrey3:#e4e4e7;
   --border: 1px solid #e4e4e7;
   --grey: #e3e3e4;
   --grey2: #bbb;
@@ -12,20 +15,52 @@
   --yellow: #e5c07b;
   --blue: #61afef;
   --purple: #c678dd;
+
+  /* EVERFOREST */
+  --bgdim:#293136;
+  --bg0:#333C43;
+  --bg1:#3A464C;
+  --bg2:#434F55;
+  --bg3:#4D5960;
+  --bg4:#555F66;
+  --bg5:#5D6B66;
+
+  --bg_red:#5C3F4F;
+  --bg_visual:#59464C;
+  --bg_yellow:#55544A;
+  --bg_green:#48584E;
+  --bg_blue:#3F5865;
+
+  --color_red:#E67E80;
+  --color_orange:#E69875;
+  --color_yellow:#DBBC7F;
+  --color_green:#A7C080;
+  --color_blue:#7FBBB3;
+  --color_aqua:#83C092;
+  --color_purple:#D699B6;
+
 }
 [data-theme="light"] {
   --bg-titlebar: var(--lightgrey);
   --bg-color: var(--white);
+  --bg-toolbar:var(--lightgrey2);
+  --bg-sidebar:var(--lightgrey);
+  --text-titlebar:var(--dark2);
   --text-color: var(--dark2);
   --border: 1px solid #e4e4e7;
 }
 
-[data-theme="dark"] {
-  --bg-titlebar: var(--dark2);
-  --bg-color: var(--dark2);
-  --text-color: var(--dark);
+/* everforest */
+/* [data-theme="dark"] {
+  --bg-titlebar: var(--bgdim);
+  --text-titlebar:#7A8478;
+  --bg-toolbar:var(--bgdim);
+  --bg-color: var(--bgdim);
+  --bg-sidebar:#282c34;
+  --text-color: #7A8478;
   --border: 1px solid var(--dark);
-}
+} */
+
 * {
   margin: 0;
   padding: 0;
@@ -74,9 +109,10 @@ textarea {
   outline: none;
   resize: none;
   width: 100%;
+  height:100%;
   border: none;
   padding: 0.5rem;
-  position: absolute;
+  /* position: absolute; */
   top: 4.5rem;
   bottom: 0;
 }
@@ -175,26 +211,4 @@ button:hover {
   padding: 0.1rem 0.2rem;
   border-radius: 5px;
 }
-/* markdown editor */
-#markdown-container {
-  width: 100%;
-  height: calc(100% - 60px);
-  overflow-y: auto;
-}
-#markdown-container img{
-  width: 75%;
-}
-#markdown-container h1 {
-  color: blue;
-}
-#markdown-container pre {
-  background: var(--lightgrey);
-  border-radius: 5px;
-  padding: 0.5rem;
-  overflow-x: auto;
-  -moz-tab-size: 2;
-  tab-size: 2;
-}
-#markdown-container code {
-  color: var(--dark2);
-}
+

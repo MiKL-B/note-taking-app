@@ -66,8 +66,8 @@
             />
           </div>
           <div class="flex gap-4">
-            <details v-if="isVisibleMenu" class="toolbar-details">
-              <summary class="app-btn" style="font-size: 14px">Add tag</summary>
+            <details v-if="tags.length > 0" class="toolbar-details">
+              <summary class="app-btn" style="font-size: 14px">Tag +</summary>
               <ul class="toolbar-menu">
                 <li
                   class="flex gap-4 align-center"
@@ -81,16 +81,19 @@
               </ul>
             </details>
             <select v-model="selectedNote.status" @change="changeNoteStatus">
-              <option disabled selected>{{$t('status')}}</option>
-              <option value="todo">{{$t('todo')}}</option>
-              <option value="inprogress">{{$t('inprogress')}}</option>
-              <option value="finished">{{$t('finished')}}</option>
-              <option value="archived">{{$t('archived')}}</option>
+              <option disabled selected>{{ $t("status") }}</option>
+              <option value="todo">{{ $t("todo") }}</option>
+              <option value="inprogress">{{ $t("inprogress") }}</option>
+              <option value="finished">{{ $t("finished") }}</option>
+              <option value="archived">{{ $t("archived") }}</option>
             </select>
 
-            <button v-if="isMarkdownMode" @click="togglePreviewMode">
+            <button v-if="!showBoth" @click="togglePreviewMode">
               <EyeOff v-if="isPreviewMode" />
               <Eye v-else />
+            </button>
+            <button @click="toggleShowBoth">
+              <Columns2 />
             </button>
           </div>
         </div>
@@ -105,21 +108,37 @@
             </span>
           </span>
         </div>
+        <div id="bothColumns" v-if="showBoth">
+          <div>
+            <textarea
+              :placeholder="$t('enter_text_here')"
+              v-model="selectedNote.content"
+              ref="div1"
+              @scroll="syncScroll('div1')"
+            ></textarea>
+          </div>
+          <hr id="separator-column" />
+          <div
+            id="markdown-container"
+            v-html="getMarkdownHtml()"
+            ref="div2"
+            @scroll="syncScroll('div2')"
+          ></div>
+        </div>
 
-        <div
-          id="markdown-container"
-          v-if="isPreviewMode && isMarkdownMode"
-          v-html="getMarkdownHtml()"
-        ></div>
-        <textarea
-          v-else
-          :placeholder="$t('enter_text_here')"
-          v-model="selectedNote.content"
-        ></textarea>
+        <div id="oneView" v-else>
+          <div v-if="!isPreviewMode">
+            <textarea
+              :placeholder="$t('enter_text_here')"
+              v-model="selectedNote.content"
+            ></textarea>
+          </div>
+          <div v-else id="markdown-container" v-html="getMarkdownHtml()"></div>
+        </div>
       </div>
     </div>
     <div class="column-note img" v-else>
-      <img src="/image3.png" />
+      <img src="/image3-removebg-preview.png" />
     </div>
   </div>
   <Notification
@@ -127,7 +146,7 @@
     :color="colorNotification"
     :showNotification="isVisibleNotification"
   />
-  <Statusbar :noteLengt="getContentNoteLength" />
+  <Statusbar :noteLength="getContentNoteLength" />
 </template>
 
 <script>
@@ -137,7 +156,7 @@ import Sidebar from "./components/Sidebar.vue";
 import Notelist from "./components/Notelist.vue";
 import Notebar from "./components/Notebar.vue";
 import Statusbar from "./components/Statusbar.vue";
-import { Plus, Eye, EyeOff, Tag, X } from "lucide-vue-next";
+import { Plus, Eye, EyeOff, Tag, X, Columns2 } from "lucide-vue-next";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import Notification from "./components/Notification.vue";
@@ -158,6 +177,7 @@ export default {
     EyeOff,
     Tag,
     X,
+    Columns2,
   },
   data() {
     return {
@@ -166,6 +186,7 @@ export default {
       isVisibleNoteBar: true,
       isMarkdownMode: true,
       isPreviewMode: false,
+      showBoth: false,
       notes: [],
       status: "",
       color: "",
@@ -245,6 +266,10 @@ export default {
     },
     toggleMarkdown() {
       this.isPreviewMode = !this.isPreviewMode;
+    },
+    toggleShowBoth() {
+      this.showBoth = !this.showBoth;
+      console.log(this.showBoth);
     },
     handleFilter(filter) {
       this.filter = filter;
@@ -339,7 +364,10 @@ export default {
           };
 
           this.notes.push(newNote);
-          this.showNotification(newNote.name + " well created!", "green");
+          this.showNotification(
+            this.$t("note_created", { note_name: newNote.name }),
+            "green"
+          );
         } catch (error) {
           console.error("Erreur lors de la lecture du fichier : ", error);
         }
@@ -410,11 +438,12 @@ export default {
         this.noteCounters[baseTitle] += 1;
       }
       return `${baseTitle} ${this.noteCounters[baseTitle]}`;
-    }, // note
+    },
+    // note
     createNote() {
       let newNote = {
         id: Date.now(),
-        name: this.generateIncrementedName("New note"),
+        name: this.generateIncrementedName("Note"),
         date: new Date().toLocaleString("fr-FR"),
         status: "todo",
         color: "red",
@@ -423,7 +452,10 @@ export default {
         selected: false,
       };
       this.notes.push(newNote);
-      this.showNotification(newNote.name + " well created!", "green");
+      this.showNotification(
+        this.$t("note_created", { note_name: newNote.name }),
+        "green"
+      );
     },
     showNotification(message, color) {
       this.isVisibleNotification = true;
@@ -448,6 +480,10 @@ export default {
       const index = this.notes.findIndex((n) => n.id === note.id);
       if (index > -1) {
         this.notes.splice(index, 1);
+        this.showNotification(
+          this.$t("note_deleted", { note_name: note.name }),
+          "green"
+        );
       }
     },
     changeNoteStatus() {
@@ -536,6 +572,16 @@ export default {
       // Générer le PDF
       html2pdf().from(element).set(opt).save();
     },
+    syncScroll(source) {
+      const div1 = this.$refs.div1;
+      const div2 = this.$refs.div2;
+
+      if (source === "div1") {
+        div2.scrollTop = div1.scrollTop;
+      } else {
+        div1.scrollTop = div2.scrollTop;
+      }
+    },
   },
   beforeDestroy() {
     clearTimeout(this.timerNotification);
@@ -550,7 +596,7 @@ export default {
 
 .column-sidebar {
   max-width: 200px;
-  background: var(--lightgrey);
+  background: var(--bg-sidebar);
   border-right: var(--border);
 }
 .column-notelist {
@@ -630,5 +676,25 @@ export default {
 }
 img {
   width: 100%;
+}
+#bothColumns {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  height: calc(100vh - 205px);
+}
+#separator-column {
+  border-left: none;
+  border-right: 1px solid var(--grey);
+  height: 100%;
+  margin: 0 1rem;
+}
+#oneView {
+  height: calc(100vh - 205px);
+}
+#oneView div {
+  height: 100%;
+}
+#bothColumns div {
+  height: 100%;
 }
 </style>

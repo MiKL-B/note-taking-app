@@ -1,16 +1,27 @@
 <template>
-  <div
-    id="notification"
-    v-if="showNotification"
-    :style="`background:var(--${color})`"
-  >
+  <div v-if="showNotification" id="notification" :style="`background:var(--${color})`">
+    <span v-if="color === 'green'">
+      <CircleCheck />
+    </span>
+    <span v-else-if="color === 'yellow'">
+      <Info />
+    </span>
+    <span v-else-if="color === 'red'">
+      <TriangleAlert />
+    </span>
     {{ message }}
   </div>
 </template>
 
 <script>
+import { CircleCheck, Info, TriangleAlert } from "lucide-vue-next";
 export default {
   name: "Notification",
+  components: {
+    CircleCheck,
+    Info,
+    TriangleAlert,
+  },
   props: {
     showNotification: {
       type: Boolean,
@@ -25,45 +36,22 @@ export default {
       default: "",
     },
   },
-  data() {
-    return {
-    //   showNotification: false,
-    //   timerId: null,
-    };
-  },
-  watch: {
-    // active(newValue) {
-    //   if (newValue) {
-    //     this.show();
-    //   }
-    // },
-  },
-  methods: {
-    // show() {
-    //   this.showNotification = true;
-    //   const duration = 2000;
-    //   this.timerId = setTimeout(() => {
-    //     this.showNotification = false;
-    //   }, duration);
-    // },
-  },
-//   beforeDestroy() {
-//     clearTimeout(this.timerId);
-//   },
 };
 </script>
 
 <style>
 #notification {
+  display: flex;
+  align-items: center;
   border-radius: 5px;
   color: white;
   position: absolute;
   bottom: 30px;
   right: 0;
   width: 400px;
-  height: 75px;
+  gap: 0.5rem;
   z-index: 5;
   margin: 0.5rem;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 </style>

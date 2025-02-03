@@ -143,7 +143,7 @@ export default {
     addTag() {
       let tag = {
         id: Date.now(),
-        name: this.generateIncrementedName("New tag"),
+        name: this.generateIncrementedName("Tag"),
         color: "blue",
         selected: false,
       };

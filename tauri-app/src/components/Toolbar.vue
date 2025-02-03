@@ -62,12 +62,12 @@
     <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">{{ $t("settings") }}</summary>
       <ul class="toolbar-menu">
-        <li class="toolbar-toggle" @click="toggleMarkdownMode">
+        <!-- <li class="toolbar-toggle" @click="toggleMarkdownMode">
           <span v-if="isMarkdownMode">
             <Check />
           </span>
           <span>{{ $t("markdown") }}</span>
-        </li>
+        </li> -->
         <ThemeSwitcher />
         <LanguageSwitcher />
       </ul>
@@ -90,7 +90,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 const appWindow = getCurrentWindow();
 export default {
   name: "Toolbar",
-  props:["isNoteSelected"],
+  props: ["isNoteSelected"],
   components: {
     Check,
     ThemeSwitcher,
@@ -101,7 +101,7 @@ export default {
       isVisibleMenu: true,
       isVisibleNoteList: true,
       isVisibleNoteBar: true,
-      isMarkdownMode: false,
+      // isMarkdownMode: false,
     };
   },
   mounted() {
@@ -142,10 +142,10 @@ export default {
       this.isVisibleNoteBar = !this.isVisibleNoteBar;
       this.$emit("toggle-notebar", this.isVisibleNoteBar);
     },
-    toggleMarkdownMode(){
-      this.isMarkdownMode = !this.isMarkdownMode;
-      this.$emit("toggle-markdownmode",this.isMarkdownMode)
-    },
+    // toggleMarkdownMode() {
+    //   this.isMarkdownMode = !this.isMarkdownMode;
+    //   this.$emit("toggle-markdownmode", this.isMarkdownMode);
+    // },
     close() {
       appWindow.close();
     },
@@ -160,6 +160,7 @@ export default {
   padding-left: 1px;
   gap: 1rem;
   position: relative;
+  background: var(--bg-toolbar);
 }
 .toolbar-btn {
   padding: 0.2rem 0.5rem;
@@ -169,7 +170,7 @@ export default {
 }
 .toolbar-btn:hover,
 .toolbar-menu li:hover {
-  background: #f4f4f5;
+  background: var(--lightgrey2);
   cursor: pointer;
 }
 
@@ -180,7 +181,7 @@ export default {
   margin-top: 5px;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  width: 200px;
+  min-width: 100px;
 }
 .toolbar-menu li {
   list-style-type: none;

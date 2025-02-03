@@ -48,6 +48,9 @@ const messages = {
     note_name_here: "Note name here...",
     status: "Status",
     enter_text_here: "Enter text here...",
+    // notification:
+    note_created: "{note_name} was created!",
+    note_deleted: "{note_name} was deleted!",
   },
   fr: {
     // titlebar
@@ -93,6 +96,9 @@ const messages = {
     note_name_here: "Nom de la note ici...",
     status: "Statut",
     enter_text_here: "Entrer le texte ici...",
+    // notification:
+    note_created: "{note_name} a bien été créée!",
+    note_deleted: "{note_name} a bien été supprimée!",
   },
 };
 const i18n = createI18n({

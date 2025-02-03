@@ -1,0 +1,23 @@
+/* markdown editor */
+#markdown-container {
+    width: 100%;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+  }
+  #markdown-container img{
+    width: 75%;
+  }
+  #markdown-container h1 {
+    color: blue;
+  }
+  #markdown-container pre {
+    background: var(--lightgrey);
+    border-radius: 5px;
+    padding: 0.5rem;
+    overflow-x: auto;
+    -moz-tab-size: 2;
+    tab-size: 2;
+  }
+  #markdown-container code {
+    color: var(--dark2);
+  }
