@@ -6,9 +6,10 @@
       <ul class="toolbar-menu">
         <li @click="onSubMenuClick('new')">{{ $t("new") }}</li>
         <li @click="onSubMenuClick('open')">{{ $t("open") }}</li>
-        <hr class="separator-x" />
         <li @click="onSubMenuClick('save')">{{ $t("save") }}</li>
         <hr class="separator-x" />
+        <li @click="onSubMenuClick('exportJSON')">{{ $t("exportjson") }}</li>
+        <li @click="onSubMenuClick('importJSON')">{{ $t("importjson") }}</li>
         <li @click="onSubMenuClick('export')">{{ $t("exportaspdf") }}</li>
         <li>{{ $t("print") }}</li>
         <hr class="separator-x" />
@@ -101,7 +102,6 @@ export default {
       isVisibleMenu: true,
       isVisibleNoteList: true,
       isVisibleNoteBar: true,
-      // isMarkdownMode: false,
     };
   },
   mounted() {
@@ -142,10 +142,6 @@ export default {
       this.isVisibleNoteBar = !this.isVisibleNoteBar;
       this.$emit("toggle-notebar", this.isVisibleNoteBar);
     },
-    // toggleMarkdownMode() {
-    //   this.isMarkdownMode = !this.isMarkdownMode;
-    //   this.$emit("toggle-markdownmode", this.isMarkdownMode);
-    // },
     close() {
       appWindow.close();
     },

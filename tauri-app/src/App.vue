@@ -126,7 +126,6 @@
             @scroll="syncScroll('div2')"
           ></div>
         </div>
-
         <div id="oneView" v-else>
           <div v-if="!isPreviewMode">
             <textarea
@@ -160,7 +159,7 @@ import Notebar from "./components/Notebar.vue";
 import Statusbar from "./components/Statusbar.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2 } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { readTextFile,writeTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import Notification from "./components/Notification.vue";
 import { marked } from "marked";
 
@@ -302,6 +301,12 @@ export default {
         case "paste":
           this.pasteText();
           break;
+        case "exportJSON":
+          this.exportJSON();
+          break;
+        case "importJSON":
+          this.importJSON();
+          break;
         case "export":
           this.exportASPDF();
           break;
@@ -356,7 +361,7 @@ export default {
 
       try {
         const content = await readTextFile(selectedFile);
-        console.log(content);
+
         let newNote = {
           id: Date.now(),
           name: fileName,
@@ -390,7 +395,7 @@ export default {
       if (path) {
         const content = this.selectedNote.content;
         await writeTextFile(path, content);
-      } 
+      }
     },
     undoAction() {
       alert("Undoing the last action...");
@@ -550,7 +555,6 @@ export default {
     // exportASPDF
     exportASPDF() {
       let name = this.selectedNote.name || "Untitled";
-      let extension = ".pdf";
       const element = document.querySelector(".contentToExport");
       console.log(element);
       const opt = {
@@ -562,6 +566,36 @@ export default {
 
       // Générer le PDF
       html2pdf().from(element).set(opt).save();
+    },
+    async exportJSON() {
+      if (this.notes.length <= 0) {
+        return;
+      }
+      const json = JSON.stringify(this.notes);
+      const path = await save({
+        filters: [{ name: "Fichiers texte", extensions: ["json"] }],
+      });
+      if (path) {
+        await writeTextFile(path, json);
+      }
+    },
+    async importJSON() {
+      const selectedFile = await open({
+        multiple: false,
+        filters: [{ name: "Fichiers texte", extensions: ["json"] }],
+      });
+      if (!selectedFile) {
+        return;
+      }
+      try {
+        const content = await readTextFile(selectedFile);
+        const jsonParsed = JSON.parse(content);
+        jsonParsed.forEach((note) => {
+          this.notes.push(note);
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
     syncScroll(source) {
       const div1 = this.$refs.div1;

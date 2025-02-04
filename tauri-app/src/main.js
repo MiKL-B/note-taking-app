@@ -32,6 +32,8 @@ const messages = {
     settings: "Settings",
     markdown: "Markdown",
     about: "About...",
+    exportjson:"Export JSON",
+    importjson:"Import JSON",
     // sidebar
     allnotes: "All notes",
     todo: "To do",
@@ -80,6 +82,8 @@ const messages = {
     settings: "Paramètres",
     markdown: "Markdown",
     about: "À propos...",
+    exportjson:"Exporter JSON",
+    importjson:"Importer JSON",
     // sidebar
     allnotes: "Notes",
     todo: "À faire",
