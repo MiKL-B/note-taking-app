@@ -67,7 +67,7 @@
           </div>
           <div class="flex gap-4">
             <details v-if="tags.length > 0" class="toolbar-details">
-              <summary class="app-btn" style="font-size: 14px">Tag +</summary>
+              <summary class="app-btn" style="font-size: 14px">Tag</summary>
               <ul class="toolbar-menu">
                 <li
                   class="flex gap-4 align-center"
@@ -80,7 +80,11 @@
                 </li>
               </ul>
             </details>
-            <select v-model="selectedNote.status" @change="changeNoteStatus">
+            <select
+              v-model="selectedNote.status"
+              @change="changeNoteStatus"
+              style="width: 100px"
+            >
               <option disabled selected>{{ $t("status") }}</option>
               <option value="todo">{{ $t("todo") }}</option>
               <option value="inprogress">{{ $t("inprogress") }}</option>
@@ -94,6 +98,9 @@
             </button>
             <button @click="toggleShowBoth">
               <Columns2 />
+            </button>
+            <button @click="duplicateNote">
+              <CopyPlus />
             </button>
           </div>
         </div>
@@ -157,7 +164,7 @@ import Sidebar from "./components/Sidebar.vue";
 import Notelist from "./components/Notelist.vue";
 import Notebar from "./components/Notebar.vue";
 import Statusbar from "./components/Statusbar.vue";
-import { Plus, Eye, EyeOff, Tag, X, Columns2 } from "lucide-vue-next";
+import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import Notification from "./components/Notification.vue";
@@ -179,6 +186,7 @@ export default {
     Tag,
     X,
     Columns2,
+    CopyPlus,
   },
   data() {
     return {
@@ -278,7 +286,7 @@ export default {
     handleAction(action) {
       switch (action) {
         case "new":
-          this.createNewDocument();
+          this.createNote();
           break;
         case "open":
           this.openDocument();
@@ -318,9 +326,7 @@ export default {
           break;
       }
     },
-    createNewDocument() {
-      this.createNote();
-    },
+
     async openDocument() {
       const selectedFile = await open({
         multiple: false,
@@ -453,6 +459,26 @@ export default {
         "green"
       );
     },
+    duplicateNote() {
+      if (!this.selectedNote) {
+        return;
+      }
+      let copyNote = {
+        id: Date.now(),
+        name: this.selectedNote.name + " - Copy",
+        date: new Date().toLocaleString("fr-FR"),
+        status: this.selectedNote.status,
+        color: this.selectedNote.color,
+        content: this.selectedNote.content,
+        tags: this.selectedNote.tags,
+        selected: false,
+      };
+      this.notes.push(copyNote);
+      this.showNotification(
+        this.$t("note_duplicated", { note_name: this.selectedNote.name }),
+        "green"
+      );
+    },
     showNotification(message, color) {
       this.isVisibleNotification = true;
       this.messageNotification = message;
@@ -577,6 +603,7 @@ export default {
       });
       if (path) {
         await writeTextFile(path, json);
+        this.showNotification(this.$t("data_exported"), "green");
       }
     },
     async importJSON() {
@@ -593,6 +620,7 @@ export default {
         jsonParsed.forEach((note) => {
           this.notes.push(note);
         });
+        this.showNotification(this.$t("data_imported"), "green");
       } catch (error) {
         console.error(error);
       }
