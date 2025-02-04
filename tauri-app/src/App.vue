@@ -159,8 +159,8 @@ import Notelist from "./components/Notelist.vue";
 import Notebar from "./components/Notebar.vue";
 import Statusbar from "./components/Statusbar.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2 } from "lucide-vue-next";
-import { open } from "@tauri-apps/plugin-dialog";
-import { readTextFile } from "@tauri-apps/plugin-fs";
+import { open, save } from "@tauri-apps/plugin-dialog";
+import { readTextFile,writeTextFile } from "@tauri-apps/plugin-fs";
 import Notification from "./components/Notification.vue";
 import { marked } from "marked";
 
@@ -321,6 +321,9 @@ export default {
         multiple: false,
         filters: [{ name: "Fichiers texte", extensions: ["txt", "md"] }],
       });
+      if (!selectedFile) {
+        return;
+      }
       const fileName = selectedFile
         .replace(/^.*[\\\/]/, "")
         .replace(/\.[^/.]+$/, "");
@@ -351,59 +354,44 @@ export default {
       //     break;
       // }
 
-      if (selectedFile) {
-        try {
-          const content = await readTextFile(selectedFile);
-          console.log(content);
-          let newNote = {
-            id: Date.now(),
-            name: fileName,
-            date: new Date().toLocaleString("fr-FR"),
-            status: "todo",
-            color: "red",
-            content: content,
-            tags: [],
-            selected: false,
-          };
+      try {
+        const content = await readTextFile(selectedFile);
+        console.log(content);
+        let newNote = {
+          id: Date.now(),
+          name: fileName,
+          date: new Date().toLocaleString("fr-FR"),
+          status: "todo",
+          color: "red",
+          content: content,
+          tags: [],
+          selected: false,
+        };
 
-          this.notes.push(newNote);
-          this.showNotification(
-            this.$t("note_created", { note_name: newNote.name }),
-            "green"
-          );
-        } catch (error) {
-          console.error("Erreur lors de la lecture du fichier : ", error);
-        }
+        this.notes.push(newNote);
+        this.showNotification(
+          this.$t("note_created", { note_name: newNote.name }),
+          "green"
+        );
+      } catch (error) {
+        console.error("Erreur lors de la lecture du fichier : ", error);
       }
     },
 
-    // async saveDocument() {
-    //   if (!this.selectedNote) {
-    //     return;
-    //   }
-    //   const defaultFileName = this.selectedNote.name + ".md";
+    async saveDocument() {
+      if (!this.selectedNote) {
+        return;
+      }
 
-    //   const filePath = await ipcRenderer.invoke(
-    //     "dialog:saveAs",
-    //     defaultFileName
-    //   );
+      const path = await save({
+        filters: [{ name: "Fichiers texte", extensions: ["txt", "md"] }],
+      });
 
-    //   if (filePath) {
-    //     const status = this.selectedNote.status;
-    //     const content = status + "\r\n" + this.selectedNote.content;
-
-    //     const result = await ipcRenderer.invoke("file:save", {
-    //       filePath,
-    //       content,
-    //     });
-
-    //     if (result && result.success) {
-    //       console.log("Fichier enregistré à :", filePath);
-    //     } else {
-    //       console.error("Erreur lors de l'enregistrement du fichier.");
-    //     }
-    //   }
-    // },
+      if (path) {
+        const content = this.selectedNote.content;
+        await writeTextFile(path, content);
+      } 
+    },
     undoAction() {
       alert("Undoing the last action...");
     },
