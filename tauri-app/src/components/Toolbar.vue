@@ -68,7 +68,7 @@
           </span>
           <span>{{ $t("markdown") }}</span>
         </li> -->
-        <ThemeSwitcher />
+        <!-- <ThemeSwitcher /> -->
         <LanguageSwitcher />
       </ul>
     </details>

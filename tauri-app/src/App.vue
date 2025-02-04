@@ -115,6 +115,7 @@
               v-model="selectedNote.content"
               ref="div1"
               @scroll="syncScroll('div1')"
+              spellcheck="false"
             ></textarea>
           </div>
           <hr id="separator-column" />
@@ -131,6 +132,7 @@
             <textarea
               :placeholder="$t('enter_text_here')"
               v-model="selectedNote.content"
+              spellcheck="false"
             ></textarea>
           </div>
           <div v-else id="markdown-container" v-html="getMarkdownHtml()"></div>
@@ -299,6 +301,7 @@ export default {
           break;
         case "paste":
           this.pasteText();
+          break;
         case "export":
           this.exportASPDF();
           break;
@@ -356,7 +359,7 @@ export default {
             id: Date.now(),
             name: fileName,
             date: new Date().toLocaleString("fr-FR"),
-            status: "",
+            status: "todo",
             color: "red",
             content: content,
             tags: [],

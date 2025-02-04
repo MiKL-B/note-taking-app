@@ -1,6 +1,6 @@
 <template>
   <div data-tauri-drag-region id="titlebar">
-    <span>{{ $t('appnotes') }}</span>
+    <span>Thoth</span>
     <div>
       <span class="titlebar-button" @click="minimize">
         <Minus />

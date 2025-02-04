@@ -41,9 +41,9 @@
 
 }
 [data-theme="light"] {
-  --bg-titlebar: var(--lightgrey);
+  --bg-titlebar: var(--lightgrey2);
   --bg-color: var(--white);
-  --bg-toolbar:var(--lightgrey2);
+  --bg-toolbar:var(--white);
   --bg-sidebar:var(--lightgrey);
   --text-titlebar:var(--dark2);
   --text-color: var(--dark2);
@@ -112,7 +112,7 @@ textarea {
   height:100%;
   border: none;
   padding: 0.5rem;
-  /* position: absolute; */
+  font-size: 1rem;
   top: 4.5rem;
   bottom: 0;
 }
