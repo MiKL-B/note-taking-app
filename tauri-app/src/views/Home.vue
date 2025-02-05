@@ -1,5 +1,5 @@
 <template>
-  <button @click="openWindow">open</button>
+
   <Toolbar
     :isNoteSelected="selectedNote"
     @action-clicked="handleAction"
@@ -135,7 +135,6 @@ import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { marked } from "marked";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 export default {
   name: "Home",
@@ -237,32 +236,6 @@ export default {
     },
   },
   methods: {
-    openWindow() {
-      const webview = new WebviewWindow("new_window", {
-        url: "./new-window",
-        decorations: false,
-        title: "Settings",
-        alwaysOnTop: true,
-      });
-      webview.once("tauri://created", function () {
-        console.log("Webview créé avec succès !");
-        document.body.style.pointerEvents = "none";
-        document.body.style.userSelect = "none";
-        document.body.style.opacity = "0.5";
-      });
-      // Lors de la fermeture de la fenêtre
-      webview.once("tauri://close-requested", function () {
-        // Réactiver les interactions sur la fenêtre principale
-        document.body.style.pointerEvents = "auto"; // Réactiver les interactions
-        document.body.style.userSelect = "auto";
-        document.body.style.opacity = "1"; // Réinitialiser l'opacité
-        webview.close();
-      });
-
-      webview.once("tauri://error", function (e) {
-        console.error("Erreur lors de la création du webview :", e);
-      });
-    },
     sortNotes() {
       this.notes.sort((a, b) => {
         if (a.name < b.name) {

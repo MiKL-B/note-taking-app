@@ -60,19 +60,8 @@
       </ul>
     </details> -->
     <!-- Settings -->
-    <details class="toolbar-details" @click="handleClickOnDetails">
-      <summary class="toolbar-btn">{{ $t("settings") }}</summary>
-      <ul class="toolbar-menu">
-        <!-- <li class="toolbar-toggle" @click="toggleMarkdownMode">
-          <span v-if="isMarkdownMode">
-            <Check />
-          </span>
-          <span>{{ $t("markdown") }}</span>
-        </li> -->
-        <!-- <ThemeSwitcher /> -->
-        <LanguageSwitcher />
-      </ul>
-    </details>
+    <span class="toolbar-btn" @click="openWindow">{{ $t("settings") }}</span>
+
     <!-- About -->
     <!-- <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">?</summary>
@@ -85,17 +74,15 @@
 
 <script>
 import { Check } from "lucide-vue-next";
-import ThemeSwitcher from "./ThemeSwitcher.vue";
-import LanguageSwitcher from "./LanguageSwitcher.vue";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+
 const appWindow = getCurrentWindow();
 export default {
   name: "Toolbar",
   props: ["isNoteSelected"],
   components: {
     Check,
-    ThemeSwitcher,
-    LanguageSwitcher,
   },
   data() {
     return {
@@ -111,6 +98,37 @@ export default {
     document.removeEventListener("click", this.closeDetails);
   },
   methods: {
+    openWindow() {
+      const webview = new WebviewWindow("new_window", {
+        url: "./new-window",
+        decorations: false,
+        title: "Settings",
+        resizable:false,
+        alwaysOnTop:true,
+        center:true,
+        width:600,
+        height:400,
+      });
+      webview.once("tauri://created", function () {
+        console.log("Webview créé avec succès !");
+        document.body.style.pointerEvents = "none";
+        document.body.style.userSelect = "none";
+        document.body.style.opacity = "0.5";
+        document.body.style.filter = "blur(1px)";
+      });
+
+      webview.once("tauri://close-requested", function () {
+        document.body.style.pointerEvents = "auto";
+        document.body.style.userSelect = "auto";
+        document.body.style.opacity = "1"; 
+        document.body.style.filter = "blur(0px)";
+        webview.close();
+      });
+
+      webview.once("tauri://error", function (e) {
+        console.error("Erreur lors de la création du webview :", e);
+      });
+    },
     handleClickOnDetails() {
       let detailsOpened = document.querySelectorAll(".toolbar-details");
       for (const item of detailsOpened) {

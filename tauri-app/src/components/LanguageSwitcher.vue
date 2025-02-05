@@ -9,13 +9,13 @@
 import { Languages } from 'lucide-vue-next';
 export default {
   name: "LanguageSwitcher",
+  components:{
+    Languages
+  },
   data() {
     return {
       language: "en",
     };
-  },
-  components:{
-    Languages
   },
   mounted() {
     const storedLanguage = localStorage.getItem("language")
