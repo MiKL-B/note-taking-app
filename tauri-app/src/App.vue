@@ -45,61 +45,30 @@
       v-if="selectedNote"
     >
       <div :class="{ invisible: !isVisibleNoteBar }">
-        <Notebar @change-status="changeNoteStatus" />
+        <Notebar
+          :tags="tags"
+          :showBoth="showBoth"
+          @add-tag-note="addTagToNote"
+          @toggle-preview-mode="toggleMarkdown"
+          @toggle-showboth="toggleShowBothTextareaPreview"
+          @duplicate-note="duplicateNote"
+          @update-status="changeNoteStatus"
+          v-model="selectedNote.status"
+        />
       </div>
-      <div class="sub-col3" :style="{ height: noteHeight }">
-        <div id="col3-header-note">
-          <div class="flex">
-            <div
-              id="col3-header-status"
-              class="color-circle"
-              :class="`bg-${selectedNote.color}`"
-            ></div>
-            <input
-              id="input-note-name"
-              type="text"
-              v-model="selectedNote.name"
-              :placeholder="$t('note_name_here')"
-            />
-          </div>
-          <div class="flex gap-4">
-            <details v-if="tags.length > 0" class="toolbar-details">
-              <summary class="app-btn" style="font-size: 14px">Tag</summary>
-              <ul class="toolbar-menu">
-                <li
-                  class="flex gap-4 align-center"
-                  v-for="tag in tags"
-                  :key="tag.id"
-                  @click="addTagToNote(tag)"
-                >
-                  <Tag :style="`color: var(--${tag.color} `" />
-                  <span>{{ tag.name }}</span>
-                </li>
-              </ul>
-            </details>
-            <select
-              v-model="selectedNote.status"
-              @change="changeNoteStatus"
-              style="width: 100px"
-            >
-              <option disabled selected>{{ $t("status") }}</option>
-              <option value="todo">{{ $t("todo") }}</option>
-              <option value="inprogress">{{ $t("inprogress") }}</option>
-              <option value="finished">{{ $t("finished") }}</option>
-              <option value="archived">{{ $t("archived") }}</option>
-            </select>
-
-            <button v-if="!showBoth" @click="togglePreviewMode">
-              <EyeOff v-if="isPreviewMode" />
-              <Eye v-else />
-            </button>
-            <button @click="toggleShowBoth">
-              <Columns2 />
-            </button>
-            <button @click="duplicateNote" :title="$t('duplicate')">
-              <CopyPlus />
-            </button>
-          </div>
+      <div class="column-note-content" :style="{ height: noteHeight }">
+        <div id="column-note-title">
+          <div
+            style="margin: auto"
+            class="color-circle"
+            :class="`bg-${selectedNote.color}`"
+          ></div>
+          <input
+            id="input-note-name"
+            type="text"
+            v-model="selectedNote.name"
+            :placeholder="$t('note_name_here')"
+          />
         </div>
         <div class="note-tag-list">
           <span
@@ -122,7 +91,7 @@
               spellcheck="false"
             ></textarea>
           </div>
-          <hr id="separator-column" />
+          <hr class="separator-column" />
           <div
             id="markdown-container"
             v-html="getMarkdownHtml()"
@@ -196,7 +165,6 @@ export default {
       isPreviewMode: false,
       showBoth: false,
       notes: [],
-      status: "",
       color: "",
       searchNote: "",
       tags: [],
@@ -206,7 +174,7 @@ export default {
       isVisibleNotification: false,
       messageNotification: "",
       colorNotification: "",
-      sortedAsc:false,
+      sortedAsc: false,
     };
   },
   computed: {
@@ -271,23 +239,20 @@ export default {
   },
   methods: {
     sortNotes() {
-      
       this.notes.sort((a, b) => {
         if (a.name < b.name) {
           return -1;
-
         } else if (b.name < a.name) {
           return 1;
         }
         return 0;
       });
-      
     },
-    toggleSort(){
+    toggleSort() {
       this.sortedAsc = !this.sortedAsc;
       this.sortNotes();
-      if (!this.sortedAsc){
-        this.notes.reverse()
+      if (!this.sortedAsc) {
+        this.notes.reverse();
       }
     },
     getMarkdownHtml() {
@@ -296,9 +261,8 @@ export default {
     toggleMarkdown() {
       this.isPreviewMode = !this.isPreviewMode;
     },
-    toggleShowBoth() {
+    toggleShowBothTextareaPreview() {
       this.showBoth = !this.showBoth;
-      console.log(this.showBoth);
     },
     handleFilter(filter) {
       this.filter = filter;
@@ -528,9 +492,9 @@ export default {
         );
       }
     },
-    changeNoteStatus() {
-      this.status = this.selectedNote.status;
-      switch (this.status) {
+    changeNoteStatus(newStatus) {
+      this.selectedNote.status = newStatus;
+      switch (this.selectedNote.status) {
         case "todo":
           this.color = "red";
           break;
@@ -685,22 +649,19 @@ export default {
   border-right: var(--border);
   max-width: 320px;
 }
-.sub-col3 {
+.column-note-content {
   position: relative;
-  max-width: calc(100vw - 460px);
+  max-width: calc(100vw - 470px);
 }
-#col3-header-note {
-  display: flex;
-  padding: 0.2rem 0.2rem 0 0.2rem;
-  gap: 0.2rem;
-  justify-content: space-between;
+#column-note-title {
+  display: inline-flex;
+  padding: 0 0.2rem;
 }
-#col3-header-status {
-  width: 12px;
-  height: 14px;
-  padding: 0 0.4rem;
-  margin: auto;
-  display: inline-block;
+#input-note-name {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  font-size: 20px;
 }
 #input-note-tag {
   width: 100px;
@@ -715,12 +676,7 @@ export default {
   justify-content: space-between;
   gap: 0.2rem;
 }
-#input-note-name {
-  width: 100%;
-  border: none;
-  box-shadow: none;
-  font-size: 20px;
-}
+
 .delete-tag-btn {
   cursor: pointer;
   color: var(--dark2);
@@ -764,7 +720,7 @@ img {
   grid-template-columns: 1fr auto 1fr;
   height: calc(100vh - 205px);
 }
-#separator-column {
+.separator-column {
   border-left: none;
   border-right: 1px solid var(--grey);
   height: 100%;
@@ -778,5 +734,10 @@ img {
 }
 #bothColumns div {
   height: 100%;
+}
+.disabled {
+  color: var(--grey);
+  cursor: not-allowed;
+  user-select: none;
 }
 </style>

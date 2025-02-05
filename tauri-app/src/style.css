@@ -133,6 +133,10 @@ button:hover {
   cursor: pointer;
   background: var(--lightgrey);
 }
+button[disabled]{
+  color:var(--grey);
+  cursor: not-allowed;
+}
 .bt-symbol {
   width: 40px;
 }
