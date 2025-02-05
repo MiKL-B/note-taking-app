@@ -52,7 +52,7 @@
     <button @click="duplicateNote" :title="$t('duplicate')">
       <CopyPlus />
     </button>
-    <span class="separator-y"></span>
+    <!-- <span class="separator-y"></span>
     <button class="bt-symbol" title="Bold">
       <Bold />
     </button>
@@ -75,7 +75,7 @@
     </button>
     <button class="bt-symbol" title="Align justify">
       <AlignJustify />
-    </button>
+    </button> -->
   </div>
 </template>
 

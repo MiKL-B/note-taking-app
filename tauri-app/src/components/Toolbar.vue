@@ -10,14 +10,14 @@
         <hr class="separator-x" />
         <li @click="onSubMenuClick('exportJSON')">{{ $t("exportjson") }}</li>
         <li @click="onSubMenuClick('importJSON')">{{ $t("importjson") }}</li>
-        <li @click="onSubMenuClick('export')">{{ $t("exportaspdf") }}</li>
-        <li>{{ $t("print") }}</li>
+        <!-- <li @click="onSubMenuClick('export')">{{ $t("exportaspdf") }}</li>
+        <li>{{ $t("print") }}</li> -->
         <hr class="separator-x" />
         <li @click="close">{{ $t("exit") }}</li>
       </ul>
     </details>
     <!-- Edit -->
-    <details class="toolbar-details" @click="handleClickOnDetails">
+    <!-- <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">{{ $t("edit") }}</summary>
       <ul class="toolbar-menu">
         <li>{{ $t("undo") }}</li>
@@ -26,7 +26,7 @@
         <li>{{ $t("copy") }}</li>
         <li>{{ $t("paste") }}</li>
       </ul>
-    </details>
+    </details> -->
     <!-- View -->
     <!-- <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">{{ $t("view") }}</summary>
@@ -74,12 +74,12 @@
       </ul>
     </details>
     <!-- About -->
-    <details class="toolbar-details" @click="handleClickOnDetails">
+    <!-- <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">?</summary>
       <ul class="toolbar-menu">
         <li>{{ $t("about") }}</li>
       </ul>
-    </details>
+    </details> -->
   </div>
 </template>
 
