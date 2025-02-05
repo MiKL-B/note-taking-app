@@ -99,7 +99,7 @@
             <button @click="toggleShowBoth">
               <Columns2 />
             </button>
-            <button @click="duplicateNote">
+            <button @click="duplicateNote" :title="$t('duplicate')">
               <CopyPlus />
             </button>
           </div>
@@ -465,7 +465,7 @@ export default {
       }
       let copyNote = {
         id: Date.now(),
-        name: this.selectedNote.name + " - Copy",
+        name: this.selectedNote.name + " - " + this.$t("copy"),
         date: new Date().toLocaleString("fr-FR"),
         status: this.selectedNote.status,
         color: this.selectedNote.color,
@@ -594,10 +594,14 @@ export default {
       html2pdf().from(element).set(opt).save();
     },
     async exportJSON() {
-      if (this.notes.length <= 0) {
+      let data = {
+        notes: this.notes,
+        tags: this.tags,
+      };
+      if (data.notes.length === 0 && data.tags.length === 0) {
         return;
       }
-      const json = JSON.stringify(this.notes);
+      const json = JSON.stringify(data);
       const path = await save({
         filters: [{ name: "Fichiers texte", extensions: ["json"] }],
       });
@@ -614,11 +618,16 @@ export default {
       if (!selectedFile) {
         return;
       }
+
       try {
         const content = await readTextFile(selectedFile);
         const jsonParsed = JSON.parse(content);
-        jsonParsed.forEach((note) => {
+
+        jsonParsed.notes.forEach((note) => {
           this.notes.push(note);
+        });
+        jsonParsed.tags.forEach((tag) => {
+          this.tags.push(tag);
         });
         this.showNotification(this.$t("data_imported"), "green");
       } catch (error) {

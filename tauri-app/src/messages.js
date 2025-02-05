@@ -51,6 +51,8 @@ const messages = {
     note_duplicated: "{note_name} was duplicated!",
     data_exported: "The datas was exported!",
     data_imported: "The datas was imported!",
+    copy: "Copy",
+    duplicate: "Duplicate",
   },
   fr: {
     // titlebar
@@ -104,6 +106,8 @@ const messages = {
     note_duplicated: "{note_name} a bien été dupliquée!",
     data_exported: "Les données ont été exportées!",
     data_imported: "Les données ont été importées!",
+    copy: "Copie",
+    duplicate: "Dupliquer",
   },
 };
 
