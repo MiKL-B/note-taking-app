@@ -1,6 +1,7 @@
 <template>
   <Titlebar />
   <RouterView></RouterView>
+  
 </template>
 <script>
 import { RouterView } from "vue-router";
@@ -13,3 +14,6 @@ export default {
   }
 };
 </script>
+<style>
+
+</style>

@@ -114,14 +114,12 @@ export default {
         document.body.style.pointerEvents = "none";
         document.body.style.userSelect = "none";
         document.body.style.opacity = "0.5";
-        document.body.style.filter = "blur(1px)";
       });
 
       webview.once("tauri://close-requested", function () {
         document.body.style.pointerEvents = "auto";
         document.body.style.userSelect = "auto";
         document.body.style.opacity = "1"; 
-        document.body.style.filter = "blur(0px)";
         webview.close();
       });
 

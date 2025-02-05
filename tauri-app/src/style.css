@@ -73,7 +73,10 @@
 body {
   overflow: hidden;
   background: var(--bg-color);
+  height:100vh;
 }
+
+
 .lucide {
   display: flex;
   width: 16px;

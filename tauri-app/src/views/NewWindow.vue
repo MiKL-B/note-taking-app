@@ -1,6 +1,9 @@
 <template>
-  <LanguageSwitcher />
-  <ThemeSwitcher />
+  
+
+    <LanguageSwitcher />
+    <ThemeSwitcher />
+
 </template>
 
 <script>
