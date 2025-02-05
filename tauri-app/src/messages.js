@@ -52,7 +52,12 @@ const messages = {
     data_exported: "The datas was exported!",
     data_imported: "The datas was imported!",
     copy: "Copy",
-    duplicate: "Duplicate",
+    duplicate: "Duplicate note",
+    sortAZ: "Sorc Asc - Desc",
+    create_note: "Create a new note",
+    add_tag: "Add tag",
+    side_by_side: "View side by side",
+    toggle_preview: "View text - markdown",
   },
   fr: {
     // titlebar
@@ -107,7 +112,12 @@ const messages = {
     data_exported: "Les données ont été exportées!",
     data_imported: "Les données ont été importées!",
     copy: "Copie",
-    duplicate: "Dupliquer",
+    duplicate: "Dupliquer note",
+    sortAZ: "Tri alphabétique",
+    create_note: "Créer une note",
+    add_tag: "Ajouter tag",
+    side_by_side: "Affichage côte à côte",
+    toggle_preview: "Affichage text - markdown",
   },
 };
 

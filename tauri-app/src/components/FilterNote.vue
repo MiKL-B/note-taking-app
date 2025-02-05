@@ -1,7 +1,7 @@
 <template>
   <div id="filter-note">
-    <button @click="sortNotes">
-      <ArrowDownAZ v-if="sortAZ" />
+    <button @click="sortNotes" :title="$t('sortAZ')">
+      <ArrowDownAZ  v-if="sortAZ"/>
       <ArrowUpZA v-else />
     </button>
     <input
@@ -12,7 +12,7 @@
       style="width: 160px"
     />
 
-    <button @click="createNote"><Plus /></button>
+    <button @click="createNote" :title="$t('create_note')"><Plus /></button>
   </div>
 </template>
 
@@ -27,10 +27,10 @@ export default {
     ArrowUpZA,
   },
   props: ["modelValue"],
-  emits: ["update:modelValue","create-note", "sort-notes"],
+  emits: ["update:modelValue", "create-note", "sort-notes"],
   data() {
     return {
-      sortAZ: true,
+      sortAZ:true,
     };
   },
   methods: {

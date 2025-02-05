@@ -172,6 +172,7 @@ export default {
   padding: 0 0 0.5rem 0;
   height: calc(100vh - 95px);
   overflow-y: hidden;
+  background:var(--lightgrey);
 }
 
 .sidebar-item {

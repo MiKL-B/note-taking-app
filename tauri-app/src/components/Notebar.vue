@@ -27,7 +27,7 @@
         class="app-btn"
         style="font-size: 14px"
       >
-        Add tag
+        {{$t('add_tag')}}
       </summary>
       <ul class="toolbar-menu">
         <li
@@ -36,17 +36,17 @@
           :key="tag.id"
           @click="addTagToNote(tag)"
         >
-          <Tag :style="`color: var(--${tag.color} `" />
+          <Tag :style="`color: var(--${tag.color}) `" />
           <span>{{ tag.name }}</span>
         </li>
       </ul>
     </details>
     <span class="separator-y"></span>
-    <button :disabled="showBoth" @click="togglePreviewMode">
+    <button :disabled="showBoth" @click="togglePreviewMode" :title="$t('toggle_preview')">
       <EyeOff v-if="isPreviewMode" />
       <Eye v-else />
     </button>
-    <button @click="toggleShowBothTextareaPreview">
+    <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
       <Columns2 />
     </button>
     <button @click="duplicateNote" :title="$t('duplicate')">

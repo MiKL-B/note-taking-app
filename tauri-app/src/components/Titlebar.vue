@@ -48,7 +48,7 @@ export default {
   user-select: none;
   -webkit-user-select: none;
   padding-left: 0.5rem;
-  background: var(--bg-titlebar);
+  background:var(--lightgrey);
   color: var(--text-titlebar);
   border-bottom: var(--border);
 }

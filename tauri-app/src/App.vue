@@ -174,7 +174,7 @@ export default {
       isVisibleNotification: false,
       messageNotification: "",
       colorNotification: "",
-      sortedAsc: false,
+      sortedAsc: true,
     };
   },
   computed: {
