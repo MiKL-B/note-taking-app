@@ -15,27 +15,27 @@
       <option value="">18</option>
     </select>
     <span class="separator-y"></span>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Bold">
       <Bold />
     </button>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Italic">
       <Italic />
     </button>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Underline">
       <Underline />
     </button>
     <input type="color" />
     <span class="separator-y"></span>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Align left">
       <AlignLeft />
     </button>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Align center">
       <AlignCenter />
     </button>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Align right">
       <AlignRight />
     </button>
-    <button class="bt-symbol">
+    <button class="bt-symbol" title="Align justify">
       <AlignJustify />
     </button>
   </div>

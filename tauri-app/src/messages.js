@@ -92,7 +92,7 @@ const messages = {
     archived: "Archivées",
     // notelist,
     create_first_note: "Creer votre première note!",
-    filter_note_by_name: "Filtrer les notes par nom...",
+    filter_note_by_name: "Rechercher par nom...",
     // notebar
     font: "Police",
     font_size: "Taille de la police",

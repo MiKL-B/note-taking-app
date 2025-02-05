@@ -28,14 +28,11 @@
       />
     </div>
     <div class="column-notelist" :class="{ invisible: !isVisibleNoteList }">
-      <div id="filter-note">
-        <input
-          type="text"
-          v-model="searchNote"
-          :placeholder="$t('filter_note_by_name')"
-        />
-        <button @click="createNote"><Plus /></button>
-      </div>
+      <FilterNote
+        v-model="searchNote"
+        @create-note="createNote"
+        @sort-notes="toggleSort"
+      />
       <Notelist
         :notes="filteredNotes"
         @select-note="selectNote"
@@ -169,6 +166,7 @@ import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import Notification from "./components/Notification.vue";
 import { marked } from "marked";
+import FilterNote from "./components/FilterNote.vue";
 
 export default {
   name: "App",
@@ -180,6 +178,7 @@ export default {
     Notebar,
     Notification,
     Statusbar,
+    FilterNote,
     Plus,
     Eye,
     EyeOff,
@@ -207,6 +206,7 @@ export default {
       isVisibleNotification: false,
       messageNotification: "",
       colorNotification: "",
+      sortedAsc:false,
     };
   },
   computed: {
@@ -270,6 +270,26 @@ export default {
     },
   },
   methods: {
+    sortNotes() {
+      
+      this.notes.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+
+        } else if (b.name < a.name) {
+          return 1;
+        }
+        return 0;
+      });
+      
+    },
+    toggleSort(){
+      this.sortedAsc = !this.sortedAsc;
+      this.sortNotes();
+      if (!this.sortedAsc){
+        this.notes.reverse()
+      }
+    },
     getMarkdownHtml() {
       return marked(this.selectedNoteContent, { sanitize: true });
     },
