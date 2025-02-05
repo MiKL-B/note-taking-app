@@ -1,5 +1,5 @@
 <template>
-  <div data-tauri-drag-region id="titlebar">
+  <div data-tauri-drag-region id="titlebar" class="titlebar">
     <span>Thoth</span>
     <div>
       <span class="titlebar-button" @click="minimize">
