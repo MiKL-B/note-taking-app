@@ -1,5 +1,6 @@
 <template>
   <Titlebar />
+
   <Toolbar
     :isNoteSelected="selectedNote"
     @action-clicked="handleAction"
@@ -238,6 +239,7 @@ export default {
     },
   },
   methods: {
+  
     sortNotes() {
       this.notes.sort((a, b) => {
         if (a.name < b.name) {
