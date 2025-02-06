@@ -7,7 +7,7 @@
       :class="{ filterselected: selectedFilter === 'allnotes' }"
     >
       <span class="sidebar-sub-label">
-        <File class="size-16"/>
+        <File class="size-16" />
         <span>{{ $t("allnotes") }}</span>
       </span>
       <span class="text-dark">{{ countAllNotes }}</span>
@@ -19,10 +19,22 @@
       :class="{ filterselected: selectedFilter === 'pinned' }"
     >
       <span class="sidebar-sub-label">
-        <Pin class="size-16"/>
+        <Pin class="size-16" />
         <span>{{ $t("pinned") }}</span>
       </span>
       <span class="text-dark">{{ countPinned }}</span>
+    </li>
+    <!-- today -->
+    <li
+      class="sidebar-item"
+      @click="selectFilter('today')"
+      :class="{ filterselected: selectedFilter === 'today' }"
+    >
+      <span class="sidebar-sub-label">
+        <Calendar class="size-16" />
+        <span>{{ $t("today") }}</span>
+      </span>
+      <span class="text-dark">{{ countToday }}</span>
     </li>
     <!-- todo -->
     <li
@@ -67,7 +79,7 @@
       :class="{ filterselected: selectedFilter === 'archived' }"
     >
       <span class="sidebar-sub-label">
-        <Archive class="size-16"/>
+        <Archive class="size-16" />
         <span>{{ $t("archived") }}</span>
       </span>
       <span class="text-dark">{{ countArchived }}</span>
@@ -75,10 +87,12 @@
     <!-- tags -->
     <li class="sidebar-item sidebar-label">
       <span class="sidebar-sub-label">
-        <Tags class="size-16"/>
+        <Tags class="size-16" />
         <span>Tags</span>
       </span>
-      <span id="sidebar-tags-btn" @click="addTag"><Plus class="text-dark size-16"/></span>
+      <span id="sidebar-tags-btn" @click="addTag"
+        ><Plus class="text-dark size-16"
+      /></span>
     </li>
     <div id="sidebar-container-list">
       <ul id="sidebar-tags-list">
@@ -92,7 +106,7 @@
           <span class="sidebar-sub-label">
             <details class="toolbar-details">
               <summary>
-                <Tag :style="`color: var(--${tag.color}`" class="size-16"/>
+                <Tag :style="`color: var(--${tag.color}`" class="size-16" />
               </summary>
               <ul class="toolbar-menu">
                 <li
@@ -121,7 +135,7 @@
 </template>
 
 <script>
-import { File, Archive, Tags, Tag, Plus, Trash2,Pin } from "lucide-vue-next";
+import { File, Archive, Tags, Tag, Plus, Trash2, Pin, Calendar } from "lucide-vue-next";
 export default {
   name: "Sidebar",
   props: [
@@ -132,8 +146,9 @@ export default {
     "countFinished",
     "countArchived",
     "countPinned",
+    "countToday",
   ],
-  emits: ["select-filter", "set-color","delete-tag","update-tag-name"],
+  emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
   components: {
     File,
     Archive,
@@ -141,7 +156,8 @@ export default {
     Tag,
     Plus,
     Trash2,
-    Pin
+    Pin,
+    Calendar
   },
   data() {
     return {
@@ -192,7 +208,7 @@ export default {
   padding: 0 0 0.5rem 0;
   height: calc(100vh - 95px);
   overflow-y: hidden;
-  background:var(--lightgrey);
+  background: var(--lightgrey);
 }
 
 .sidebar-item {

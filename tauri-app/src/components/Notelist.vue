@@ -11,6 +11,7 @@
     >
       <div id="note">
         <h4 class="note-title">
+          <Pin v-if="note.pinned" class="size-16 text-dark"/>
           <div class="color-circle" :class="`bg-${note.color}`"></div>
           <span>
             {{ note.name }}
@@ -35,11 +36,12 @@
 </template>
 
 <script>
-import { Trash2 } from "lucide-vue-next";
+import { Pin, Trash2 } from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes"],
   components: {
+    Pin,
     Trash2,
   },
 

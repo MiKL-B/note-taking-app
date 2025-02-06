@@ -21,6 +21,7 @@
         :countFinished="getCountFinished"
         :countArchived="getCountArchived"
         :countPinned="getCountPinned"
+        :countToday="getCountToday"
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
         @select-filter="handleFilter"
@@ -220,6 +221,8 @@ export default {
           });
         case "pinned":
           return this.notes.filter((note) => note.pinned === true);
+        case "today":
+          return this.notes.filter((note) => note.date.split(" ")[0] === this.getToday());
         default:
           return this.notes.filter((note) => {
             return note.tags.some((tag) =>
@@ -240,11 +243,17 @@ export default {
     getCountArchived() {
       return this.notes.filter((note) => note.status === "archived").length;
     },
-    getCountPinned(){
+    getCountPinned() {
       return this.notes.filter((note) => note.pinned === true).length;
-    }
+    },
+    getCountToday() {
+      return this.notes.filter((note) => note.date.split(" ")[0] === this.getToday()).length;
+    },
   },
   methods: {
+    getToday() {
+      return new Date().toLocaleString("fr-FR").split(" ")[0];
+    },
     sortNotes() {
       this.notes.sort((a, b) => {
         if (a.name < b.name) {
@@ -465,9 +474,9 @@ export default {
         status: this.selectedNote.status,
         color: this.selectedNote.color,
         content: this.selectedNote.content,
-        tags: this.selectedNote.tags,
+        tags: [],
         selected: false,
-        pinned:false,
+        pinned: false,
       };
       this.notes.push(copyNote);
       this.showNotification(
