@@ -24,6 +24,18 @@
       </span>
       <span class="text-dark">{{ countPinned }}</span>
     </li>
+    <!-- important -->
+    <li
+      class="sidebar-item"
+      @click="selectFilter('important')"
+      :class="{ filterselected: selectedFilter === 'important' }"
+    >
+      <span class="sidebar-sub-label">
+        <FileWarning class="size-16"/>
+        <span>{{ $t("important") }}</span>
+      </span>
+      <span class="text-dark">{{ countImportant }}</span>
+    </li>
     <!-- today -->
     <li
       class="sidebar-item"
@@ -135,7 +147,17 @@
 </template>
 
 <script>
-import { File, Archive, Tags, Tag, Plus, Trash2, Pin, Calendar } from "lucide-vue-next";
+import {
+  File,
+  Archive,
+  Tags,
+  Tag,
+  Plus,
+  Trash2,
+  Pin,
+  Calendar,
+  FileWarning
+} from "lucide-vue-next";
 export default {
   name: "Sidebar",
   props: [
@@ -147,6 +169,7 @@ export default {
     "countArchived",
     "countPinned",
     "countToday",
+    "countImportant",
   ],
   emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
   components: {
@@ -157,7 +180,8 @@ export default {
     Plus,
     Trash2,
     Pin,
-    Calendar
+    Calendar,
+    FileWarning
   },
   data() {
     return {

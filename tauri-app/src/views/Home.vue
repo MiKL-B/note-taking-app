@@ -22,6 +22,7 @@
         :countArchived="getCountArchived"
         :countPinned="getCountPinned"
         :countToday="getCountToday"
+        :countImportant="getCountImportant"
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
         @select-filter="handleFilter"
@@ -56,6 +57,8 @@
           @update-status="changeNoteStatus"
           @toggle-pin-note="togglePinNote"
           :isPinned="selectedNote.pinned"
+          @toggle-important-note="toggleImportantNote"
+          :isImportant="selectedNote.important"
           v-model="selectedNote.status"
         />
       </div>
@@ -222,7 +225,11 @@ export default {
         case "pinned":
           return this.notes.filter((note) => note.pinned === true);
         case "today":
-          return this.notes.filter((note) => note.date.split(" ")[0] === this.getToday());
+          return this.notes.filter(
+            (note) => note.date.split(" ")[0] === this.getToday()
+          );
+        case "important":
+          return this.notes.filter((note) => note.important === true);
         default:
           return this.notes.filter((note) => {
             return note.tags.some((tag) =>
@@ -247,7 +254,12 @@ export default {
       return this.notes.filter((note) => note.pinned === true).length;
     },
     getCountToday() {
-      return this.notes.filter((note) => note.date.split(" ")[0] === this.getToday()).length;
+      return this.notes.filter(
+        (note) => note.date.split(" ")[0] === this.getToday()
+      ).length;
+    },
+    getCountImportant() {
+      return this.notes.filter((note) => note.important === true).length;
     },
   },
   methods: {
@@ -453,6 +465,7 @@ export default {
         tags: [],
         selected: false,
         pinned: false,
+        important: false,
       };
       this.notes.push(newNote);
       this.showNotification(
@@ -462,6 +475,9 @@ export default {
     },
     togglePinNote() {
       this.selectedNote.pinned = !this.selectedNote.pinned;
+    },
+    toggleImportantNote() {
+      this.selectedNote.important = !this.selectedNote.important;
     },
     duplicateNote() {
       if (!this.selectedNote) {
@@ -477,6 +493,7 @@ export default {
         tags: [],
         selected: false,
         pinned: false,
+        important: false,
       };
       this.notes.push(copyNote);
       this.showNotification(

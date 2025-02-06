@@ -11,6 +11,7 @@
     >
       <div id="note">
         <h4 class="note-title">
+          <span style="color:var(--red)" v-if="note.important">!</span>
           <Pin v-if="note.pinned" class="size-16 text-dark"/>
           <div class="color-circle" :class="`bg-${note.color}`"></div>
           <span>

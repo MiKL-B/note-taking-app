@@ -42,6 +42,9 @@
       </ul>
     </details>
     <span class="separator-y"></span>
+    <button @click="toggleImportantNote" :title="isPinned ? $t('unimportant_note') : $t('important_note')">
+      <FileWarning class="size-16" :style="isImportant ? 'color:var(--red)': ''"/>
+    </button>
     <button @click="togglePinNote" :title="isPinned ? $t('unpin_note') : $t('pin_note')">
       <PinOff v-if="isPinned" class="size-16"/>
       <Pin v-else class="size-16"/>
@@ -99,7 +102,8 @@ import {
   EyeOff,
   Eye,
   Pin,
-  PinOff
+  PinOff,
+  FileWarning
 } from "lucide-vue-next";
 export default {
   name: "Notebar",
@@ -117,16 +121,18 @@ export default {
     EyeOff,
     Eye,
     Pin,
-    PinOff
+    PinOff,
+    FileWarning
   },
-  props: ["tags", "showBoth","modelValue","isPinned"],
+  props: ["tags", "showBoth","modelValue","isPinned","isImportant"],
   emits: [
     "add-tag-note",
     "duplicate-note",
     "toggle-showboth",
     "toggle-preview-mode",
     "update-status",
-    "toggle-pin-note"
+    "toggle-pin-note",
+    "toggle-important-note"
   ],
   data() {
     return {
@@ -161,6 +167,9 @@ export default {
     },
     togglePinNote(){
       this.$emit("toggle-pin-note")
+    },
+    toggleImportantNote(){
+      this.$emit("toggle-important-note")
     },
     changeNoteStatus(value){
       this.$emit("update-status",value)

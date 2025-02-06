@@ -37,6 +37,7 @@ const messages = {
     archived: "Archived",
     pinned:"Pinned",
     today:"Today",
+    important:"Important",
     // notelist,
     create_first_note: "Create your first note!",
     filter_note_by_name: "Filter notes by name...",
@@ -46,6 +47,8 @@ const messages = {
     duplicate: "Duplicate note",
     pin_note:"Pin note",
     unpin_note:"Unpin note",
+    important_note:"Define as important",
+    unimportant_note:"Define as normal",
     // note
     note_name_here: "Note name here...",
     status: "Status",
@@ -110,6 +113,7 @@ const messages = {
     archived: "Archivées",
     pinned:"Epinglées",
     today:"Aujourd'hui",
+    important:"Importantes",
     // notelist,
     create_first_note: "Creer votre première note!",
     filter_note_by_name: "Rechercher par nom...",
@@ -119,6 +123,8 @@ const messages = {
     duplicate: "Dupliquer note",
     pin_note:"Epingler note",
     unpin_note:"Désépingler note",
+    important_note:"Définir comme important",
+    unimportant_note:"Définir comme normal",
     // note
     note_name_here: "Nom de la note ici...",
     status: "Statut",
