@@ -11,13 +11,9 @@
 </template>
 
 <script>
-import { Languages } from "lucide-vue-next";
 import { emit } from "@tauri-apps/api/event";
 export default {
   name: "LanguageSwitcher",
-  components: {
-    Languages,
-  },
   data() {
     return {
       language: "",

@@ -1,4 +1,5 @@
 <template>
+  <Titlebar name="Settings" :maximizable="false"/>
   <div id="settings">
     <LanguageSwitcher />
     <!-- <ThemeSwitcher /> -->
@@ -6,21 +7,23 @@
 </template>
 
 <script>
+import Titlebar from "../components/Titlebar.vue";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 // import ThemeSwitcher from "../components/ThemeSwitcher.vue";
 export default {
-  name: "NewWindow",
+  name: "SettingsWindow",
   components: {
+    Titlebar,
     LanguageSwitcher,
     // ThemeSwitcher,
   },
 };
 </script>
 <style>
-#settings{
-  padding:1rem;
+#settings {
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap:1rem;
+  gap: 1rem;
 }
 </style>

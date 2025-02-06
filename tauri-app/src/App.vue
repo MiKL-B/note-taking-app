@@ -1,16 +1,13 @@
 <template>
-  <Titlebar />
   <RouterView></RouterView>
 </template>
 <script>
 import { RouterView } from "vue-router";
-import Titlebar from "./components/Titlebar.vue";
 import { listen } from "@tauri-apps/api/event";
 export default {
   name: "App",
   components: {
     RouterView,
-    Titlebar,
   },
 
   mounted() {
@@ -25,4 +22,3 @@ export default {
   },
 };
 </script>
-<style></style>

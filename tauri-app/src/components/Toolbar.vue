@@ -65,8 +65,8 @@ export default {
   },
   methods: {
     openWindow() {
-      const webview = new WebviewWindow("new_window", {
-        url: "./new-window",
+      const webview = new WebviewWindow("settings_window", {
+        url: "./settings-window",
         decorations: false,
         title: "Settings",
         resizable: false,
@@ -76,7 +76,6 @@ export default {
         height: 400,
       });
       webview.once("tauri://created", function () {
-        console.log("Webview créé avec succès !");
         document.body.style.pointerEvents = "none";
         document.body.style.userSelect = "none";
         document.body.style.opacity = "0.5";

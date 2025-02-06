@@ -1,5 +1,5 @@
 <template>
-
+  <Titlebar />
   <Toolbar
     :isNoteSelected="selectedNote"
     @action-clicked="handleAction"
@@ -124,6 +124,7 @@
 </template>
 
 <script>
+import Titlebar from "../components/Titlebar.vue";
 import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Notelist from "../components/Notelist.vue";
@@ -138,6 +139,7 @@ import { marked } from "marked";
 export default {
   name: "Home",
   components: {
+    Titlebar,
     Toolbar,
     Sidebar,
     Notelist,

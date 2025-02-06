@@ -1,11 +1,11 @@
 <template>
   <div data-tauri-drag-region id="titlebar" class="titlebar">
-    <span>Thoth</span>
+    <span>{{ name }}</span>
     <div>
       <span class="titlebar-button" @click="minimize">
         <Minus />
       </span>
-      <span class="titlebar-button" @click="maximize">
+      <span class="titlebar-button" @click="maximize" v-if="maximizable">
         <Square />
       </span>
       <span class="titlebar-button titlebar-close-button" @click="close">
@@ -21,6 +21,18 @@ const appWindow = getCurrentWindow();
 import { Minus, Square, X } from "lucide-vue-next";
 export default {
   name: "Titlebar",
+
+  props: {
+    name: {
+      type: String,
+      default: "Thoth",
+    },
+    maximizable: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
   components: {
     Minus,
     Square,
@@ -48,7 +60,7 @@ export default {
   user-select: none;
   -webkit-user-select: none;
   padding-left: 0.5rem;
-  background:var(--lightgrey);
+  background: var(--lightgrey);
   color: var(--text-titlebar);
   border-bottom: var(--border);
 }
@@ -68,5 +80,4 @@ export default {
 .titlebar-close-button:hover {
   background: var(--red);
 }
-
 </style>
