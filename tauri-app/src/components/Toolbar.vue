@@ -27,48 +27,17 @@
         <li>{{ $t("paste") }}</li>
       </ul>
     </details> -->
-    <!-- View -->
-    <!-- <details class="toolbar-details" @click="handleClickOnDetails">
-      <summary class="toolbar-btn">{{ $t("view") }}</summary>
-      <ul class="toolbar-menu">
-        <li class="toolbar-toggle" @click="toggleMenuVisibility">
-          <span v-if="isVisibleMenu">
-            <Check />
-          </span>
-          <span>{{ $t("sidebar") }}</span>
-        </li>
-        <li
-          class="toolbar-toggle"
-          @click="toggleNoteListVisibility"
-          v-if="isNoteSelected"
-        >
-          <span v-if="isVisibleNoteList">
-            <Check />
-          </span>
-          <span>{{ $t("notelist") }}</span>
-        </li>
-        <li
-          class="toolbar-toggle"
-          @click="toggleNoteBarVisibility"
-          v-if="isNoteSelected"
-        >
-          <span v-if="isVisibleNoteBar">
-            <Check />
-          </span>
-          <span>{{ $t("notebar") }}</span>
-        </li>
-      </ul>
-    </details> -->
+
     <!-- Settings -->
     <span class="toolbar-btn" @click="openWindow">{{ $t("settings") }}</span>
 
     <!-- About -->
-    <!-- <details class="toolbar-details" @click="handleClickOnDetails">
+    <details class="toolbar-details" @click="handleClickOnDetails">
       <summary class="toolbar-btn">?</summary>
       <ul class="toolbar-menu">
-        <li>{{ $t("about") }}</li>
+        <li @click="displayAbout">{{ $t("about") }}</li>
       </ul>
-    </details> -->
+    </details>
   </div>
 </template>
 
@@ -86,9 +55,6 @@ export default {
   },
   data() {
     return {
-      isVisibleMenu: true,
-      isVisibleNoteList: true,
-      isVisibleNoteBar: true,
     };
   },
   mounted() {
@@ -103,11 +69,11 @@ export default {
         url: "./new-window",
         decorations: false,
         title: "Settings",
-        resizable:false,
-        alwaysOnTop:true,
-        center:true,
-        width:600,
-        height:400,
+        resizable: false,
+        alwaysOnTop: true,
+        center: true,
+        width: 600,
+        height: 400,
       });
       webview.once("tauri://created", function () {
         console.log("Webview créé avec succès !");
@@ -117,15 +83,16 @@ export default {
       });
 
       webview.once("tauri://close-requested", function () {
+        webview.close();
         document.body.style.pointerEvents = "auto";
         document.body.style.userSelect = "auto";
-        document.body.style.opacity = "1"; 
-        webview.close();
+        document.body.style.opacity = "1";
       });
 
       webview.once("tauri://error", function (e) {
         console.error("Erreur lors de la création du webview :", e);
       });
+
     },
     handleClickOnDetails() {
       let detailsOpened = document.querySelectorAll(".toolbar-details");
@@ -146,17 +113,9 @@ export default {
     onSubMenuClick(action) {
       this.$emit("action-clicked", action);
     },
-    toggleMenuVisibility() {
-      this.isVisibleMenu = !this.isVisibleMenu;
-      this.$emit("toggle-menu", this.isVisibleMenu);
-    },
-    toggleNoteListVisibility() {
-      this.isVisibleNoteList = !this.isVisibleNoteList;
-      this.$emit("toggle-notelist", this.isVisibleNoteList);
-    },
-    toggleNoteBarVisibility() {
-      this.isVisibleNoteBar = !this.isVisibleNoteBar;
-      this.$emit("toggle-notebar", this.isVisibleNoteBar);
+    displayAbout(){
+      let msg = this.$t('developed')
+      alert(msg + " Becquer Michaël.")
     },
     close() {
       appWindow.close();

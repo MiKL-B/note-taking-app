@@ -135,7 +135,6 @@ import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { marked } from "marked";
-
 export default {
   name: "Home",
   components: {
@@ -175,6 +174,7 @@ export default {
       sortedAsc: true,
     };
   },
+
   computed: {
     noteHeight() {
       return this.isVisibleNoteBar ? "calc(100% - 48px)" : "calc(100% - 5px)";

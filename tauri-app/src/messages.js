@@ -58,6 +58,14 @@ const messages = {
     add_tag: "Add tag",
     side_by_side: "View side by side",
     toggle_preview: "View text - markdown",
+    // settings
+    english: "English",
+    french: "French",
+    select_language: "Select language",
+    language_description:
+      "This is the language that will be used in the application.",
+    // about
+    developed: "Application developed by",
   },
   fr: {
     // titlebar
@@ -118,6 +126,14 @@ const messages = {
     add_tag: "Ajouter tag",
     side_by_side: "Affichage côte à côte",
     toggle_preview: "Affichage text - markdown",
+    // settings
+    english: "Anglais",
+    french: "Français",
+    select_language: "Sélectionner la langue",
+    language_description:
+      "Il s’agit de la langue qui sera utilisée dans l’application.",
+    // about
+    developed: "Application développée par",
   },
 };
 
