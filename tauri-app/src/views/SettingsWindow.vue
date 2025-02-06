@@ -2,20 +2,20 @@
   <Titlebar :name="$t('settings')" :maximizable="false"/>
   <div id="settings">
     <LanguageSwitcher />
-    <!-- <ThemeSwitcher /> -->
+    <ThemeSwitcher />
   </div>
 </template>
 
 <script>
 import Titlebar from "../components/Titlebar.vue";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
-// import ThemeSwitcher from "../components/ThemeSwitcher.vue";
+import ThemeSwitcher from "../components/ThemeSwitcher.vue";
 export default {
   name: "SettingsWindow",
   components: {
     Titlebar,
     LanguageSwitcher,
-    // ThemeSwitcher,
+    ThemeSwitcher,
   },
 };
 </script>

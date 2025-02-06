@@ -187,5 +187,7 @@ export default {
   gap: 0.2rem;
   height: 42px;
   overflow-y: auto;
+  background:var(--bg-notebar);
+  color:var(--text-color-notebar);
 }
 </style>

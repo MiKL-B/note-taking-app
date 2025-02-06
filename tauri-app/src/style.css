@@ -17,7 +17,7 @@
   --purple: #c678dd;
 
   /* EVERFOREST */
-  --bgdim: #293136;
+  --bgdim: #353941;
   --bg0: #333c43;
   --bg1: #3a464c;
   --bg2: #434f55;
@@ -40,25 +40,103 @@
   --color_purple: #d699b6;
 }
 [data-theme="light"] {
-  --bg-titlebar: var(--lightgrey2);
-  --bg-color: var(--white);
-  --bg-toolbar: var(--white);
-  --bg-sidebar: var(--lightgrey);
-  --text-titlebar: var(--dark2);
-  --text-color: var(--dark2);
+  /* body */
+  --bg-body: var(--white);
+  /* border */
   --border: 1px solid #e4e4e7;
+  /* button */
+  --text-color-button: var(--dark2);
+  --bg-hover-button: var(--lightgrey);
+  --text-color-button-disabled: var(--grey);
+ /* label */
+ --text-color-label:var(--dark2);
+  /* input */
+  --text-color-input: var(--dark2);
+  /* option */
+  --text-color-option: var(--dark2);
+  --bg-option: var(--lightgrey);
+  /* textarea */
+  --bg-textarea: var(--white);
+  --text-color-textarea: var(--dark2);
+  /* scrollbar */
+  --scrollbar-track: var(--lightgrey);
+  --scrollbar-track-horizontal: var(--lightgrey);
+  --scrollbar-thumb: var(--lightgrey3);
+  --scrollbar-thumb-horizontal: var(--lightgrey3);
+  --scrollbar-hover-thumb: var(--grey);
+  /* titlebar */
+  --bg-titlebar: var(--lightgrey);
+  --text-color-titlebar: var(--dark2);
+  --bg-hover-titlebar: var(--grey);
+  /* toolbar */
+  --bg-toolbar: var(--white);
+  --text-color-toolbar: var(--dark2);
+  --bg-hover-toolbar: var(--lightgrey2);
+  /* sidebar */
+  --bg-sidebar: var(--lightgrey);
+  --bg-hover-sidebar: var(--lightgrey3);
+  --bg-selected-sidebar: var(--lightgrey3);
+  --text-color-sidebar: var(--dark2);
+  /* notelist */
+  --bg-notelist: var(--white);
+  --text-color-notelist: var(--dark2);
+  --bg-note-selected: #f4f4f5;
+  /* notebar */
+  --bg-notebar: var(--white);
+  --text-color-notebar: var(--dark2);
+  /* note */
+  --bg-note: var(--white);
+  --text-color-note: var(--dark2);
 }
-
-/* everforest */
-/* [data-theme="dark"] {
-  --bg-titlebar: var(--bgdim);
-  --text-titlebar:#7A8478;
-  --bg-toolbar:var(--bgdim);
-  --bg-color: var(--bgdim);
-  --bg-sidebar:#282c34;
-  --text-color: #7A8478;
+[data-theme="dark"] {
+  /* body */
+  --bg-body: var(--dark2);
+  /* border */
   --border: 1px solid var(--dark);
-} */
+  /* button */
+  --text-color-button: var(--lightgrey);
+  --bg-hover-button: #353941;
+  --text-color-button-disabled: var(--dark);
+  /* label */
+  --text-color-label:var(--lightgrey);
+  /* input */
+  --text-color-input: var(--lightgrey);
+  /* option */
+  --text-color-option: var(--lightgrey);
+  --bg-option: var(--dark2);
+  /* textarea */
+  --bg-textarea: var(--dark2);
+  --text-color-textarea: var(--lightgrey);
+  /* scrollbar */
+  --scrollbar-track: var(--dark2);
+  --scrollbar-track-horizontal: var(--dark2);
+  --scrollbar-thumb: var(--dark);
+  --scrollbar-thumb-horizontal: var(--dark);
+  --scrollbar-hover-thumb: #353941;
+  /* titlebar */
+  --bg-titlebar: var(--dark2);
+  --text-color-titlebar: var(--lightgrey);
+  --bg-hover-titlebar: #353941;
+  /* toolbar */
+  --bg-toolbar: var(--dark2);
+  --text-color-toolbar: var(--lightgrey);
+  --bg-hover-toolbar: #353941;
+  /* sidebar */
+  --bg-sidebar: var(--dark2);
+  --bg-hover-sidebar: #353941;
+  --bg-selected-sidebar: #353941;
+  --text-color-sidebar: var(--lightgrey);
+  /* notelist */
+  --bg-notelist: var(--dark2);
+  --text-color-notelist: var(--lightgrey);
+  --bg-note-selected: #353941;
+  /* notebar */
+  --bg-notebar: var(--dark2);
+  --text-color-notebar: var(--lightgrey);
+  /* note */
+  --bg-note: var(--dark2);
+  --text-color-note: var(--lightgrey);
+}
 
 * {
   margin: 0;
@@ -71,7 +149,7 @@
 
 body {
   overflow: hidden;
-  background: var(--bg-color);
+  background: var(--bg-body);
   height: 100vh;
 }
 
@@ -85,14 +163,23 @@ body {
 }
 input,
 select {
-  border: 1px solid #e4e4e7;
-  color: var(--dark2);
+  border: var(--border);
+  color: var(--text-color-input);
   padding: 0.5rem;
   border-radius: 5px;
   height: 35px;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   outline: none;
   font-family: "Inter", serif;
+  background-color: transparent;
+}
+option {
+  color: var(--text-color-option);
+  background: var(--bg-option);
+}
+input[type="checkbox"] {
+  width: 16px;
+  box-shadow: none;
 }
 input[type="color"] {
   background: none;
@@ -118,6 +205,8 @@ textarea {
   font-size: 1rem;
   top: 4.5rem;
   bottom: 0;
+  background: var(--bg-textarea);
+  color: var(--text-color-textarea);
 }
 button,
 .app-btn {
@@ -129,16 +218,19 @@ button,
   background: transparent;
   padding: 0.5rem 0.75rem;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
-  color: var(--dark2);
+  color: var(--text-color-button);
 }
 
 button:hover {
   cursor: pointer;
-  background: var(--lightgrey);
+  background: var(--bg-hover-button);
 }
 button[disabled] {
-  color: var(--grey);
+  color: var(--text-color-button-disabled);
   cursor: not-allowed;
+}
+button[disabled]:hover{
+  background:transparent;
 }
 .bt-symbol {
   width: 40px;
@@ -149,15 +241,15 @@ button[disabled] {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--lightgrey);
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e4e4e7;
+  background: var(--scrollbar-thumb);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--grey);
+  background: var(--scrollbar-hover-thumb);
   cursor: pointer;
 }
 ::-webkit-scrollbar:horizontal {
@@ -165,11 +257,11 @@ button[disabled] {
 }
 
 ::-webkit-scrollbar-track:horizontal {
-  background: var(--lightgrey);
+  background: var(--scrollbar-track-horizontal);
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
-  background: #e4e4e7;
+  background: var(--scrollbar-thumb-horizontal);
 }
 .separator-y {
   border-right: var(--border);

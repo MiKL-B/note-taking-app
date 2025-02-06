@@ -1,28 +1,23 @@
 <template>
-  <li class="toolbar-toggle" @click="toggleTheme">
-    <span v-if="theme === 'dark'">
-      <Moon />
-    </span>
-    <span v-else>
-      <Sun />
-    </span>
-    <span>{{ $t('theme') }}</span>
-  </li>
+  <div class="field">
+    <label for="theme">{{ $t("theme") }}</label>
+    <div class="flex align-center gap-4">
+      <input type="checkbox" @click="toggleTheme" :checked="theme === 'dark' ? true : false"/>
+      <span class="label">{{ theme === "light" ? $t("light") : $t("dark") }}</span>
+    </div>
+  </div>
 </template>
 
 <script>
-import { Sun, Moon } from "lucide-vue-next";
+import { emit } from "@tauri-apps/api/event";
 export default {
   name: "ThemeSwitcher",
   data() {
     return {
-      theme: "light",
+      theme: "",
     };
   },
-  components: {
-    Sun,
-    Moon,
-  },
+
   mounted() {
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme) {
@@ -37,6 +32,7 @@ export default {
       this.theme = this.theme === "light" ? "dark" : "light";
       this.applyTheme(this.theme);
       localStorage.setItem("theme", this.theme);
+      emit("theme-changed", this.theme);
     },
     applyTheme(theme) {
       document.documentElement.setAttribute("data-theme", theme);
@@ -44,3 +40,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.label{
+  color:var(--text-color-label);
+}
+</style>

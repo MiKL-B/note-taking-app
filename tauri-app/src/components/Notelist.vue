@@ -11,8 +11,8 @@
     >
       <div id="note">
         <h4 class="note-title">
-          <span style="color:var(--red)" v-if="note.important">!</span>
-          <Pin v-if="note.pinned" class="size-16 text-dark"/>
+          <span style="color: var(--red)" v-if="note.important">!</span>
+          <Pin v-if="note.pinned" class="size-16 text-dark" />
           <div class="color-circle" :class="`bg-${note.color}`"></div>
           <span>
             {{ note.name }}
@@ -29,7 +29,7 @@
         <p class="note-content">
           {{ note.content }}
         </p>
-        <span>{{ note.date }}</span>
+        <span class="note-date">{{ note.date }}</span>
       </div>
       <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
     </div>
@@ -58,7 +58,7 @@ export default {
 </script>
 <style>
 #notelist {
-  height: calc(100vh - 150px);
+  height: calc(100vh - 109px);
   overflow-y: auto;
 }
 #note-container {
@@ -70,7 +70,7 @@ export default {
 }
 
 .note-selected {
-  background: #f4f4f5;
+  background: var(--bg-note-selected);
 }
 
 #note-container:hover .note-trash {
@@ -89,6 +89,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.2rem;
+  color:var(--text-color-notelist);
 }
 .notelist-tag {
   display: flex;
@@ -103,7 +104,7 @@ export default {
 }
 
 #note-container:hover {
-  background: #f4f4f5;
+  background: var(--bg-note-selected);
   cursor: pointer;
 }
 .note-trash {
@@ -111,9 +112,11 @@ export default {
   transition: opacity 0.3s ease;
   pointer-events: none;
   color: var(--red);
-  margin:auto;
+  margin: auto;
 }
-
+.note-date{
+  color:var(--text-color-notelist);
+}
 .note-trash:hover {
   cursor: pointer;
 }

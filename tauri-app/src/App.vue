@@ -19,6 +19,19 @@ export default {
         this.$i18n.locale = newLanguage;
       });
     }
+    const storedTheme = localStorage.getItem("theme");
+    this.applyTheme(storedTheme);
+    if (storedTheme) {
+      listen("theme-changed", (event) => {
+        const newTheme = event.payload;
+        this.applyTheme(newTheme);
+      });
+    }
+  },
+  methods: {
+    applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+    },
   },
 };
 </script>

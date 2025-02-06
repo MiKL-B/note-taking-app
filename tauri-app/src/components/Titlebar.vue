@@ -60,8 +60,8 @@ export default {
   user-select: none;
   -webkit-user-select: none;
   padding-left: 0.5rem;
-  background: var(--lightgrey);
-  color: var(--text-titlebar);
+  background: var(--bg-titlebar);
+  color: var(--text-color-titlebar);
   border-bottom: var(--border);
 }
 
@@ -73,7 +73,7 @@ export default {
   height: 32px;
 }
 .titlebar-button:hover {
-  background: var(--grey);
+  background: var(--bg-hover-titlebar);
   cursor: pointer;
 }
 

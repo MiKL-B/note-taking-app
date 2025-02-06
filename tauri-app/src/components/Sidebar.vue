@@ -230,9 +230,10 @@ export default {
 <style scoped>
 #sidebar {
   padding: 0 0 0.5rem 0;
-  height: calc(100vh - 95px);
+  height: calc(100vh - 65px);
   overflow-y: hidden;
-  background: var(--lightgrey);
+  background: var(--bg-sidebar);
+  color:var(--text-color-sidebar);
 }
 
 .sidebar-item {
@@ -266,11 +267,11 @@ export default {
 .sidebar-item:hover,
 .sidebar-sub-item:hover,
 #sidebar-tags-btn:hover {
-  background: #e4e4e7;
+  background:var(--bg-hover-sidebar);
   cursor: pointer;
 }
 .sidebar-label:hover {
-  background: var(--lightgrey);
+  background:none;
 }
 .sidebar-sub-item {
   display: flex;
@@ -322,7 +323,7 @@ export default {
 }
 .tag-selected,
 .filterselected {
-  background: #e4e4e7;
+  background: var(--bg-selected-sidebar);
 }
 .sidebar-input-tag {
   background: none;
@@ -331,5 +332,7 @@ export default {
   width: 90%;
   padding: 0;
   height: 50%;
+  color:var(--text-color-sidebar);
 }
+
 </style>

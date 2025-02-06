@@ -45,6 +45,7 @@ export default {
 label {
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color:var(--text-color-label);
 }
 .setting-info {
   margin: 0.5rem 0;

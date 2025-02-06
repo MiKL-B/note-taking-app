@@ -124,6 +124,7 @@ export default {
   gap: 1rem;
   position: relative;
   background: var(--bg-toolbar);
+  color:var(--text-color-toolbar);
 }
 .toolbar-btn {
   padding: 0.2rem 0.5rem;
@@ -133,12 +134,12 @@ export default {
 }
 .toolbar-btn:hover,
 .toolbar-menu li:hover {
-  background: var(--lightgrey2);
+  background: var(--bg-hover-toolbar);
   cursor: pointer;
 }
 
 .toolbar-menu {
-  background-color: white;
+  background-color: var(--bg-toolbar);
   position: absolute;
   z-index: 1;
   margin-top: 5px;

@@ -126,7 +126,7 @@
     :color="colorNotification"
     :showNotification="isVisibleNotification"
   />
-  <Statusbar :noteLength="getContentNoteLength" />
+  <!-- <Statusbar :noteLength="getContentNoteLength" /> -->
 </template>
 
 <script>
@@ -135,7 +135,7 @@ import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Notelist from "../components/Notelist.vue";
 import Notebar from "../components/Notebar.vue";
-import Statusbar from "../components/Statusbar.vue";
+// import Statusbar from "../components/Statusbar.vue";
 import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
@@ -151,7 +151,7 @@ export default {
     Notelist,
     Notebar,
     Notification,
-    Statusbar,
+
     FilterNote,
     Plus,
     Eye,
@@ -675,7 +675,7 @@ export default {
 </script>
 <style>
 #container {
-  height: calc(100vh - 95px);
+  height: calc(100vh - 65px);
   display: flex;
 }
 
@@ -687,10 +687,14 @@ export default {
 .column-notelist {
   border-right: var(--border);
   max-width: 320px;
+  background: var(--bg-notelist);
+  color: var(--text-color-notelist);
 }
 .column-note-content {
   position: relative;
-  max-width: calc(100vw - 470px);
+  max-width: calc(100vw - 464px);
+  background: var(--bg-note);
+  color: var(--text-color-note);
 }
 #column-note-title {
   display: inline-flex;
@@ -757,7 +761,7 @@ img {
 #bothColumns {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  height: calc(100vh - 205px);
+  height: calc(100vh - 170px);
 }
 .separator-column {
   border-left: none;
@@ -766,7 +770,7 @@ img {
   margin: 0 1rem;
 }
 #oneView {
-  height: calc(100vh - 205px);
+  height: calc(100vh - 170px);
 }
 #oneView div {
   height: 100%;
@@ -775,7 +779,7 @@ img {
   height: 100%;
 }
 .disabled {
-  color: var(--grey);
+  color: var(--text-color-button-disabled);
   cursor: not-allowed;
   user-select: none;
 }
