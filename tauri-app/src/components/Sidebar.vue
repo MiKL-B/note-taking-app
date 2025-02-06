@@ -1,16 +1,30 @@
 <template>
   <ul id="sidebar">
+    <!-- all notes -->
     <li
       class="sidebar-item"
       @click="selectFilter('allnotes')"
       :class="{ filterselected: selectedFilter === 'allnotes' }"
     >
       <span class="sidebar-sub-label">
-        <File />
+        <File class="size-16"/>
         <span>{{ $t("allnotes") }}</span>
       </span>
       <span class="text-dark">{{ countAllNotes }}</span>
     </li>
+    <!-- pinned -->
+    <li
+      class="sidebar-item"
+      @click="selectFilter('pinned')"
+      :class="{ filterselected: selectedFilter === 'pinned' }"
+    >
+      <span class="sidebar-sub-label">
+        <Pin class="size-16"/>
+        <span>{{ $t("pinned") }}</span>
+      </span>
+      <span class="text-dark">{{ countPinned }}</span>
+    </li>
+    <!-- todo -->
     <li
       class="sidebar-item"
       @click="selectFilter('todo')"
@@ -22,6 +36,7 @@
       </span>
       <span class="text-dark">{{ countTodo }}</span>
     </li>
+    <!-- inprogress -->
     <li
       class="sidebar-item"
       @click="selectFilter('inprogress')"
@@ -33,6 +48,7 @@
       </span>
       <span class="text-dark">{{ countInProgress }}</span>
     </li>
+    <!-- finished -->
     <li
       class="sidebar-item"
       @click="selectFilter('finished')"
@@ -44,23 +60,25 @@
       </span>
       <span class="text-dark">{{ countFinished }}</span>
     </li>
+    <!-- archived -->
     <li
       class="sidebar-item"
       @click="selectFilter('archived')"
       :class="{ filterselected: selectedFilter === 'archived' }"
     >
       <span class="sidebar-sub-label">
-        <Archive />
+        <Archive class="size-16"/>
         <span>{{ $t("archived") }}</span>
       </span>
       <span class="text-dark">{{ countArchived }}</span>
     </li>
+    <!-- tags -->
     <li class="sidebar-item sidebar-label">
       <span class="sidebar-sub-label">
-        <Tags />
+        <Tags class="size-16"/>
         <span>Tags</span>
       </span>
-      <span id="sidebar-tags-btn" @click="addTag"><Plus class="text-dark"/></span>
+      <span id="sidebar-tags-btn" @click="addTag"><Plus class="text-dark size-16"/></span>
     </li>
     <div id="sidebar-container-list">
       <ul id="sidebar-tags-list">
@@ -74,7 +92,7 @@
           <span class="sidebar-sub-label">
             <details class="toolbar-details">
               <summary>
-                <Tag :style="`color: var(--${tag.color}`" />
+                <Tag :style="`color: var(--${tag.color}`" class="size-16"/>
               </summary>
               <ul class="toolbar-menu">
                 <li
@@ -103,7 +121,7 @@
 </template>
 
 <script>
-import { File, Archive, Tags, Tag, Plus, Trash2 } from "lucide-vue-next";
+import { File, Archive, Tags, Tag, Plus, Trash2,Pin } from "lucide-vue-next";
 export default {
   name: "Sidebar",
   props: [
@@ -113,6 +131,7 @@ export default {
     "countInProgress",
     "countFinished",
     "countArchived",
+    "countPinned",
   ],
   emits: ["select-filter", "set-color","delete-tag","update-tag-name"],
   components: {
@@ -122,6 +141,7 @@ export default {
     Tag,
     Plus,
     Trash2,
+    Pin
   },
   data() {
     return {

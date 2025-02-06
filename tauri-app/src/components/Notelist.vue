@@ -1,37 +1,35 @@
 <template>
   <div id="notelist">
-    <span id="notelist-nonotes" v-if="notes.length <= 0"
-      >{{ $t("create_first_note") }}</span
-    >
+    <span id="notelist-nonotes" v-if="notes.length <= 0">{{
+      $t("create_first_note")
+    }}</span>
     <div
       id="note-container"
       v-for="note in notes"
       :class="note.selected ? 'note-selected' : ''"
+      @click="selectNote(note)"
     >
-      <div id="note" @click="selectNote(note)">
-        <div class="note-content">
-          <h4 class="note-title">
-            <div class="color-circle" :class="`bg-${note.color}`"></div>
-            <span>
-              {{ note.name }}
-            </span>
-          </h4>
-          <div class="notelist-tag">
-            <span
-              class="tag"
-              v-for="tag in note.tags"
-              :style="` background: var(--${tag.color} `"
-              >{{ tag.name }}</span
-            >
-          </div>
-          <p class="note-content">
-            {{ note.content }}
-          </p>
-          <span>{{ note.date }}</span>
+      <div id="note">
+        <h4 class="note-title">
+          <div class="color-circle" :class="`bg-${note.color}`"></div>
+          <span>
+            {{ note.name }}
+          </span>
+        </h4>
+        <div class="notelist-tag">
+          <span
+            class="tag"
+            v-for="tag in note.tags"
+            :style="`background: var(--${tag.color})`"
+            >{{ tag.name }}</span
+          >
         </div>
+        <p class="note-content">
+          {{ note.content }}
+        </p>
+        <span>{{ note.date }}</span>
       </div>
-
-      <Trash2 class="note-trash" @click="deleteNote(note)" />
+      <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
     </div>
   </div>
 </template>
@@ -60,12 +58,14 @@ export default {
   height: calc(100vh - 150px);
   overflow-y: auto;
 }
-
-#note {
-  padding: 1rem 0.5rem;
+#note-container {
   display: grid;
   grid-template-columns: 200px auto;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  border-bottom: var(--border);
 }
+
 .note-selected {
   background: #f4f4f5;
 }
@@ -79,6 +79,7 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: var(--dark);
 }
 
 .note-title {
@@ -97,23 +98,17 @@ export default {
   user-select: none;
   display: flex;
 }
-#note-container {
-  display: flex;
-  align-items: center;
-  transition: 0.3s ease;
-  border-bottom: var(--border);
-}
+
 #note-container:hover {
   background: #f4f4f5;
   cursor: pointer;
 }
 .note-trash {
-  display: flex;
-  justify-content: space-between;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
   color: var(--red);
+  margin:auto;
 }
 
 .note-trash:hover {

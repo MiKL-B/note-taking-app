@@ -1,7 +1,6 @@
 <template>
   <Titlebar />
   <Toolbar
-    :isNoteSelected="selectedNote"
     @action-clicked="handleAction"
     @toggle-menu="toggleMenu"
     @toggle-notelist="toggleNoteList"
@@ -21,6 +20,7 @@
         :countInProgress="getCountInProgress"
         :countFinished="getCountFinished"
         :countArchived="getCountArchived"
+        :countPinned="getCountPinned"
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
         @select-filter="handleFilter"
@@ -53,6 +53,8 @@
           @toggle-showboth="toggleShowBothTextareaPreview"
           @duplicate-note="duplicateNote"
           @update-status="changeNoteStatus"
+          @toggle-pin-note="togglePinNote"
+          :isPinned="selectedNote.pinned"
           v-model="selectedNote.status"
         />
       </div>
@@ -77,7 +79,7 @@
             :style="` background: var(--${tag.color} `"
             >{{ tag.name }}
             <span class="delete-tag-btn" @click="deleteTagNote(tag)"
-              ><X />
+              ><X class="size-16" />
             </span>
           </span>
         </div>
@@ -216,6 +218,8 @@ export default {
               .toLowerCase()
               .includes(this.searchNote.toLowerCase());
           });
+        case "pinned":
+          return this.notes.filter((note) => note.pinned === true);
         default:
           return this.notes.filter((note) => {
             return note.tags.some((tag) =>
@@ -236,6 +240,9 @@ export default {
     getCountArchived() {
       return this.notes.filter((note) => note.status === "archived").length;
     },
+    getCountPinned(){
+      return this.notes.filter((note) => note.pinned === true).length;
+    }
   },
   methods: {
     sortNotes() {
@@ -436,12 +443,16 @@ export default {
         content: "",
         tags: [],
         selected: false,
+        pinned: false,
       };
       this.notes.push(newNote);
       this.showNotification(
         this.$t("note_created", { note_name: newNote.name }),
         "green"
       );
+    },
+    togglePinNote() {
+      this.selectedNote.pinned = !this.selectedNote.pinned;
     },
     duplicateNote() {
       if (!this.selectedNote) {
@@ -456,6 +467,7 @@ export default {
         content: this.selectedNote.content,
         tags: this.selectedNote.tags,
         selected: false,
+        pinned:false,
       };
       this.notes.push(copyNote);
       this.showNotification(
@@ -583,6 +595,7 @@ export default {
         tags: this.tags,
       };
       if (data.notes.length === 0 && data.tags.length === 0) {
+        this.showNotification(this.$t("no_data_to_export"), "red");
         return;
       }
       const json = JSON.stringify(data);

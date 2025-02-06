@@ -36,21 +36,26 @@
           :key="tag.id"
           @click="addTagToNote(tag)"
         >
-          <Tag :style="`color: var(--${tag.color}) `" />
+          <Tag :style="`color: var(--${tag.color}) `" class="size-16"/>
           <span>{{ tag.name }}</span>
         </li>
       </ul>
     </details>
     <span class="separator-y"></span>
-    <button :disabled="showBoth" @click="togglePreviewMode" :title="$t('toggle_preview')">
-      <EyeOff v-if="isPreviewMode" />
-      <Eye v-else />
-    </button>
-    <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
-      <Columns2 />
+    <button @click="togglePinNote" :title="isPinned ? $t('unpin_note') : $t('pin_note')">
+      <PinOff v-if="isPinned" class="size-16"/>
+      <Pin v-else class="size-16"/>
     </button>
     <button @click="duplicateNote" :title="$t('duplicate')">
-      <CopyPlus />
+      <CopyPlus class="size-16"/>
+    </button>
+    <span class="separator-y"></span>
+    <button :disabled="showBoth" @click="togglePreviewMode" :title="$t('toggle_preview')">
+      <EyeOff v-if="isPreviewMode" class="size-16"/>
+      <Eye v-else class="size-16"/>
+    </button>
+    <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
+      <Columns2 class="size-16"/>
     </button>
     <!-- <span class="separator-y"></span>
     <button class="bt-symbol" title="Bold">
@@ -81,42 +86,47 @@
 
 <script>
 import {
-  Bold,
-  Italic,
-  Underline,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  AlignJustify,
+  // Bold,
+  // Italic,
+  // Underline,
+  // AlignLeft,
+  // AlignCenter,
+  // AlignRight,
+  // AlignJustify,
   Tag,
   CopyPlus,
   Columns2,
   EyeOff,
   Eye,
+  Pin,
+  PinOff
 } from "lucide-vue-next";
 export default {
   name: "Notebar",
   components: {
-    Bold,
-    Italic,
-    Underline,
-    AlignLeft,
-    AlignCenter,
-    AlignRight,
-    AlignJustify,
+    // Bold,
+    // Italic,
+    // Underline,
+    // AlignLeft,
+    // AlignCenter,
+    // AlignRight,
+    // AlignJustify,
     Tag,
     CopyPlus,
     Columns2,
     EyeOff,
     Eye,
+    Pin,
+    PinOff
   },
-  props: ["tags", "showBoth","modelValue"],
+  props: ["tags", "showBoth","modelValue","isPinned"],
   emits: [
     "add-tag-note",
     "duplicate-note",
     "toggle-showboth",
     "toggle-preview-mode",
-    "update-status"
+    "update-status",
+    "toggle-pin-note"
   ],
   data() {
     return {
@@ -146,7 +156,11 @@ export default {
       this.$emit("toggle-showboth");
     },
     togglePreviewMode() {
+      this.isPreviewMode = !this.isPreviewMode
       this.$emit("toggle-preview-mode");
+    },
+    togglePinNote(){
+      this.$emit("toggle-pin-note")
     },
     changeNoteStatus(value){
       this.$emit("update-status",value)

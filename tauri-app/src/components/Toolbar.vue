@@ -42,21 +42,13 @@
 </template>
 
 <script>
-import { Check } from "lucide-vue-next";
+
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 const appWindow = getCurrentWindow();
 export default {
   name: "Toolbar",
-  props: ["isNoteSelected"],
-  components: {
-    Check,
-  },
-  data() {
-    return {
-    };
-  },
   mounted() {
     document.addEventListener("click", this.closeDetails);
   },
@@ -83,6 +75,8 @@ export default {
 
       webview.once("tauri://close-requested", function () {
         webview.close();
+      });
+      webview.once("tauri://destroyed", function () {
         document.body.style.pointerEvents = "auto";
         document.body.style.userSelect = "auto";
         document.body.style.opacity = "1";
@@ -91,7 +85,6 @@ export default {
       webview.once("tauri://error", function (e) {
         console.error("Erreur lors de la création du webview :", e);
       });
-
     },
     handleClickOnDetails() {
       let detailsOpened = document.querySelectorAll(".toolbar-details");
@@ -112,9 +105,9 @@ export default {
     onSubMenuClick(action) {
       this.$emit("action-clicked", action);
     },
-    displayAbout(){
-      let msg = this.$t('developed')
-      alert(msg + " Becquer Michaël.")
+    displayAbout() {
+      let msg = this.$t("developed");
+      alert(msg + " Becquer Michaël.");
     },
     close() {
       appWindow.close();

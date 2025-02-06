@@ -3,13 +3,13 @@
     <span>{{ name }}</span>
     <div>
       <span class="titlebar-button" @click="minimize">
-        <Minus />
+        <Minus class="size-16"/>
       </span>
       <span class="titlebar-button" @click="maximize" v-if="maximizable">
-        <Square />
+        <Square class="size-16"/>
       </span>
       <span class="titlebar-button titlebar-close-button" @click="close">
-        <X />
+        <X class="size-16"/>
       </span>
     </div>
   </div>
