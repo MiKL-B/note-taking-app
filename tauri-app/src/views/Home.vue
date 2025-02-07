@@ -31,9 +31,12 @@
     </div>
     <div class="column-notelist" :class="{ invisible: !isVisibleNoteList }">
       <FilterNote
+      :canCreateNote="canCreateNote"
         v-model="searchNote"
         @create-note="createNote"
-        @sort-notes="toggleSort"
+        @sort-notes-AZ="toggleSortAZ"
+        @sort-notes-date="toggleSortByDate"
+        @sort-notes-clear="clearFilterSort"
       />
       <Notelist
         :notes="filteredNotes"
@@ -65,7 +68,7 @@
       <div class="column-note-content" :style="{ height: noteHeight }">
         <div id="column-note-title">
           <div
-           style="margin:auto 0"
+            style="margin: auto 0"
             class="color-circle"
             :class="`bg-${selectedNote.color}`"
           ></div>
@@ -151,7 +154,6 @@ export default {
     Notelist,
     Notebar,
     Notification,
-
     FilterNote,
     Plus,
     Eye,
@@ -180,6 +182,9 @@ export default {
       messageNotification: "",
       colorNotification: "",
       sortedAsc: true,
+      sortedDate: true,
+      timerCreateNote:null,
+      canCreateNote:true,
     };
   },
 
@@ -276,12 +281,32 @@ export default {
         return 0;
       });
     },
-    toggleSort() {
+    sortNotesDate(ascending) {
+      this.notes.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (ascending) {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+    },
+    toggleSortAZ() {
       this.sortedAsc = !this.sortedAsc;
       this.sortNotes();
       if (!this.sortedAsc) {
         this.notes.reverse();
       }
+    },
+    clearFilterSort(){
+      this.sortedAsc = true;
+      this.sortedDate = true;
+      this.sortNotesDate(true);
+    },
+    toggleSortByDate() {
+      this.sortedDate = !this.sortedDate;
+      this.sortNotesDate(this.sortedDate);
     },
     getMarkdownHtml() {
       return marked(this.selectedNoteContent, { sanitize: true });
@@ -472,6 +497,14 @@ export default {
         this.$t("note_created", { note_name: newNote.name }),
         "green"
       );
+      this.setDelayCreationNote()
+    },
+    setDelayCreationNote(){
+      const duration = 500;
+      this.canCreateNote = false;
+      this.timerCreateNote = setTimeout(()=>{
+        this.canCreateNote = true;
+      },duration)
     },
     togglePinNote() {
       this.selectedNote.pinned = !this.selectedNote.pinned;
@@ -500,6 +533,7 @@ export default {
         this.$t("note_duplicated", { note_name: this.selectedNote.name }),
         "green"
       );
+      this.setDelayCreationNote()
     },
     showNotification(message, color) {
       this.isVisibleNotification = true;
@@ -670,6 +704,7 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.timerNotification);
+    clearTimeout(this.timerCreateNote);
   },
 };
 </script>
@@ -779,6 +814,7 @@ img {
 #bothColumns div {
   height: 100%;
 }
+.app-btn.disabled,
 .disabled {
   color: var(--text-color-button-disabled);
   cursor: not-allowed;

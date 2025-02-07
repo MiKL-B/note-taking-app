@@ -146,6 +146,7 @@ export default {
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   min-width: 100px;
+  user-select: none;
 }
 .toolbar-menu li {
   list-style-type: none;

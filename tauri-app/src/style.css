@@ -219,9 +219,10 @@ button,
   padding: 0.5rem 0.75rem;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   color: var(--text-color-button);
+  cursor: pointer;
 }
 
-button:hover {
+button:hover, .app-btn:hover {
   cursor: pointer;
   background: var(--bg-hover-button);
 }

@@ -1,9 +1,23 @@
 <template>
   <div id="filter-note">
-    <button @click="sortNotes" :title="$t('sortAZ')">
-      <ArrowDownAZ v-if="sortAZ" class="size-16" />
-      <ArrowUpZA v-else class="size-16" />
-    </button>
+    <details class="toolbar-details" :title="$t('filters_sort')">
+      <summary class="app-btn"><Filter class="size-16" /></summary>
+      <ul class="toolbar-menu">
+        <li class="flex gap-4 align-center" @click="sortNotesAZ">
+          <ArrowDownAZ v-if="sortAZ" class="size-16" />
+          <ArrowUpZA v-else class="size-16" />
+          <span>{{ sortAZ ? $t("sortAZ") : $t("sortZA") }}</span>
+        </li>
+        <li class="flex gap-4 align-center" @click="sortNotesByDate">
+          <Calendar class="size-16" />
+          <span>{{ sortDate ? $t("sort_oldest") : $t("sort_newest") }}</span>
+        </li>
+        <li class="flex gap-4 align-center" @click="clearFilterSort">
+          <FilterX class="size-16" />
+          <span>{{ $t("clear_filter") }}</span>
+        </li>
+      </ul>
+    </details>
     <input
       type="text"
       :value="modelValue"
@@ -11,14 +25,21 @@
       @input="updateSearchNote($event.target.value)"
       style="width: 160px"
     />
-    <button @click="createNote" :title="$t('create_note')">
+    <button :disabled="!canCreateNote" @click="createNote" :title="$t('create_note')">
       <Plus class="size-16" />
     </button>
   </div>
 </template>
 
 <script>
-import { Plus, ArrowDownAZ, ArrowUpZA } from "lucide-vue-next";
+import {
+  Plus,
+  ArrowDownAZ,
+  ArrowUpZA,
+  Filter,
+  Calendar,
+  FilterX,
+} from "lucide-vue-next";
 
 export default {
   name: "FilterNote",
@@ -26,21 +47,40 @@ export default {
     Plus,
     ArrowDownAZ,
     ArrowUpZA,
+    Filter,
+    Calendar,
+    FilterX,
   },
-  props: ["modelValue"],
-  emits: ["update:modelValue", "create-note", "sort-notes"],
+  props: ["modelValue","canCreateNote"],
+  emits: [
+    "update:modelValue",
+    "create-note",
+    "sort-notes-AZ",
+    "sort-notes-date",
+    "sort-notes-clear"
+  ],
   data() {
     return {
       sortAZ: true,
+      sortDate: true,
     };
   },
   methods: {
     createNote() {
       this.$emit("create-note");
     },
-    sortNotes() {
+    sortNotesAZ() {
       this.sortAZ = !this.sortAZ;
-      this.$emit("sort-notes");
+      this.$emit("sort-notes-AZ");
+    },
+    sortNotesByDate() {
+      this.sortDate = !this.sortDate;
+      this.$emit("sort-notes-date");
+    },
+    clearFilterSort(){
+      this.sortAZ = true;
+      this.sortDate = true;
+      this.$emit("sort-notes-clear")
     },
     updateSearchNote(value) {
       this.$emit("update:modelValue", value);
