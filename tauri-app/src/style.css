@@ -81,6 +81,7 @@
   --bg-notelist: var(--white);
   --text-color-notelist: var(--dark2);
   --bg-note-selected: #f4f4f5;
+  --bg-drag-placeholder:var(--lightgrey3);
   /* notebar */
   --bg-notebar: var(--white);
   --text-color-notebar: var(--dark2);
@@ -130,6 +131,7 @@
   --bg-notelist: var(--dark2);
   --text-color-notelist: var(--lightgrey);
   --bg-note-selected: #353941;
+  --bg-drag-placeholder:var(--dark);
   /* notebar */
   --bg-notebar: var(--dark2);
   --text-color-notebar: var(--lightgrey);

@@ -3,49 +3,76 @@
     <span id="notelist-nonotes" v-if="notes.length <= 0">{{
       $t("create_first_note")
     }}</span>
-    <div
-      id="note-container"
-      v-for="note in notes"
-      :class="note.selected ? 'note-selected' : ''"
-      @click="selectNote(note)"
-    >
-      <div id="note">
-        <h4 class="note-title">
-          <span style="color: var(--red)" v-if="note.important">!</span>
-          <Pin v-if="note.pinned" class="size-16 text-dark" />
-          <div style="padding:0 0.3rem" class="color-circle" :class="`bg-${note.color}`"></div>
-          <span id="note-title-name">
-            {{ note.name }}
-          </span>
-        </h4>
-        <div class="notelist-tag">
-          <span
-            class="tag"
-            v-for="tag in note.tags"
-            :style="`background: var(--${tag.color})`"
-            >{{ tag.name }}</span
-          >
+
+    <!-- <ul id="sortable">
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
+  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
+</ul> -->
+    <ul id="sortable">
+      <div
+        id="note-container"
+        v-for="note in notes"
+        :class="note.selected ? 'note-selected' : ''"
+        @click="selectNote(note)"
+      >
+      <GripVertical   class="icon-grip size-16 text-dark"/>
+        <div id="note">
+          <h4 class="note-title">
+            <span style="color: var(--red)" v-if="note.important">!</span>
+            <Pin v-if="note.pinned" class="size-16 text-dark" />
+            <div
+              style="padding: 0 0.3rem"
+              class="color-circle"
+              :class="`bg-${note.color}`"
+            ></div>
+            <span id="note-title-name">
+              {{ note.name }}
+            </span>
+          </h4>
+          <div class="notelist-tag">
+            <span
+              class="tag"
+              v-for="tag in note.tags"
+              :style="`background: var(--${tag.color})`"
+              >{{ tag.name }}</span
+            >
+          </div>
+          <p class="note-content">
+            {{ note.content }}
+          </p>
+          <span class="note-date">{{ note.date }}</span>
         </div>
-        <p class="note-content">
-          {{ note.content }}
-        </p>
-        <span class="note-date">{{ note.date }}</span>
+        <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
       </div>
-      <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
-    </div>
+    </ul>
   </div>
 </template>
 
 <script>
-import { Pin, Trash2 } from "lucide-vue-next";
+$(function () {
+  $("#sortable").sortable({
+    placeholder: "drag-placeholder",
+  });
+  $("#sortable").disableSelection();
+});
+import { Pin, Trash2, GripVertical } from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes"],
   components: {
     Pin,
     Trash2,
+    GripVertical
   },
-
+  data() {
+    return {};
+  },
+  mounted() {},
   methods: {
     selectNote(note) {
       this.$emit("select-note", note);
@@ -65,7 +92,8 @@ export default {
   display: grid;
   grid-template-columns: 200px auto;
   align-items: center;
-  padding: 1rem 0.5rem;
+  padding: 0.75rem 0.5rem;
+  position: relative;
   border-bottom: var(--border);
 }
 
@@ -74,6 +102,10 @@ export default {
 }
 
 #note-container:hover .note-trash {
+  opacity: 1;
+  pointer-events: auto;
+}
+#note-container:hover .icon-grip {
   opacity: 1;
   pointer-events: auto;
 }
@@ -89,13 +121,14 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  color:var(--text-color-notelist);
+  color: var(--text-color-notelist);
+  margin-bottom: 0.2rem;
 }
-#note-title-name{
+#note-title-name {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width:200px;
+  width: 200px;
 }
 .notelist-tag {
   display: flex;
@@ -120,10 +153,22 @@ export default {
   color: var(--red);
   margin: auto;
 }
-.note-date{
-  color:var(--text-color-notelist);
+.note-date {
+  color: var(--text-color-notelist);
+  font-size: 14px;
 }
 .note-trash:hover {
   cursor: pointer;
+}
+.drag-placeholder {
+  height:73px;
+  background:var(--bg-drag-placeholder);
+}
+.icon-grip{
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: absolute;
+  top:2px;
+  right:0;
 }
 </style>
