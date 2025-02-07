@@ -13,8 +13,8 @@
         <h4 class="note-title">
           <span style="color: var(--red)" v-if="note.important">!</span>
           <Pin v-if="note.pinned" class="size-16 text-dark" />
-          <div class="color-circle" :class="`bg-${note.color}`"></div>
-          <span>
+          <div style="padding:0 0.3rem" class="color-circle" :class="`bg-${note.color}`"></div>
+          <span id="note-title-name">
             {{ note.name }}
           </span>
         </h4>
@@ -90,6 +90,12 @@ export default {
   align-items: center;
   gap: 0.2rem;
   color:var(--text-color-notelist);
+}
+#note-title-name{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width:200px;
 }
 .notelist-tag {
   display: flex;

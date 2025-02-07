@@ -65,7 +65,7 @@
       <div class="column-note-content" :style="{ height: noteHeight }">
         <div id="column-note-title">
           <div
-            style="margin: auto"
+           style="margin:auto 0"
             class="color-circle"
             :class="`bg-${selectedNote.color}`"
           ></div>
@@ -697,8 +697,9 @@ export default {
   color: var(--text-color-note);
 }
 #column-note-title {
-  display: inline-flex;
+  display: flex;
   padding: 0 0.2rem;
+  width: 100%;
 }
 #input-note-name {
   width: 100%;
