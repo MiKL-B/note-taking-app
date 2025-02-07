@@ -46,7 +46,7 @@ export default {
   border-radius: 5px;
   color: white;
   position: absolute;
-  bottom: 30px;
+  bottom: 0;
   right: 0;
   width: 400px;
   gap: 0.5rem;
