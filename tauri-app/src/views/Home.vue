@@ -1,18 +1,8 @@
 <template>
   <Titlebar />
-  <Toolbar
-    @action-clicked="handleAction"
-    @toggle-menu="toggleMenu"
-    @toggle-notelist="toggleNoteList"
-    @toggle-notebar="toggleNoteBar"
-    @toggle-markdownmode="toggleMarkdownMode"
-  />
+  <Toolbar @action-clicked="handleAction" />
   <div id="container">
-    <div
-      class="column-sidebar"
-      :style="{ flex: isVisibleNoteList ? '1' : '2' }"
-      :class="{ invisible: !isVisibleMenu }"
-    >
+    <div class="column-sidebar">
       <Sidebar
         :tags="tags"
         :countAllNotes="notes.length"
@@ -23,15 +13,16 @@
         :countPinned="getCountPinned"
         :countToday="getCountToday"
         :countImportant="getCountImportant"
+        @add-tag="addTag"
         @delete-tag="deleteTag"
         @update-tag-name="handleUpdateTagName"
         @select-filter="handleFilter"
         @set-color="setColorTag"
       />
     </div>
-    <div class="column-notelist" :class="{ invisible: !isVisibleNoteList }">
+    <div class="column-notelist">
       <FilterNote
-      :canCreateNote="canCreateNote"
+        :canCreateNote="canCreateNote"
         v-model="searchNote"
         @create-note="createNote"
         @sort-notes-AZ="toggleSortAZ"
@@ -44,12 +35,8 @@
         @delete-note="deleteNote"
       />
     </div>
-    <div
-      class="column-note"
-      :style="{ flex: isVisibleNoteList ? '1' : '2' }"
-      v-if="selectedNote"
-    >
-      <div :class="{ invisible: !isVisibleNoteBar }">
+    <div class="column-note" v-if="selectedNote">
+      <div>
         <Notebar
           :tags="tags"
           :showBoth="showBoth"
@@ -165,10 +152,7 @@ export default {
   },
   data() {
     return {
-      isVisibleMenu: true,
-      isVisibleNoteList: true,
-      isVisibleNoteBar: true,
-      isMarkdownMode: true,
+      isVisibleNoteBar:true,
       isPreviewMode: false,
       showBoth: false,
       notes: [],
@@ -183,8 +167,8 @@ export default {
       colorNotification: "",
       sortedAsc: true,
       sortedDate: true,
-      timerCreateNote:null,
-      canCreateNote:true,
+      timerCreateNote: null,
+      canCreateNote: true,
     };
   },
 
@@ -299,7 +283,7 @@ export default {
         this.notes.reverse();
       }
     },
-    clearFilterSort(){
+    clearFilterSort() {
       this.sortedAsc = true;
       this.sortedDate = true;
       this.sortNotesDate(true);
@@ -330,21 +314,6 @@ export default {
           break;
         case "save":
           this.saveDocument();
-          break;
-        case "undo":
-          this.undoAction();
-          break;
-        case "redo":
-          this.redoAction();
-          break;
-        case "cut":
-          this.cutText();
-          break;
-        case "copy":
-          this.copyText();
-          break;
-        case "paste":
-          this.pasteText();
           break;
         case "exportJSON":
           this.exportJSON();
@@ -440,33 +409,6 @@ export default {
         await writeTextFile(path, content);
       }
     },
-    undoAction() {
-      alert("Undoing the last action...");
-    },
-    redoAction() {
-      alert("Redoing the last action...");
-    },
-    cutText() {
-      alert("Cutting the selected text...");
-    },
-    copyText() {
-      alert("Copying the selected text...");
-    },
-    pasteText() {
-      alert("Pasting the text...");
-    },
-    toggleMenu(isVisible) {
-      this.isVisibleMenu = isVisible;
-    },
-    toggleNoteList(isVisible) {
-      this.isVisibleNoteList = isVisible;
-    },
-    toggleNoteBar(isVisible) {
-      this.isVisibleNoteBar = isVisible;
-    },
-    toggleMarkdownMode(isMarkdownMode) {
-      this.isMarkdownMode = isMarkdownMode;
-    },
     togglePreviewMode() {
       this.isPreviewMode = !this.isPreviewMode;
     },
@@ -497,14 +439,14 @@ export default {
         this.$t("note_created", { note_name: newNote.name }),
         "green"
       );
-      this.setDelayCreationNote()
+      this.setDelayCreationNote();
     },
-    setDelayCreationNote(){
+    setDelayCreationNote() {
       const duration = 500;
       this.canCreateNote = false;
-      this.timerCreateNote = setTimeout(()=>{
+      this.timerCreateNote = setTimeout(() => {
         this.canCreateNote = true;
-      },duration)
+      }, duration);
     },
     togglePinNote() {
       this.selectedNote.pinned = !this.selectedNote.pinned;
@@ -533,7 +475,7 @@ export default {
         this.$t("note_duplicated", { note_name: this.selectedNote.name }),
         "green"
       );
-      this.setDelayCreationNote()
+      this.setDelayCreationNote();
     },
     showNotification(message, color) {
       this.isVisibleNotification = true;
@@ -556,6 +498,7 @@ export default {
     },
     deleteNote(note) {
       const index = this.notes.findIndex((n) => n.id === note.id);
+
       if (index > -1) {
         this.notes.splice(index, 1);
         this.showNotification(
@@ -584,6 +527,15 @@ export default {
     },
 
     // tag
+    addTag(){
+      let tag = {
+        id: Date.now(),
+        name: this.generateIncrementedName("Tag"),
+        color: "blue",
+        selected: false,
+      };
+      this.tags.push(tag);
+    },
     deleteTag(tag) {
       const index = this.tags.findIndex((t) => t.id === tag.id);
 

@@ -1,101 +1,23 @@
 <template>
   <ul id="sidebar">
-    <!-- all notes -->
     <li
       class="sidebar-item"
-      @click="selectFilter('allnotes')"
-      :class="{ filterselected: selectedFilter === 'allnotes' }"
+      @click="selectFilter(item.label)"
+      :class="{ filterselected: selectedFilter === item.label }"
+      v-for="item in computedItems"
     >
       <span class="sidebar-sub-label">
-        <File class="size-16" />
-        <span>{{ $t("allnotes") }}</span>
+        <div
+          v-if="item.icon === null"
+          class="color-circle"
+          :class="`bg-${item.color}`"
+        ></div>
+        <component v-else :is="item.icon" class="size-16"></component>
+        <span>{{ $t(item.label) }}</span>
       </span>
-      <span class="text-dark">{{ countAllNotes }}</span>
+      <span class="text-dark">{{ item.count }}</span>
     </li>
-    <!-- pinned -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('pinned')"
-      :class="{ filterselected: selectedFilter === 'pinned' }"
-    >
-      <span class="sidebar-sub-label">
-        <Pin class="size-16" />
-        <span>{{ $t("pinned") }}</span>
-      </span>
-      <span class="text-dark">{{ countPinned }}</span>
-    </li>
-    <!-- important -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('important')"
-      :class="{ filterselected: selectedFilter === 'important' }"
-    >
-      <span class="sidebar-sub-label">
-        <FileWarning class="size-16"/>
-        <span>{{ $t("important") }}</span>
-      </span>
-      <span class="text-dark">{{ countImportant }}</span>
-    </li>
-    <!-- today -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('today')"
-      :class="{ filterselected: selectedFilter === 'today' }"
-    >
-      <span class="sidebar-sub-label">
-        <Calendar class="size-16" />
-        <span>{{ $t("today") }}</span>
-      </span>
-      <span class="text-dark">{{ countToday }}</span>
-    </li>
-    <!-- todo -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('todo')"
-      :class="{ filterselected: selectedFilter === 'todo' }"
-    >
-      <span class="sidebar-sub-label">
-        <div class="color-circle bg-red"></div>
-        <span>{{ $t("todo") }}</span>
-      </span>
-      <span class="text-dark">{{ countTodo }}</span>
-    </li>
-    <!-- inprogress -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('inprogress')"
-      :class="{ filterselected: selectedFilter === 'inprogress' }"
-    >
-      <span class="sidebar-sub-label">
-        <div class="color-circle bg-yellow"></div>
-        <span>{{ $t("inprogress") }}</span>
-      </span>
-      <span class="text-dark">{{ countInProgress }}</span>
-    </li>
-    <!-- finished -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('finished')"
-      :class="{ filterselected: selectedFilter === 'finished' }"
-    >
-      <span class="sidebar-sub-label">
-        <div class="color-circle bg-green"></div>
-        <span>{{ $t("finished") }}</span>
-      </span>
-      <span class="text-dark">{{ countFinished }}</span>
-    </li>
-    <!-- archived -->
-    <li
-      class="sidebar-item"
-      @click="selectFilter('archived')"
-      :class="{ filterselected: selectedFilter === 'archived' }"
-    >
-      <span class="sidebar-sub-label">
-        <Archive class="size-16" />
-        <span>{{ $t("archived") }}</span>
-      </span>
-      <span class="text-dark">{{ countArchived }}</span>
-    </li>
+
     <!-- tags -->
     <li class="sidebar-item sidebar-label">
       <span class="sidebar-sub-label">
@@ -106,6 +28,25 @@
         ><Plus class="text-dark size-16"
       /></span>
     </li>
+    <!-- test -->
+    <!-- <div class="test">
+      <span class="flex align-center gap-4">
+        <details>
+          <summary>
+            <Tag class="size-16" />
+          </summary>
+          <ul class="toolbar-menu">
+            <li class="flex gap-4 align-center">
+              <div class="color-circle"></div>
+              <span>color</span>
+            </li>
+          </ul>
+        </details>
+        <input class="sidebar-input-tag" type="text" value="name tag" />
+      </span>
+      <Trash2 width="20" />
+    </div> -->
+    <!-- test -->
     <div id="sidebar-container-list">
       <ul id="sidebar-tags-list">
         <li
@@ -139,7 +80,7 @@
             />
           </span>
 
-          <Trash2 class="tag-trash" @click="deleteTag(tag)" />
+          <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
         </li>
       </ul>
     </div>
@@ -156,22 +97,46 @@ import {
   Trash2,
   Pin,
   Calendar,
-  FileWarning
+  FileWarning,
 } from "lucide-vue-next";
 export default {
   name: "Sidebar",
-  props: [
-    "tags",
-    "countAllNotes",
-    "countTodo",
-    "countInProgress",
-    "countFinished",
-    "countArchived",
-    "countPinned",
-    "countToday",
-    "countImportant",
-  ],
-  emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
+  props: {
+    tags: Array,
+    countAllNotes: {
+      type: Number,
+      default: 0,
+    },
+    countTodo: {
+      type: Number,
+      default: 0,
+    },
+    countInProgress: {
+      type: Number,
+      default: 0,
+    },
+    countFinished: {
+      type: Number,
+      default: 0,
+    },
+    countArchived: {
+      type: Number,
+      default: 0,
+    },
+    countPinned: {
+      type: Number,
+      default: 0,
+    },
+    countToday: {
+      type: Number,
+      default: 0,
+    },
+    countImportant: {
+      type: Number,
+      default: 0,
+    },
+  },
+  emits: ["select-filter", "set-color","add-tag", "delete-tag", "update-tag-name"],
   components: {
     File,
     Archive,
@@ -181,7 +146,7 @@ export default {
     Trash2,
     Pin,
     Calendar,
-    FileWarning
+    FileWarning,
   },
   data() {
     return {
@@ -190,6 +155,55 @@ export default {
       selectedFilter: "allnotes",
       colors: ["blue", "red", "yellow", "green", "purple"],
     };
+  },
+  computed: {
+    computedItems() {
+      return [
+        {
+          label: "allnotes",
+          count: this.countAllNotes,
+          icon: File,
+        },
+        {
+          label: "pinned",
+          count: this.countPinned,
+          icon: Pin,
+        },
+        {
+          label: "important",
+          count: this.countImportant,
+          icon: FileWarning,
+        },
+        {
+          label: "today",
+          count: this.countToday,
+          icon: Calendar,
+        },
+        {
+          label: "todo",
+          count: this.countTodo,
+          icon: null,
+          color: "red",
+        },
+        {
+          label: "inprogress",
+          count: this.countInProgress,
+          icon: null,
+          color: "yellow",
+        },
+        {
+          label: "finished",
+          count: this.countFinished,
+          icon: null,
+          color: "green",
+        },
+        {
+          label: "archived",
+          count: this.countArchived,
+          icon: Archive,
+        },
+      ];
+    },
   },
 
   methods: {
@@ -201,23 +215,8 @@ export default {
       this.$emit("set-color", tag, color);
     },
     addTag() {
-      let tag = {
-        id: Date.now(),
-        name: this.generateIncrementedName("Tag"),
-        color: "blue",
-        selected: false,
-      };
-      this.tags.push(tag);
+      this.$emit("add-tag")
     },
-    generateIncrementedName(baseTitle) {
-      if (!this.noteCounters[baseTitle]) {
-        this.noteCounters[baseTitle] = 1;
-      } else {
-        this.noteCounters[baseTitle] += 1;
-      }
-      return `${baseTitle} ${this.noteCounters[baseTitle]}`;
-    },
-
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
     },
@@ -233,7 +232,7 @@ export default {
   height: calc(100vh - 65px);
   overflow-y: hidden;
   background: var(--bg-sidebar);
-  color:var(--text-color-sidebar);
+  color: var(--text-color-sidebar);
 }
 
 .sidebar-item {
@@ -267,11 +266,11 @@ export default {
 .sidebar-item:hover,
 .sidebar-sub-item:hover,
 #sidebar-tags-btn:hover {
-  background:var(--bg-hover-sidebar);
+  background: var(--bg-hover-sidebar);
   cursor: pointer;
 }
 .sidebar-label:hover {
-  background:none;
+  background: none;
 }
 .sidebar-sub-item {
   display: flex;
@@ -283,15 +282,9 @@ export default {
 
 #sidebar-container-list {
   position: relative;
-  height: calc(100vh - 355px);
+  height: calc(100vh - 500px);
 }
-#sidebar-tags-list {
-  overflow: auto;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  top: 0;
-}
+
 #sidebar-tags-btn {
   height: 24px;
   width: 24px;
@@ -309,13 +302,10 @@ export default {
 }
 .tag-trash {
   display: flex;
-  width: 24px;
   justify-content: space-between;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-}
-.tag-trash {
   color: var(--red);
 }
 .tag-trash:hover {
@@ -331,8 +321,21 @@ export default {
   box-shadow: none;
   width: 90%;
   padding: 0;
-  height: 50%;
-  color:var(--text-color-sidebar);
+
+  color: var(--text-color-sidebar);
 }
 
+#sidebar-tags-list {
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.test {
+  border: 1px solid red;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
 </style>

@@ -11,7 +11,7 @@
         :class="note.selected ? 'note-selected' : ''"
         @click="selectNote(note)"
       >
-      <GripVertical   class="icon-grip size-16 text-dark"/>
+        <GripVertical class="icon-grip size-16 text-dark" />
         <div id="note">
           <h4 class="note-title">
             <span style="color: var(--red)" v-if="note.important">!</span>
@@ -58,7 +58,7 @@ export default {
   components: {
     Pin,
     Trash2,
-    GripVertical
+    GripVertical,
   },
   data() {
     return {};
@@ -152,14 +152,14 @@ export default {
   cursor: pointer;
 }
 .drag-placeholder {
-  height:73px;
-  background:var(--bg-drag-placeholder);
+  height: 73px;
+  background: var(--bg-drag-placeholder);
 }
-.icon-grip{
+.icon-grip {
   opacity: 0;
   transition: opacity 0.3s ease;
   position: absolute;
-  top:2px;
-  right:0;
+  top: 2px;
+  right: 0;
 }
 </style>
