@@ -1,7 +1,65 @@
-# Tauri + Vue 3
+# Implemented
 
-This template should help get you started developing with Tauri + Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Notes
+- CRUD
+- Search by name
+- Sort asc-desc, date, clear sort
+- Filter by status, tags, today, pin / unpin, important
+- Open
+- Save
+- Export, import
+- Change status
+- Add tags
+- Duplicate
+- Pin / unpin note
+- Important note
+- Theme
+- Allow drag and drop notelist
 
-## Recommended IDE Setup
+## Tags
+- CRUD
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## Settings
+- Change language
+
+## Miscellaneous
+- Toggle preview markdown
+- View both text / markdown
+- Notifications (just information)
+---
+
+# Fixed
+- fix width input name note (column note)
+- set ellipsis note name (column notelist)
+- fix position notification
+---
+
+# To fix
+
+---
+
+# To improve
+- alert before deleting note
+- Improve textarea
+- Improve save functionnality
+- Improve Style markdown
+---
+
+# To Implement
+- Folders and subfolders
+- View kanban, schedule
+- View sidebar, notelist (distraction-free mode)
+- View drawing
+- App branding
+- Add image, audio and video
+- Add font and font size in settings
+- Accessibility (title..)
+- Export PDF
+- Export import settings
+- Set settings auto export pdf when saving note
+- Print
+- see octarine for auto completions links
+- insert date... see tiny mce
+- define path in settings window to create a vault like obsidian to store notes
+- new -> mkfile
+- save -> save the file with the right id
