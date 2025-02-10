@@ -19,7 +19,15 @@
     </li>
 
     <!-- tags -->
-
+    <details class="">
+      <summary>Tags</summary>
+      <ul class="">
+        <li class="flex gap-4 align-center" v-for="tag in tags">
+          <Tag :style="`color: var(--${tag.color}`" class="size-16" />
+          <span>{{ tag.name }}</span>
+        </li>
+      </ul>
+    </details>
 
     <li class="sidebar-item sidebar-label">
       <span class="sidebar-sub-label">
@@ -30,25 +38,7 @@
         ><Plus class="text-dark size-16"
       /></span>
     </li>
-    <!-- test -->
-    <!-- <div class="test">
-      <span class="flex align-center gap-4">
-        <details>
-          <summary>
-            <Tag class="size-16" />
-          </summary>
-          <ul class="toolbar-menu">
-            <li class="flex gap-4 align-center">
-              <div class="color-circle"></div>
-              <span>color</span>
-            </li>
-          </ul>
-        </details>
-        <input class="sidebar-input-tag" type="text" value="name tag" />
-      </span>
-      <Trash2 width="20" />
-    </div> -->
-    <!-- test -->
+
     <div id="sidebar-container-list">
       <ul id="sidebar-tags-list">
         <li
@@ -341,10 +331,4 @@ export default {
   bottom: 0;
 }
 
-.test {
-  border: 1px solid red;
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-}
 </style>

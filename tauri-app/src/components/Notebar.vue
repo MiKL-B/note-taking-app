@@ -8,34 +8,30 @@
       <option value="archived">{{ $t("archived") }}</option>
     </select>
     <!-- add tag -->
-    <!-- <input
-      type="text"
-      pattern="[A-Za-z]+"
-      placeholder="Add tags..."
-      style="max-width: 110px"
-      @keyup.enter="test"
-      v-model="inputTagName"
-    /> -->
-    <details class="toolbar-details">
-      <summary
-        :class="tags.length <= 0 ? 'disabled' : ''"
-        class="app-btn"
-        style="font-size: 14px"
-      >
-        {{ $t("add_tag") }}
-      </summary>
-      <ul class="toolbar-menu">
-        <li
-          class="flex gap-4 align-center"
-          v-for="tag in tags"
-          :key="tag.id"
-          @click="addTagToNote(tag)"
+    <div id="suggestion-container">
+      <input
+        type="text"
+        v-model="input"
+        @input="updateSuggestions"
+        @keyup.enter="addTagToNote"
+        :placeholder="$t('add_tags')"
+        pattern="[a-zA-ZÀ-ÿ]+"
+        style="max-width: 120px"
+      />
+
+      <ul id="suggestion-list" v-if="suggestions.length > 0">
+        <li class="flex align-center gap-4"
+          v-for="suggestion in suggestions"
+          @click="selectSuggestion(suggestion)"
         >
-          <Tag :style="`color: var(--${tag.color}) `" class="size-16" />
-          <span>{{ tag.name }}</span>
+          <Tag :style="`color: var(--${suggestion.color}) `" class="size-16" />
+          <span>
+            {{ suggestion.name }}
+          </span>
         </li>
       </ul>
-    </details>
+    </div>
+  
     <span class="separator-y"></span>
     <button
       @click="toggleImportantNote"
@@ -68,42 +64,12 @@
     <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
       <Columns2 class="size-16" />
     </button>
-    <!-- <span class="separator-y"></span>
-    <button class="bt-symbol" title="Bold">
-      <Bold />
-    </button>
-    <button class="bt-symbol" title="Italic">
-      <Italic />
-    </button>
-    <button class="bt-symbol" title="Underline">
-      <Underline />
-    </button>
-    <input type="color" />
-    <span class="separator-y"></span>
-    <button class="bt-symbol" title="Align left">
-      <AlignLeft />
-    </button>
-    <button class="bt-symbol" title="Align center">
-      <AlignCenter />
-    </button>
-    <button class="bt-symbol" title="Align right">
-      <AlignRight />
-    </button>
-    <button class="bt-symbol" title="Align justify">
-      <AlignJustify />
-    </button> -->
+
   </div>
 </template>
 
 <script>
 import {
-  // Bold,
-  // Italic,
-  // Underline,
-  // AlignLeft,
-  // AlignCenter,
-  // AlignRight,
-  // AlignJustify,
   Tag,
   CopyPlus,
   Columns2,
@@ -116,13 +82,6 @@ import {
 export default {
   name: "Notebar",
   components: {
-    // Bold,
-    // Italic,
-    // Underline,
-    // AlignLeft,
-    // AlignCenter,
-    // AlignRight,
-    // AlignJustify,
     Tag,
     CopyPlus,
     Columns2,
@@ -145,16 +104,11 @@ export default {
   data() {
     return {
       isPreviewMode: false,
-      // inputTagName:""
+      input: "",
+      suggestions: [],
     };
   },
   methods: {
-    // test(e) {
-    //   e.preventDefault();
-    //   console.log("key pressed");
-    //   // this.$emit("add-tag-test",this.inputTagName)
-    //   // console.log(this.inputTagName)
-    // },
     handleScroll(event) {
       const scrollSpeed = 0.2;
       const deltaY = event.deltaY * scrollSpeed;
@@ -167,8 +121,10 @@ export default {
         behavior: "smooth",
       });
     },
-    addTagToNote(tag) {
-      this.$emit("add-tag-note", tag);
+    addTagToNote() {
+      this.$emit("add-tag-note", this.input);
+      this.input = "";
+      this.suggestions = [];
     },
     duplicateNote() {
       this.$emit("duplicate-note");
@@ -189,6 +145,20 @@ export default {
     changeNoteStatus(value) {
       this.$emit("update-status", value);
     },
+    updateSuggestions() {
+      if (this.input) {
+        this.suggestions = this.tags.filter((word) =>
+          word.name.toLowerCase().includes(this.input.toLowerCase())
+        );
+      } else {
+        this.suggestions = [];
+      }
+    },
+    selectSuggestion(suggestion) {
+      this.input = suggestion.name;
+      this.suggestions = [];
+      this.addTagToNote();
+    },
   },
 };
 </script>
@@ -204,5 +174,26 @@ export default {
   overflow-y: auto;
   background: var(--bg-notebar);
   color: var(--text-color-notebar);
+}
+#suggestion-container {
+  position: relative;
+}
+#suggestion-list {
+  position: fixed;
+  list-style-type: none;
+  background-color: var(--bg-toolbar);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 0.5rem 0.2rem;
+  min-width: 120px;
+  user-select: none;
+}
+#suggestion-list li{
+  padding:0.2rem ;
+  border-radius: 5px;
+}
+#suggestion-list li:hover{
+  background: var(--bg-hover-toolbar);
+  cursor: pointer;
 }
 </style>

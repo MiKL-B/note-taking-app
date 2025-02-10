@@ -1,6 +1,11 @@
 <template>
   <Titlebar />
-  <Toolbar @action-clicked="handleAction" @display-about="displayAbout" @open-window="openWindow" />
+  <Toolbar
+    @action-clicked="handleAction"
+    @display-about="displayAbout"
+    @open-window="openWindow"
+  />
+
   <div id="container">
     <div class="row">
       <!-- left column -->
@@ -16,7 +21,6 @@
           :countPinned="getCountPinned"
           :countToday="getCountToday"
           :countImportant="getCountImportant"
-          @add-tag="addTag"
           @delete-tag="deleteTag"
           @update-tag-name="handleUpdateTagName"
           @select-filter="handleFilter"
@@ -47,7 +51,7 @@
         <Notebar
           :tags="tags"
           :showBoth="showBoth"
-          @add-tag-note="addTagToNote"
+          @add-tag-note="addTag"
           @toggle-preview-mode="toggleMarkdown"
           @toggle-showboth="toggleShowBothTextareaPreview"
           @duplicate-note="duplicateNote"
@@ -543,19 +547,7 @@ export default {
     },
 
     // tag
-    addTag() {
-      let tag = {
-        id: Date.now(),
-        name: this.generateIncrementedName("Tag"),
-        color: "blue",
-        selected: false,
-      };
-      this.tags.push(tag);
-      this.showNotification(
-        this.$t("tag_created", { tag_name: tag.name }),
-        "green"
-      );
-    },
+
     deleteTag(tag) {
       const index = this.tags.findIndex((t) => t.id === tag.id);
 
@@ -573,16 +565,42 @@ export default {
         );
       }
     },
-    addTagToNote(tag) {
-      const existingTag = this.selectedNote.tags.find(
-        (t) => t.name.toLowerCase() === tag.name.toLowerCase()
+    addTag(tag) {
+      const word = tag.trim();
+      const pattern = /^[a-zA-ZÀ-ÿ]+$/;
+      let tagtoAdd = {
+        id: Date.now(),
+        name: word,
+        color: "blue",
+        selected: false,
+      };
+
+      const existingTag = this.tags.find(
+        (t) => t.name.toLocaleString() === word.toLowerCase()
       );
-      if (existingTag) {
+      const existingTagNote = this.selectedNote.tags.find(
+        (t) => t.name.toLowerCase() === word.toLowerCase()
+      );
+      if (!pattern.test(word)) {
         return;
       }
-
-      this.selectedNote.tags.push(tag);
+      if (!existingTag) {
+        this.tags.push(tagtoAdd);
+        this.selectedNote.tags.push(tagtoAdd);
+        this.showNotification(
+          this.$t("tag_created", { tag_name: tagtoAdd.name }),
+          "green"
+        );
+        return;
+      }
+      tagtoAdd.color = existingTag.color;
+      tagtoAdd.id = existingTag.id;
+      if (!existingTagNote) {
+        this.selectedNote.tags.push(tagtoAdd);
+        return;
+      }
     },
+
     deleteTagNote(tag) {
       const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
 
@@ -604,6 +622,14 @@ export default {
     },
     setColorTag(tag, color) {
       const index = this.tags.findIndex((t) => t.id === tag.id);
+
+      for (let i = 0; i < this.notes.length; i++) {
+        for (let j = 0; j < this.notes[i].tags.length; j++) {
+          if (this.notes[i].tags[j].id === tag.id) {
+            this.notes[i].tags[j].color = color;
+          }
+        }
+      }
       this.tags[index].color = color;
     },
     // markdown
@@ -677,11 +703,11 @@ export default {
         div1.scrollTop = div2.scrollTop;
       }
     },
-    displayAbout(){
+    displayAbout() {
       let msg = this.$t("developed");
       alert(msg + " Becquer Michaël.");
     },
-    openWindow(){
+    openWindow() {
       const webview = new WebviewWindow("settings_window", {
         url: "./settings-window",
         decorations: false,
@@ -710,7 +736,7 @@ export default {
       webview.once("tauri://error", function (e) {
         console.error("Erreur lors de la création du webview :", e);
       });
-    }
+    },
   },
   beforeDestroy() {
     clearTimeout(this.timerNotification);
@@ -725,7 +751,7 @@ export default {
 
 .column-notelist {
   border-right: var(--border);
-  max-width: 320px;
+  max-width: 265px;
   background: var(--bg-notelist);
   color: var(--text-color-notelist);
 }
