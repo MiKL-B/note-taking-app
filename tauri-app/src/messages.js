@@ -26,7 +26,7 @@ const messages = {
     notebar: "Notebar",
     settings: "Settings",
     markdown: "Markdown",
-    about: "About...",
+    about: "About",
     exportjson: "Export JSON",
     importjson: "Import JSON",
     // sidebar
@@ -112,7 +112,7 @@ const messages = {
     notebar: "Barre d'outils note",
     settings: "Paramètres",
     markdown: "Markdown",
-    about: "À propos...",
+    about: "À propos",
     exportjson: "Exporter JSON",
     importjson: "Importer JSON",
     // sidebar

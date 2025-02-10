@@ -1,52 +1,24 @@
 <template>
   <div id="toolbar">
-    <!-- file -->
-    <details class="toolbar-details" @click="handleClickOnDetails">
-      <summary class="toolbar-btn">{{ $t("file") }}</summary>
+    <details
+      class="toolbar-details"
+      v-for="menu in menus"
+      @click="handleClickOnDetails"
+    >
+      <summary class="toolbar-btn">{{ menu.name }}</summary>
       <ul class="toolbar-menu">
-        <li @click="onSubMenuClick('new')">{{ $t("new") }}</li>
-        <li @click="onSubMenuClick('open')">{{ $t("open") }}</li>
-        <li @click="onSubMenuClick('save')">{{ $t("save") }}</li>
-        <hr class="separator-x" />
-        <li @click="onSubMenuClick('exportJSON')">{{ $t("exportjson") }}</li>
-        <li @click="onSubMenuClick('importJSON')">{{ $t("importjson") }}</li>
-        <!-- <li @click="onSubMenuClick('export')">{{ $t("exportaspdf") }}</li>
-        <li>{{ $t("print") }}</li> -->
-        <hr class="separator-x" />
-        <li @click="close">{{ $t("exit") }}</li>
+        <li v-for="item in menu.items" @click="onSubMenuClick(item.label)">
+          {{ $t(item.label) }}
+        </li>
       </ul>
     </details>
-    <!-- Edit -->
-    <!-- <details class="toolbar-details" @click="handleClickOnDetails">
-      <summary class="toolbar-btn">{{ $t("edit") }}</summary>
-      <ul class="toolbar-menu">
-        <li>{{ $t("undo") }}</li>
-        <li>{{ $t("redo") }}</li>
-        <li>{{ $t("cut") }}</li>
-        <li>{{ $t("copy") }}</li>
-        <li>{{ $t("paste") }}</li>
-      </ul>
-    </details> -->
 
-    <!-- Settings -->
     <span class="toolbar-btn" @click="openWindow">{{ $t("settings") }}</span>
-
-    <!-- About -->
-    <details class="toolbar-details" @click="handleClickOnDetails">
-      <summary class="toolbar-btn">?</summary>
-      <ul class="toolbar-menu">
-        <li @click="displayAbout">{{ $t("about") }}</li>
-      </ul>
-    </details>
+    <span class="toolbar-btn" @click="displayAbout">{{ $t("about") }}</span>
   </div>
 </template>
 
 <script>
-
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-
-const appWindow = getCurrentWindow();
 export default {
   name: "Toolbar",
   mounted() {
@@ -55,36 +27,27 @@ export default {
   beforeDestroy() {
     document.removeEventListener("click", this.closeDetails);
   },
+  data() {
+    return {
+      menus: [
+        {
+          name: this.$t("file"),
+          items: [
+            { label: "new" },
+            { label: "open" },
+            { label: "save" },
+            { label: "exportjson" },
+            { label: "importjson" },
+            { label: "exit" },
+          ],
+        },
+      ],
+    };
+  },
+  emits: ["action-clicked", "display-about", "open-window"],
   methods: {
     openWindow() {
-      const webview = new WebviewWindow("settings_window", {
-        url: "./settings-window",
-        decorations: false,
-        title: "Settings",
-        resizable: false,
-        alwaysOnTop: true,
-        center: true,
-        width: 600,
-        height: 400,
-      });
-      webview.once("tauri://created", function () {
-        document.body.style.pointerEvents = "none";
-        document.body.style.userSelect = "none";
-        document.body.style.opacity = "0.5";
-      });
-
-      webview.once("tauri://close-requested", function () {
-        webview.close();
-      });
-      webview.once("tauri://destroyed", function () {
-        document.body.style.pointerEvents = "auto";
-        document.body.style.userSelect = "auto";
-        document.body.style.opacity = "1";
-      });
-
-      webview.once("tauri://error", function (e) {
-        console.error("Erreur lors de la création du webview :", e);
-      });
+      this.$emit("open-window");
     },
     handleClickOnDetails() {
       let detailsOpened = document.querySelectorAll(".toolbar-details");
@@ -106,11 +69,7 @@ export default {
       this.$emit("action-clicked", action);
     },
     displayAbout() {
-      let msg = this.$t("developed");
-      alert(msg + " Becquer Michaël.");
-    },
-    close() {
-      appWindow.close();
+      this.$emit("display-about");
     },
   },
 };
@@ -124,7 +83,7 @@ export default {
   gap: 1rem;
   position: relative;
   background: var(--bg-toolbar);
-  color:var(--text-color-toolbar);
+  color: var(--text-color-toolbar);
 }
 .toolbar-btn {
   padding: 0.2rem 0.5rem;

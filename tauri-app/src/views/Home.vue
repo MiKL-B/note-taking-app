@@ -1,6 +1,6 @@
 <template>
   <Titlebar />
-  <Toolbar @action-clicked="handleAction" />
+  <Toolbar @action-clicked="handleAction" @display-about="displayAbout" @open-window="openWindow" />
   <div id="container">
     <div class="row">
       <!-- left column -->
@@ -56,7 +56,7 @@
           :isPinned="selectedNote.pinned"
           @toggle-important-note="toggleImportantNote"
           :isImportant="selectedNote.important"
-          v-model="selectedNote.status"
+          v-model.modelValue="selectedNote.status"
         />
         <div class="column-note-content" :style="{ height: noteHeight }">
           <div id="column-note-title">
@@ -145,6 +145,9 @@ import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { marked } from "marked";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+const appWindow = getCurrentWindow();
 export default {
   name: "Home",
   components: {
@@ -328,17 +331,14 @@ export default {
         case "save":
           this.saveDocument();
           break;
-        case "exportJSON":
+        case "exportjson":
           this.exportJSON();
           break;
-        case "importJSON":
+        case "importjson":
           this.importJSON();
           break;
-        case "export":
-          this.exportASPDF();
-          break;
         case "exit":
-          this.exit();
+          appWindow.close();
           break;
         default:
           alert(`Unknown action: ${action}`);
@@ -677,6 +677,40 @@ export default {
         div1.scrollTop = div2.scrollTop;
       }
     },
+    displayAbout(){
+      let msg = this.$t("developed");
+      alert(msg + " Becquer Michaël.");
+    },
+    openWindow(){
+      const webview = new WebviewWindow("settings_window", {
+        url: "./settings-window",
+        decorations: false,
+        title: "Settings",
+        resizable: false,
+        alwaysOnTop: true,
+        center: true,
+        width: 600,
+        height: 400,
+      });
+      webview.once("tauri://created", function () {
+        document.body.style.pointerEvents = "none";
+        document.body.style.userSelect = "none";
+        document.body.style.opacity = "0.5";
+      });
+
+      webview.once("tauri://close-requested", function () {
+        webview.close();
+      });
+      webview.once("tauri://destroyed", function () {
+        document.body.style.pointerEvents = "auto";
+        document.body.style.userSelect = "auto";
+        document.body.style.opacity = "1";
+      });
+
+      webview.once("tauri://error", function (e) {
+        console.error("Erreur lors de la création du webview :", e);
+      });
+    }
   },
   beforeDestroy() {
     clearTimeout(this.timerNotification);
@@ -689,14 +723,6 @@ export default {
   display: flex;
 }
 
-.col-3 {
-  width: 25%;
-}
-
-.col-6 {
-  width: 50%;
-}
-
 .column-notelist {
   border-right: var(--border);
   max-width: 320px;
@@ -707,6 +733,13 @@ export default {
 .column-note-content {
   background: var(--bg-note);
   color: var(--text-color-note);
+}
+.col-3 {
+  width: 25%;
+}
+
+.col-6 {
+  width: 50%;
 }
 #column-note-title {
   display: flex;

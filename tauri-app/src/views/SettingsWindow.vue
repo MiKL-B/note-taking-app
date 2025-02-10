@@ -3,6 +3,20 @@
   <div id="settings">
     <LanguageSwitcher />
     <ThemeSwitcher />
+        <!-- <select name="" id="">
+      <option value="" disabled selected>{{$t('font')}}</option>
+      <option value="">Arial</option>
+      <option value="">Time New Roman</option>
+      <option value="">Roboto</option>
+      <option value="">Ubuntu</option>
+    </select>
+    <select name="" id="">
+      <option value="" disabled selected>{{$t('font_size')}}</option>
+      <option value="">12</option>
+      <option value="">14</option>
+      <option value="">16</option>
+      <option value="">18</option>
+    </select> -->
   </div>
 </template>
 
