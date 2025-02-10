@@ -152,7 +152,7 @@ export default {
   },
   data() {
     return {
-      isVisibleNoteBar:true,
+      isVisibleNoteBar: true,
       isPreviewMode: false,
       showBoth: false,
       notes: [],
@@ -496,7 +496,14 @@ export default {
         note.selected = true;
       }
     },
-    deleteNote(note) {
+    async deleteNote(note) {
+      const confirmed = await confirm(
+        `Are you sure you want to delete ${note.name}?`
+      );
+
+      if (!confirmed) {
+        return;
+      }
       const index = this.notes.findIndex((n) => n.id === note.id);
 
       if (index > -1) {
@@ -527,7 +534,7 @@ export default {
     },
 
     // tag
-    addTag(){
+    addTag() {
       let tag = {
         id: Date.now(),
         name: this.generateIncrementedName("Tag"),
