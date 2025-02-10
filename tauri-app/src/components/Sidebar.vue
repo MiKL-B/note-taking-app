@@ -19,63 +19,51 @@
     </li>
 
     <!-- tags -->
-    <details class="">
-      <summary>Tags</summary>
-      <ul class="">
-        <li class="flex gap-4 align-center" v-for="tag in tags">
-          <Tag :style="`color: var(--${tag.color}`" class="size-16" />
-          <span>{{ tag.name }}</span>
-        </li>
-      </ul>
-    </details>
-
-    <li class="sidebar-item sidebar-label">
+    <li class="sidebar-item" @click="toggleTagsMenu">
       <span class="sidebar-sub-label">
         <Tags class="size-16" />
         <span>Tags</span>
       </span>
-      <span id="sidebar-tags-btn" @click="addTag"
-        ><Plus class="text-dark size-16"
-      /></span>
+      <span>
+        <ChevronDown v-if="!tagsMenu" class="text-dark size-16" />
+        <ChevronUp v-else class="text-dark size-16" />
+      </span>
     </li>
+    <ul v-if="tagsMenu" class="test">
+      <li
+        id="sidebar-tag"
+        @click="selectFilter(tag.name)"
+        :class="{ filterselected: selectedFilter === tag.name }"
+        class="sidebar-sub-item"
+        v-for="tag in tags"
+      >
+        <span class="sidebar-sub-label">
+          <details class="toolbar-details">
+            <summary>
+              <Tag :style="`color: var(--${tag.color}`" class="size-16" />
+            </summary>
+            <ul class="toolbar-menu">
+              <li
+                class="flex gap-4 align-center"
+                v-for="color in colors"
+                @click="setColor(tag, color)"
+              >
+                <div class="color-circle" :class="`bg-${color}`"></div>
+                <span>{{ color }}</span>
+              </li>
+            </ul>
+          </details>
+          <input
+            class="sidebar-input-tag"
+            type="text"
+            v-model="tag.name"
+            @input="updateTagName(tag)"
+          />
+        </span>
 
-    <div id="sidebar-container-list">
-      <ul id="sidebar-tags-list">
-        <li
-          id="sidebar-tag"
-          @click="selectFilter(tag.name)"
-          :class="{ filterselected: selectedFilter === tag.name }"
-          class="sidebar-sub-item"
-          v-for="tag in tags"
-        >
-          <span class="sidebar-sub-label">
-            <details class="toolbar-details">
-              <summary>
-                <Tag :style="`color: var(--${tag.color}`" class="size-16" />
-              </summary>
-              <ul class="toolbar-menu">
-                <li
-                  class="flex gap-4 align-center"
-                  v-for="color in colors"
-                  @click="setColor(tag, color)"
-                >
-                  <div class="color-circle" :class="`bg-${color}`"></div>
-                  <span>{{ color }}</span>
-                </li>
-              </ul>
-            </details>
-            <input
-              class="sidebar-input-tag"
-              type="text"
-              v-model="tag.name"
-              @input="updateTagName(tag)"
-            />
-          </span>
-
-          <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
-        </li>
-      </ul>
-    </div>
+        <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
+      </li>
+    </ul>
   </ul>
 </template>
 
@@ -90,6 +78,8 @@ import {
   Pin,
   Calendar,
   FileWarning,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-vue-next";
 export default {
   name: "Sidebar",
@@ -145,6 +135,8 @@ export default {
     Pin,
     Calendar,
     FileWarning,
+    ChevronDown,
+    ChevronUp,
   },
   data() {
     return {
@@ -152,6 +144,7 @@ export default {
       noteCounters: {},
       selectedFilter: "allnotes",
       colors: ["blue", "red", "yellow", "green", "purple"],
+      tagsMenu: false,
     };
   },
   computed: {
@@ -221,6 +214,9 @@ export default {
     updateTagName(tag) {
       this.$emit("update-tag-name", { ...tag });
     },
+    toggleTagsMenu() {
+      this.tagsMenu = !this.tagsMenu;
+    },
   },
 };
 </script>
@@ -279,11 +275,6 @@ export default {
   padding: 0.7rem 0.5rem 0.7rem 2rem;
 }
 
-#sidebar-container-list {
-  position: relative;
-  height: calc(100vh - 500px);
-}
-
 #sidebar-tags-btn {
   height: 24px;
   width: 24px;
@@ -324,11 +315,8 @@ export default {
   color: var(--text-color-sidebar);
 }
 
-#sidebar-tags-list {
-  overflow: auto;
-  position: absolute;
-  top: 0;
-  bottom: 0;
+.test{
+  height: calc(100% - 375px);
+  overflow-y: scroll;
 }
-
 </style>
