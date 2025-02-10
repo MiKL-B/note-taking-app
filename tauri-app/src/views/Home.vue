@@ -487,14 +487,10 @@ export default {
       }, duration);
     },
     selectNote(note) {
-      if (note.selected) {
-        note.selected = false;
-      } else {
-        this.notes.forEach((n) => {
-          n.selected = false;
-        });
-        note.selected = true;
-      }
+      this.notes.forEach((n) => {
+        n.selected = false;
+      });
+      note.selected = true;
     },
     async deleteNote(note) {
       const confirmed = await confirm(
