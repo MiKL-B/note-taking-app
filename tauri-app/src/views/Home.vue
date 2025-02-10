@@ -2,41 +2,48 @@
   <Titlebar />
   <Toolbar @action-clicked="handleAction" />
   <div id="container">
-    <div class="column-sidebar">
-      <Sidebar
-        :tags="tags"
-        :countAllNotes="notes.length"
-        :countTodo="getCountTodo"
-        :countInProgress="getCountInProgress"
-        :countFinished="getCountFinished"
-        :countArchived="getCountArchived"
-        :countPinned="getCountPinned"
-        :countToday="getCountToday"
-        :countImportant="getCountImportant"
-        @add-tag="addTag"
-        @delete-tag="deleteTag"
-        @update-tag-name="handleUpdateTagName"
-        @select-filter="handleFilter"
-        @set-color="setColorTag"
-      />
-    </div>
-    <div class="column-notelist">
-      <FilterNote
-        :canCreateNote="canCreateNote"
-        v-model="searchNote"
-        @create-note="createNote"
-        @sort-notes-AZ="toggleSortAZ"
-        @sort-notes-date="toggleSortByDate"
-        @sort-notes-clear="clearFilterSort"
-      />
-      <Notelist
-        :notes="filteredNotes"
-        @select-note="selectNote"
-        @delete-note="deleteNote"
-      />
-    </div>
-    <div class="column-note" v-if="selectedNote">
-      <div>
+    <div class="row">
+      <!-- left column -->
+      <div class="col-3" style="max-width: 200px">
+        <!-- sidebar -->
+        <Sidebar
+          :tags="tags"
+          :countAllNotes="notes.length"
+          :countTodo="getCountTodo"
+          :countInProgress="getCountInProgress"
+          :countFinished="getCountFinished"
+          :countArchived="getCountArchived"
+          :countPinned="getCountPinned"
+          :countToday="getCountToday"
+          :countImportant="getCountImportant"
+          @add-tag="addTag"
+          @delete-tag="deleteTag"
+          @update-tag-name="handleUpdateTagName"
+          @select-filter="handleFilter"
+          @set-color="setColorTag"
+        />
+      </div>
+      <!-- middle column -->
+      <div class="col-3 column-notelist">
+        <!-- filternote -->
+        <FilterNote
+          :canCreateNote="canCreateNote"
+          v-model="searchNote"
+          @create-note="createNote"
+          @sort-notes-AZ="toggleSortAZ"
+          @sort-notes-date="toggleSortByDate"
+          @sort-notes-clear="clearFilterSort"
+        />
+        <!-- notelist -->
+        <Notelist
+          :notes="filteredNotes"
+          @select-note="selectNote"
+          @delete-note="deleteNote"
+        />
+      </div>
+      <!-- right column -->
+      <div class="col-6" style="flex-grow: 1" v-if="selectedNote">
+        <!-- notebar -->
         <Notebar
           :tags="tags"
           :showBoth="showBoth"
@@ -51,66 +58,72 @@
           :isImportant="selectedNote.important"
           v-model="selectedNote.status"
         />
-      </div>
-      <div class="column-note-content" :style="{ height: noteHeight }">
-        <div id="column-note-title">
-          <div
-            style="margin: auto 0"
-            class="color-circle"
-            :class="`bg-${selectedNote.color}`"
-          ></div>
-          <input
-            id="input-note-name"
-            type="text"
-            v-model="selectedNote.name"
-            :placeholder="$t('note_name_here')"
-          />
-        </div>
-        <div class="note-tag-list">
-          <span
-            class="tag"
-            v-for="tag in selectedNote.tags"
-            :style="` background: var(--${tag.color} `"
-            >{{ tag.name }}
-            <span class="delete-tag-btn" @click="deleteTagNote(tag)"
-              ><X class="size-16" />
+        <div class="column-note-content" :style="{ height: noteHeight }">
+          <div id="column-note-title">
+            <div
+              style="margin: auto 0"
+              class="color-circle"
+              :class="`bg-${selectedNote.color}`"
+            ></div>
+            <input
+              id="input-note-name"
+              type="text"
+              v-model="selectedNote.name"
+              :placeholder="$t('note_name_here')"
+            />
+          </div>
+          <div class="note-tag-list">
+            <span
+              class="tag"
+              v-for="tag in selectedNote.tags"
+              :style="` background: var(--${tag.color} `"
+              >{{ tag.name }}
+              <span class="delete-tag-btn" @click="deleteTagNote(tag)"
+                ><X class="size-16" />
+              </span>
             </span>
-          </span>
-        </div>
-        <div id="bothColumns" v-if="showBoth">
-          <div>
-            <textarea
-              :placeholder="$t('enter_text_here')"
-              v-model="selectedNote.content"
-              ref="div1"
-              @scroll="syncScroll('div1')"
-              spellcheck="false"
-            ></textarea>
           </div>
-          <hr class="separator-column" />
-          <div
-            id="markdown-container"
-            v-html="getMarkdownHtml()"
-            ref="div2"
-            @scroll="syncScroll('div2')"
-          ></div>
-        </div>
-        <div id="oneView" v-else>
-          <div v-if="!isPreviewMode">
-            <textarea
-              :placeholder="$t('enter_text_here')"
-              v-model="selectedNote.content"
-              spellcheck="false"
-            ></textarea>
+          <div id="bothColumns" v-if="showBoth">
+            <div>
+              <textarea
+                :placeholder="$t('enter_text_here')"
+                v-model="selectedNote.content"
+                ref="div1"
+                @scroll="syncScroll('div1')"
+                spellcheck="false"
+              ></textarea>
+            </div>
+            <hr class="separator-column" />
+            <div
+              id="markdown-container"
+              v-html="getMarkdownHtml()"
+              ref="div2"
+              @scroll="syncScroll('div2')"
+            ></div>
           </div>
-          <div v-else id="markdown-container" v-html="getMarkdownHtml()"></div>
+          <div id="oneView" v-else>
+            <div v-if="!isPreviewMode">
+              <textarea
+                :placeholder="$t('enter_text_here')"
+                v-model="selectedNote.content"
+                spellcheck="false"
+              ></textarea>
+            </div>
+            <div
+              v-else
+              id="markdown-container"
+              v-html="getMarkdownHtml()"
+            ></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="column-note img" v-else>
-      <img src="/image3-removebg-preview.png" />
+
+      <div class="column-note img" v-else>
+        <img src="/image3-removebg-preview.png" />
+      </div>
     </div>
   </div>
+
   <Notification
     :message="messageNotification"
     :color="colorNotification"
@@ -538,6 +551,10 @@ export default {
         selected: false,
       };
       this.tags.push(tag);
+      this.showNotification(
+        this.$t("tag_created", { tag_name: tag.name }),
+        "green"
+      );
     },
     deleteTag(tag) {
       const index = this.tags.findIndex((t) => t.id === tag.id);
@@ -550,6 +567,10 @@ export default {
         }
 
         this.tags.splice(index, 1);
+        this.showNotification(
+          this.$t("tag_deleted", { tag_name: tag.name }),
+          "green"
+        );
       }
     },
     addTagToNote(tag) {
@@ -664,25 +685,26 @@ export default {
 };
 </script>
 <style>
-#container {
-  height: calc(100vh - 65px);
+.row {
   display: flex;
 }
 
-.column-sidebar {
-  max-width: 200px;
-  background: var(--bg-sidebar);
-  border-right: var(--border);
+.col-3 {
+  width: 25%;
 }
+
+.col-6 {
+  width: 50%;
+}
+
 .column-notelist {
   border-right: var(--border);
   max-width: 320px;
   background: var(--bg-notelist);
   color: var(--text-color-notelist);
 }
+
 .column-note-content {
-  position: relative;
-  max-width: calc(100vw - 464px);
   background: var(--bg-note);
   color: var(--text-color-note);
 }

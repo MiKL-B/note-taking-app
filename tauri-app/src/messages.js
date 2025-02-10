@@ -59,6 +59,8 @@ const messages = {
     note_duplicated: "{note_name} was duplicated!",
     data_exported: "The datas was exported!",
     data_imported: "The datas was imported!",
+    tag_created:"{tag_name} was created!",
+    tag_deleted:"{tag_name} was deleted!",
     copy: "Copy",
     // filternote
     sortAZ: "Sort A -> Z",
@@ -143,6 +145,8 @@ const messages = {
     note_duplicated: "{note_name} a bien été dupliquée!",
     data_exported: "Les données ont été exportées!",
     data_imported: "Les données ont été importées!",
+    tag_created:"{tag_name} a bien été créé!",
+    tag_deleted:"{tag_name} a bien été supprimé!",
     copy: "Copie",
     // filternote
     sortAZ: "Tri A -> Z",

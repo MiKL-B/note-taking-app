@@ -1,25 +1,23 @@
 /* markdown editor */
 #markdown-container {
-
-    width: 98%;
-    height: calc(100% - 60px);
-    overflow-y: auto;
-
-  }
-  #markdown-container img{
-    width: 75%;
-  }
-  #markdown-container h1 {
-    color: blue;
-  }
-  #markdown-container pre {
-    background: var(--lightgrey);
-    border-radius: 5px;
-    padding: 0.5rem;
-    overflow-x: auto;
-    -moz-tab-size: 2;
-    tab-size: 2;
-  }
-  #markdown-container code {
-    color: var(--dark2);
-  }
+  height: calc(100% - 60px);
+  overflow-y: auto;
+  padding:0 0.5rem;
+}
+#markdown-container img {
+  width: 75%;
+}
+#markdown-container h1 {
+  color: blue;
+}
+#markdown-container pre {
+  background: var(--lightgrey);
+  border-radius: 5px;
+  padding: 0.5rem;
+  overflow-x: auto;
+  -moz-tab-size: 2;
+  tab-size: 2;
+}
+#markdown-container code {
+  color: var(--dark2);
+}

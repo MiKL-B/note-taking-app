@@ -19,6 +19,8 @@
     </li>
 
     <!-- tags -->
+
+
     <li class="sidebar-item sidebar-label">
       <span class="sidebar-sub-label">
         <Tags class="size-16" />
@@ -136,7 +138,13 @@ export default {
       default: 0,
     },
   },
-  emits: ["select-filter", "set-color","add-tag", "delete-tag", "update-tag-name"],
+  emits: [
+    "select-filter",
+    "set-color",
+    "add-tag",
+    "delete-tag",
+    "update-tag-name",
+  ],
   components: {
     File,
     Archive,
@@ -215,7 +223,7 @@ export default {
       this.$emit("set-color", tag, color);
     },
     addTag() {
-      this.$emit("add-tag")
+      this.$emit("add-tag");
     },
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
@@ -233,6 +241,7 @@ export default {
   overflow-y: hidden;
   background: var(--bg-sidebar);
   color: var(--text-color-sidebar);
+  border-right: var(--border);
 }
 
 .sidebar-item {

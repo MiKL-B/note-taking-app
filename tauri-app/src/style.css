@@ -283,6 +283,7 @@ button[disabled]:hover{
   height: 10px;
   border-radius: 50%;
 }
+
 .bg-red {
   background: var(--red);
 }
