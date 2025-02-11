@@ -4,63 +4,53 @@
       $t("create_first_note")
     }}</span>
 
-    <ul id="sortable">
-      <div
-        id="note-container"
-        v-for="note in notes"
-        :class="note.selected ? 'note-selected' : ''"
-        @click="selectNote(note)"
-      >
-        <GripVertical class="icon-grip size-16 text-dark" />
-        <div id="note">
-          <h4 class="note-title">
-            <!-- <Lock class="size-16 text-dark"/> -->
-            <span style="color: var(--red)" v-if="note.important">!</span>
-            <Pin v-if="note.pinned" class="size-16 text-dark" />
-            <div
-              style="padding: 0 0.3rem"
-              class="color-circle"
-              :class="`bg-${note.color}`"
-            ></div>
-            <span id="note-title-name">
-              {{ note.name }}
-            </span>
-          </h4>
-          <div class="notelist-tag">
-            <span
-              class="tag"
-              v-for="tag in note.tags"
-              :style="`background: var(--${tag.color})`"
-              >{{ tag.name }}</span
-            >
-          </div>
-          <p class="note-content">
-            {{ note.content }}
-          </p>
-          <span class="note-date">{{ note.date }}</span>
+    <div
+      id="note-container"
+      v-for="note in notes"
+      :class="note.selected ? 'note-selected' : ''"
+      @click="selectNote(note)"
+    >
+      <div id="note">
+        <h4 class="note-title">
+          <!-- <Lock class="size-16 text-dark"/> -->
+          <span style="color: var(--red)" v-if="note.important">!</span>
+          <Pin v-if="note.pinned" class="size-16 text-dark" />
+          <div
+            style="padding: 0 0.3rem"
+            class="color-circle"
+            :class="`bg-${note.color}`"
+          ></div>
+          <span id="note-title-name">
+            {{ note.name }}
+          </span>
+        </h4>
+        <div class="notelist-tag">
+          <span
+            class="tag"
+            v-for="tag in note.tags"
+            :style="`background: var(--${tag.color})`"
+            >{{ tag.name }}</span
+          >
         </div>
-        <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
+        <p class="note-content">
+          {{ note.content }}
+        </p>
+        <span class="note-date">{{ note.date }}</span>
       </div>
-    </ul>
+      <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
+    </div>
   </div>
 </template>
 
 <script>
-$(function () {
-  $("#sortable").sortable({
-    placeholder: "drag-placeholder",
-  });
-  $("#sortable").disableSelection();
-});
-import { Pin, Trash2, GripVertical, Lock } from "lucide-vue-next";
+import { Pin, Trash2, Lock } from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes"],
   components: {
     Pin,
     Trash2,
-    GripVertical,
-    Lock
+    Lock,
   },
   data() {
     return {};
@@ -152,16 +142,5 @@ export default {
 }
 .note-trash:hover {
   cursor: pointer;
-}
-.drag-placeholder {
-  height: 73px;
-  background: var(--bg-drag-placeholder);
-}
-.icon-grip {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  position: absolute;
-  top: 2px;
-  right: 0;
 }
 </style>

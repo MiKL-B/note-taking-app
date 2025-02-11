@@ -4,12 +4,14 @@
     @action-clicked="handleAction"
     @display-about="displayAbout"
     @open-window="openWindow"
+    @toggle-sidebar="toggleSidebar"
+    @toggle-notelist="toggleNoteList"
   />
 
   <div id="container">
     <div class="row">
       <!-- left column -->
-      <div class="col-3" style="max-width: 200px">
+      <div class="col-3" style="max-width: 200px" v-if="isVisibleSidebar">
         <!-- sidebar -->
         <Sidebar
           :tags="tags"
@@ -28,7 +30,7 @@
         />
       </div>
       <!-- middle column -->
-      <div class="col-3 column-notelist">
+      <div class="col-3 column-notelist" v-if="isVisibleNotelist">
         <!-- filternote -->
         <FilterNote
           :canCreateNote="canCreateNote"
@@ -189,6 +191,8 @@ export default {
       sortedDate: true,
       timerCreateNote: null,
       canCreateNote: true,
+      isVisibleSidebar: true,
+      isVisibleNotelist:true,
     };
   },
 
@@ -349,7 +353,12 @@ export default {
           break;
       }
     },
-
+    toggleSidebar() {
+      this.isVisibleSidebar = !this.isVisibleSidebar;
+    },
+    toggleNoteList(){
+      this.isVisibleNotelist = !this.isVisibleNotelist;
+    },
     async openDocument() {
       const selectedFile = await open({
         multiple: false,
@@ -823,8 +832,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  margin: auto;
+  margin:auto;
   user-select: none;
 }
 img {

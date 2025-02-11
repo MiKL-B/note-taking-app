@@ -12,15 +12,39 @@
         </li>
       </ul>
     </details>
-
+    <!-- view -->
+    <details class="toolbar-details" @click="handleClickOnDetails">
+      <summary class="toolbar-btn">{{ $t("view") }}</summary>
+      <ul class="toolbar-menu">
+        <li @click="toggleSidebar" class="flex align-center gap-4">
+          <Check v-if="isVisibleSidebar" class="size-16 text-dark" />
+          {{ $t("sidebar") }}
+        </li>
+        <li @click="toggleNoteList" class="flex align-center gap-4">
+          <Check v-if="isVisibleNotelist" class="size-16 text-dark" />
+          {{ $t("notelist") }}
+        </li>
+      </ul>
+    </details>
     <span class="toolbar-btn" @click="openWindow">{{ $t("settings") }}</span>
     <span class="toolbar-btn" @click="displayAbout">{{ $t("about") }}</span>
   </div>
 </template>
 
 <script>
+import { Check } from "lucide-vue-next";
 export default {
   name: "Toolbar",
+  components: {
+    Check,
+  },
+  emits: [
+    "action-clicked",
+    "display-about",
+    "open-window",
+    "toggle-sidebar",
+    "toggle-notelist",
+  ],
   mounted() {
     document.addEventListener("click", this.closeDetails);
   },
@@ -29,6 +53,8 @@ export default {
   },
   data() {
     return {
+      isVisibleSidebar: true,
+      isVisibleNotelist: true,
       menus: [
         {
           name: this.$t("file"),
@@ -44,7 +70,6 @@ export default {
       ],
     };
   },
-  emits: ["action-clicked", "display-about", "open-window"],
   methods: {
     openWindow() {
       this.$emit("open-window");
@@ -67,6 +92,14 @@ export default {
     },
     onSubMenuClick(action) {
       this.$emit("action-clicked", action);
+    },
+    toggleSidebar() {
+      this.isVisibleSidebar = !this.isVisibleSidebar;
+      this.$emit("toggle-sidebar");
+    },
+    toggleNoteList() {
+      this.isVisibleNotelist = !this.isVisibleNotelist;
+      this.$emit("toggle-notelist");
     },
     displayAbout() {
       this.$emit("display-about");
@@ -96,12 +129,13 @@ export default {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
 }
-
+li hr:hover {
+  background: none;
+}
 .toolbar-menu {
   background-color: var(--bg-toolbar);
   position: absolute;
   z-index: 1;
-  margin-top: 5px;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   min-width: 100px;
