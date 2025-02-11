@@ -1,7 +1,7 @@
 # Implemented
 
-## Notes
-- CRUD
+## App
+- CRUD Notes and tags
 - Search by name
 - Sort asc-desc, date, clear sort
 - Filter by status, tags, today, pin / unpin, important
@@ -14,18 +14,12 @@
 - Pin / unpin note
 - Important note
 - Theme
-- Allow drag and drop notelist
-
-## Tags
-- CRUD
-
-## Settings
+- View sidebar, notelist (distraction-free mode)
 - Change language
-
-## Miscellaneous
 - Toggle preview markdown
 - View both text / markdown
 - Notifications (just information)
+
 ---
 
 # Fixed
@@ -51,7 +45,6 @@
 # To Implement
 - Folders and subfolders
 - View kanban, schedule
-- View sidebar, notelist (distraction-free mode)
 - View drawing
 - App branding
 - Add image, audio and video
