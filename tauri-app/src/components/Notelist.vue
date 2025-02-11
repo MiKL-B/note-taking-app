@@ -14,6 +14,7 @@
         <GripVertical class="icon-grip size-16 text-dark" />
         <div id="note">
           <h4 class="note-title">
+            <!-- <Lock class="size-16 text-dark"/> -->
             <span style="color: var(--red)" v-if="note.important">!</span>
             <Pin v-if="note.pinned" class="size-16 text-dark" />
             <div
@@ -51,7 +52,7 @@ $(function () {
   });
   $("#sortable").disableSelection();
 });
-import { Pin, Trash2, GripVertical } from "lucide-vue-next";
+import { Pin, Trash2, GripVertical, Lock } from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes"],
@@ -59,6 +60,7 @@ export default {
     Pin,
     Trash2,
     GripVertical,
+    Lock
   },
   data() {
     return {};

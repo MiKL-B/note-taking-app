@@ -118,13 +118,7 @@ export default {
       default: 0,
     },
   },
-  emits: [
-    "select-filter",
-    "set-color",
-    "add-tag",
-    "delete-tag",
-    "update-tag-name",
-  ],
+  emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
   components: {
     File,
     Archive,
@@ -204,9 +198,6 @@ export default {
     },
     setColor(tag, color) {
       this.$emit("set-color", tag, color);
-    },
-    addTag() {
-      this.$emit("add-tag");
     },
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
@@ -315,7 +306,7 @@ export default {
   color: var(--text-color-sidebar);
 }
 
-.test{
+.test {
   height: calc(100% - 375px);
   overflow-y: scroll;
 }

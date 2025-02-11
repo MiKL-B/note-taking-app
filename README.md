@@ -32,14 +32,17 @@
 - fix width input name note (column note)
 - set ellipsis note name (column notelist)
 - fix position notification
+- position layout container
 ---
+
+# Improved 
+- confirm before deleting note
 
 # To fix
 
 ---
 
 # To improve
-- alert before deleting note
 - Improve textarea
 - Improve save functionnality
 - Improve Style markdown
@@ -63,3 +66,4 @@
 - define path in settings window to create a vault like obsidian to store notes
 - new -> mkfile
 - save -> save the file with the right id
+- Lock files / folders 
