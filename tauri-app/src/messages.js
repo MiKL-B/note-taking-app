@@ -29,6 +29,7 @@ const messages = {
     about: "About",
     exportjson: "Export JSON",
     importjson: "Import JSON",
+
     // sidebar
     allnotes: "All notes",
     todo: "To do",
@@ -82,6 +83,9 @@ const messages = {
       "This is the language that will be used in the application.",
     light: "Light",
     dark: "Dark",
+    select_font:"Select font",
+    font_description:"This is the font that will be used in the application.",
+   
     // about
     developed: "Application developed by",
   },
@@ -115,6 +119,7 @@ const messages = {
     about: "À propos",
     exportjson: "Exporter JSON",
     importjson: "Importer JSON",
+
     // sidebar
     allnotes: "Notes",
     todo: "À faire",
@@ -125,7 +130,7 @@ const messages = {
     today: "Aujourd'hui",
     important: "Importantes",
     // notelist,
-    create_first_note: "Creer votre première note!",
+    create_first_note: "Créer votre première note!",
     filter_note_by_name: "Rechercher par nom...",
     // notebar
     font: "Police",
@@ -168,6 +173,9 @@ const messages = {
       "Il s’agit de la langue qui sera utilisée dans l’application.",
     light: "Clair",
     dark: "Sombre",
+    select_font:"Sélectionner la police d'écriture",
+    font_description:"Il s'agit de la police d'écriture qui sera utilisée dans l'application.",
+   
     // about
     developed: "Application développée par",
   },

@@ -29,7 +29,7 @@
         <ChevronUp v-else class="text-dark size-16" />
       </span>
     </li>
-    <ul v-if="tagsMenu" class="test">
+    <ul v-if="tagsMenu" class="tags-list">
       <li
         id="sidebar-tag"
         @click="selectFilter(tag.name)"
@@ -40,7 +40,7 @@
         <span class="sidebar-sub-label">
           <details class="toolbar-details">
             <summary>
-              <Tag :style="`color: var(--${tag.color}`" class="size-16" />
+              <Tag :style="`color: var(--${tag.color})`" width="20" />
             </summary>
             <ul class="toolbar-menu">
               <li
@@ -59,9 +59,8 @@
             v-model="tag.name"
             @input="updateTagName(tag)"
           />
+          <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
         </span>
-
-        <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
       </li>
     </ul>
   </ul>
@@ -81,6 +80,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-vue-next";
+
 export default {
   name: "Sidebar",
   props: {
@@ -137,7 +137,17 @@ export default {
       showDetails: false,
       noteCounters: {},
       selectedFilter: "allnotes",
-      colors: ["blue", "red", "yellow", "green", "purple"],
+      colors: [
+        "brown",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "cyan",
+        "blue",
+        "purple",
+        "pink",
+      ],
       tagsMenu: false,
     };
   },
@@ -306,8 +316,8 @@ export default {
   color: var(--text-color-sidebar);
 }
 
-.test {
+.tags-list {
   height: calc(100% - 375px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

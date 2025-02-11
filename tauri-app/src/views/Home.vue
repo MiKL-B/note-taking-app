@@ -6,6 +6,7 @@
     @open-window="openWindow"
     @toggle-sidebar="toggleSidebar"
     @toggle-notelist="toggleNoteList"
+
   />
 
   <div id="container">
@@ -153,6 +154,7 @@ import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { marked } from "marked";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+
 const appWindow = getCurrentWindow();
 export default {
   name: "Home",
@@ -756,6 +758,7 @@ export default {
 <style>
 .row {
   display: flex;
+  height:100vh;
 }
 
 .column-notelist {
@@ -864,4 +867,5 @@ img {
   cursor: not-allowed;
   user-select: none;
 }
+
 </style>

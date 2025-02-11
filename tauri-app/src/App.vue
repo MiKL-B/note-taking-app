@@ -27,10 +27,24 @@ export default {
         this.applyTheme(newTheme);
       });
     }
+    const storedFont = localStorage.getItem("font");
+    this.applyFont(storedFont);
+    if (storedFont) {
+      listen("font-changed", (event) => {
+        const newFont = event.payload;
+        this.applyFont(newFont);
+      });
+    }
   },
   methods: {
     applyTheme(theme) {
       document.documentElement.setAttribute("data-theme", theme);
+    },
+    applyFont(font) {
+      const elements = document.querySelectorAll("*");
+      elements.forEach((element) => {
+        element.style.fontFamily = font;
+      });
     },
   },
 };

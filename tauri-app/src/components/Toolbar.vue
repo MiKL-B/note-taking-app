@@ -5,7 +5,7 @@
       v-for="menu in menus"
       @click="handleClickOnDetails"
     >
-      <summary class="toolbar-btn">{{ menu.name }}</summary>
+      <summary class="toolbar-btn">{{ $t(menu.name) }}</summary>
       <ul class="toolbar-menu">
         <li v-for="item in menu.items" @click="onSubMenuClick(item.label)">
           {{ $t(item.label) }}
@@ -57,7 +57,7 @@ export default {
       isVisibleNotelist: true,
       menus: [
         {
-          name: this.$t("file"),
+          name: "file",
           items: [
             { label: "new" },
             { label: "open" },

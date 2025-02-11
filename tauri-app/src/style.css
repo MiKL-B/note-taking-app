@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-@import "./markdown.css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap');@import "./markdown.css";
 :root {
   --white: #ffffff;
   --lightgrey: #f9f9fa;
@@ -12,10 +12,13 @@
   --dark2: #282c34;
   --red: #e06c75;
   --green: #98c379;
-  --yellow: #e5c07b;
+  --yellow: #e3e57b;
   --blue: #61afef;
   --purple: #c678dd;
-
+  --pink: #f556e8;
+  --cyan:#56B6C2;
+  --orange:#e0a63b;
+  --brown:#a37f4f;
   /* EVERFOREST */
   --bgdim: #353941;
   --bg0: #333c43;
@@ -301,6 +304,18 @@ button[disabled]:hover{
 }
 .bg-purple {
   background: var(--purple);
+}
+.bg-pink{
+  background:var(--pink);
+}
+.bg-orange{
+  background:var(--orange);
+}
+.bg-cyan {
+  background:var(--cyan);
+}
+.bg-brown{
+  background:var(--brown);
 }
 .text-dark {
   color: var(--dark);
