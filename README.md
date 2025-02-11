@@ -8,14 +8,14 @@
 - Open
 - Save
 - Export, import
-- Change status
-- Add tags
-- Duplicate
+- Change status note
+- Duplicate note
 - Pin / unpin note
 - Important note
-- Theme
 - View sidebar, notelist (distraction-free mode)
-- Change language
+- Change theme in the settings window
+- Change language in the settings window
+- Change font in the settings window
 - Toggle preview markdown
 - View both text / markdown
 - Notifications (just information)
@@ -48,7 +48,6 @@
 - View drawing
 - App branding
 - Add image, audio and video
-- Add font and font size in settings
 - Accessibility (title..)
 - Export PDF
 - Export import settings
