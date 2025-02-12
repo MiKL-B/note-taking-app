@@ -117,6 +117,7 @@ export default {
   position: relative;
   background: var(--bg-toolbar);
   color: var(--text-color-toolbar);
+  height: 33px;
 }
 .toolbar-btn {
   padding: 0.2rem 0.5rem;

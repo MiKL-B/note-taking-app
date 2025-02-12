@@ -1,19 +1,15 @@
 <template>
-  <Titlebar />
-  <Toolbar
-    @action-clicked="handleAction"
-    @display-about="displayAbout"
-    @open-window="openWindow"
-    @toggle-sidebar="toggleSidebar"
-    @toggle-notelist="toggleNoteList"
-
-  />
-
-  <div id="container">
+  <div id="home-container">
+    <Titlebar />
+    <Toolbar
+      @action-clicked="handleAction"
+      @display-about="displayAbout"
+      @open-window="openWindow"
+      @toggle-sidebar="toggleSidebar"
+      @toggle-notelist="toggleNoteList"
+    />
     <div class="row">
-      <!-- left column -->
-      <div class="col-3" style="max-width: 200px" v-if="isVisibleSidebar">
-        <!-- sidebar -->
+      <div id="column-left" class="col-3" v-if="isVisibleSidebar">
         <Sidebar
           :tags="tags"
           :countAllNotes="notes.length"
@@ -30,8 +26,7 @@
           @set-color="setColorTag"
         />
       </div>
-      <!-- middle column -->
-      <div class="col-3 column-notelist" v-if="isVisibleNotelist">
+      <div id="column-middle" class="col-3" v-if="isVisibleNotelist">
         <!-- filternote -->
         <FilterNote
           :canCreateNote="canCreateNote"
@@ -48,8 +43,7 @@
           @delete-note="deleteNote"
         />
       </div>
-      <!-- right column -->
-      <div class="col-6" style="flex-grow: 1" v-if="selectedNote">
+      <div id="column-right" class="col-6" v-if="selectedNote">
         <!-- notebar -->
         <Notebar
           :tags="tags"
@@ -65,7 +59,8 @@
           :isImportant="selectedNote.important"
           v-model.modelValue="selectedNote.status"
         />
-        <div class="column-note-content" :style="{ height: noteHeight }">
+        <!-- note -->
+        <div class="column-note-content">
           <div id="column-note-title">
             <div
               style="margin: auto 0"
@@ -124,7 +119,6 @@
           </div>
         </div>
       </div>
-
       <div class="column-note img" v-else>
         <img src="/image3-removebg-preview.png" />
       </div>
@@ -176,7 +170,6 @@ export default {
   },
   data() {
     return {
-      isVisibleNoteBar: true,
       isPreviewMode: false,
       showBoth: false,
       notes: [],
@@ -194,14 +187,11 @@ export default {
       timerCreateNote: null,
       canCreateNote: true,
       isVisibleSidebar: true,
-      isVisibleNotelist:true,
+      isVisibleNotelist: true,
     };
   },
 
   computed: {
-    noteHeight() {
-      return this.isVisibleNoteBar ? "calc(100% - 48px)" : "calc(100% - 5px)";
-    },
     selectedNote() {
       const selectedNote = this.notes.find((note) => note.selected);
       return selectedNote ? selectedNote : "";
@@ -358,7 +348,7 @@ export default {
     toggleSidebar() {
       this.isVisibleSidebar = !this.isVisibleSidebar;
     },
-    toggleNoteList(){
+    toggleNoteList() {
       this.isVisibleNotelist = !this.isVisibleNotelist;
     },
     async openDocument() {
@@ -756,22 +746,46 @@ export default {
 };
 </script>
 <style>
+#home-container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 33px 33px 1fr;
+}
 .row {
   display: flex;
-  height:100vh;
+  height: 100%;
 }
-
-.column-notelist {
+#column-left {
+  max-width: 200px;
+}
+#column-middle {
+  max-width: 263.5px;
+  display: grid;
+  grid-template-rows: 42px calc(100vh - 108px);
   border-right: var(--border);
-  max-width: 265px;
   background: var(--bg-notelist);
   color: var(--text-color-notelist);
+}
+#filter-note {
+  border-bottom: var(--border);
+  padding: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2rem;
+  height: 42px;
+}
+#column-right {
+  flex-grow: 1;
+  display: grid;
+  grid-template-rows: 42px calc(100vh - 108px);
 }
 
 .column-note-content {
   background: var(--bg-note);
   color: var(--text-color-note);
+  width: calc(100vw - 463.5px);
 }
+
 .col-3 {
   width: 25%;
 }
@@ -779,6 +793,7 @@ export default {
 .col-6 {
   width: 50%;
 }
+
 #column-note-title {
   display: flex;
   padding: 0 0.2rem;
@@ -792,16 +807,6 @@ export default {
 }
 #input-note-tag {
   width: 100px;
-}
-.invisible {
-  display: none;
-}
-#filter-note {
-  border-bottom: var(--border);
-  padding: 0.2rem;
-  display: flex;
-  justify-content: space-between;
-  gap: 0.2rem;
 }
 
 .delete-tag-btn {
@@ -835,7 +840,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin:auto;
+  margin: auto;
   user-select: none;
 }
 img {
@@ -867,5 +872,4 @@ img {
   cursor: not-allowed;
   user-select: none;
 }
-
 </style>

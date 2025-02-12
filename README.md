@@ -27,12 +27,15 @@
 - set ellipsis note name (column notelist)
 - fix position notification
 - position layout container
+- height home window
 ---
 
 # Improved 
 - confirm before deleting note
 
 # To fix
+- open details
+- remove minimize settings window
 
 ---
 
@@ -59,3 +62,4 @@
 - new -> mkfile
 - save -> save the file with the right id
 - Lock files / folders 
+- Add context menu

@@ -224,7 +224,7 @@ export default {
 <style scoped>
 #sidebar {
   padding: 0 0 0.5rem 0;
-  height: calc(100vh - 65px);
+  height:100%;
   overflow-y: hidden;
   background: var(--bg-sidebar);
   color: var(--text-color-sidebar);

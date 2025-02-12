@@ -1,8 +1,7 @@
 /* markdown editor */
 #markdown-container {
-  height: calc(100% - 60px);
   overflow-y: auto;
-  padding:0 0.5rem;
+  padding: 0 0.5rem;
 }
 #markdown-container img {
   width: 75%;

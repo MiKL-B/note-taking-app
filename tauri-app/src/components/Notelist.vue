@@ -68,7 +68,6 @@ export default {
 </script>
 <style>
 #notelist {
-  height: calc(100vh - 109px);
   overflow-y: auto;
 }
 #note-container {

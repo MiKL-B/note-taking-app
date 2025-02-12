@@ -157,7 +157,9 @@ body {
   background: var(--bg-body);
   height: 100vh;
 }
-
+#app{
+  height:100%;
+}
 .lucide {
   display: flex;
   align-items: center;
