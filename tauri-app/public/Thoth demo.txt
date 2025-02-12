@@ -1,0 +1,70 @@
+## Headers
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
+
+## Paragraph
+Just type text like this!
+
+## Bold
+Text in **bold**
+__This will also be bold__
+
+## Underline
+
+## Italic
+*This text will be italic*  
+_This will also be italic_
+
+## Bold and Italic
+_You **can** combine them_
+
+
+## Separator
+---
+
+## Checkbox
+- [ ] Unchecked
+- [x] Checked
+
+## Lists
+### Unordored
+- list item 1
+- list item 2
+- list item 3
+
+### Ordered
+1. list item
+2. list item
+3. list item
+
+### Nested
+- list item 1
+   - list item 1.1
+   - list item 1.2
+- list item 2
+
+
+## Code
+```
+code example
+```
+
+## Blockquote
+> This is a blockquote!
+>> Nested blockquote!
+
+## Image
+![App Platorm](https://picsum.photos/600/300 "This is a sample image.")
+
+## Link
+[Node.js](https://nodejs.org/)
+
+## Table
+| Column1 | Column2|
+| ------ | ------ |
+| Row 1| value 2|
+| Row 2|value 2 |

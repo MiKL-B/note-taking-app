@@ -28,21 +28,24 @@
 - fix position notification
 - position layout container
 - height home window
+- remove minimize settings window
 ---
 
 # Improved 
 - confirm before deleting note
+- Improve Style markdown
 
 # To fix
 - open details
-- remove minimize settings window
-
+- settings font mounted ?
 ---
 
 # To improve
 - Improve textarea
 - Improve save functionnality
-- Improve Style markdown
+- insert: heading ... at the right place
+- insert: other elements like date...
+- insert: Add image, audio and video
 ---
 
 # To Implement
@@ -50,14 +53,11 @@
 - View kanban, schedule
 - View drawing
 - App branding
-- Add image, audio and video
 - Accessibility (title..)
 - Export PDF
 - Export import settings
 - Set settings auto export pdf when saving note
 - Print
-- see octarine for auto completions links
-- insert date... see tiny mce
 - define path in settings window to create a vault like obsidian to store notes
 - new -> mkfile
 - save -> save the file with the right id

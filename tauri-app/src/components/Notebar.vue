@@ -1,11 +1,9 @@
 <template>
   <div id="notebar" @wheel.prevent="handleScroll">
-    <select :value="modelValue" @change="changeNoteStatus($event.target.value)">
+    <!-- status -->
+    <select :value="modelValue" @change="changeNoteStatus($event.target.value)" :title="$t('status')">
       <option disabled selected>{{ $t("status") }}</option>
-      <option value="todo">{{ $t("todo") }}</option>
-      <option value="inprogress">{{ $t("inprogress") }}</option>
-      <option value="finished">{{ $t("finished") }}</option>
-      <option value="archived">{{ $t("archived") }}</option>
+      <option :value="item" v-for="item in status">{{ $t(item) }}</option>
     </select>
     <!-- add tag -->
     <div id="suggestion-container">
@@ -20,7 +18,8 @@
       />
 
       <ul id="suggestion-list" v-if="suggestions.length > 0">
-        <li class="flex align-center gap-4"
+        <li
+          class="flex align-center gap-4"
           v-for="suggestion in suggestions"
           @click="selectSuggestion(suggestion)"
         >
@@ -31,8 +30,13 @@
         </li>
       </ul>
     </div>
-  
+    <!-- insert -->
+    <select v-model="insertValue" @change="insertItem" :title="$t('insert')">
+      <option disabled selected>{{ $t("insert") }}</option>
+      <option :value="item" v-for="item in insertItems" >{{ $t(item) }}</option>
+    </select>
     <span class="separator-y"></span>
+    <!-- important -->
     <button
       @click="toggleImportantNote"
       :title="isPinned ? $t('unimportant_note') : $t('important_note')"
@@ -42,6 +46,7 @@
         :style="isImportant ? 'color:var(--red)' : ''"
       />
     </button>
+    <!-- pin -->
     <button
       @click="togglePinNote"
       :title="isPinned ? $t('unpin_note') : $t('pin_note')"
@@ -49,10 +54,12 @@
       <PinOff v-if="isPinned" class="size-16" />
       <Pin v-else class="size-16" />
     </button>
+    <!-- duplicate -->
     <button @click="duplicateNote" :title="$t('duplicate')">
       <CopyPlus class="size-16" />
     </button>
     <span class="separator-y"></span>
+    <!-- preview -->
     <button
       :disabled="showBoth"
       @click="togglePreviewMode"
@@ -61,10 +68,10 @@
       <EyeOff v-if="isPreviewMode" class="size-16" />
       <Eye v-else class="size-16" />
     </button>
+    <!-- both view -->
     <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
       <Columns2 class="size-16" />
     </button>
-
   </div>
 </template>
 
@@ -100,12 +107,25 @@ export default {
     "update-status",
     "toggle-pin-note",
     "toggle-important-note",
+    "insert-item"
   ],
   data() {
     return {
       isPreviewMode: false,
       input: "",
+      status: ["todo", "inprogress", "finished", "archived"],
       suggestions: [],
+      insertValue:"",
+      insertItems: [
+        "heading1",
+        "heading2",
+        "heading3",
+        "heading4",
+        "heading5",
+        "heading6",
+        "checkbox",
+        "separator",
+      ],
     };
   },
   methods: {
@@ -159,6 +179,10 @@ export default {
       this.suggestions = [];
       this.addTagToNote();
     },
+    insertItem(){
+      this.$emit('insert-item',this.insertValue);
+      this.insertValue = "";
+    }
   },
 };
 </script>
@@ -188,11 +212,11 @@ export default {
   min-width: 120px;
   user-select: none;
 }
-#suggestion-list li{
-  padding:0.2rem ;
+#suggestion-list li {
+  padding: 0.2rem;
   border-radius: 5px;
 }
-#suggestion-list li:hover{
+#suggestion-list li:hover {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
 }

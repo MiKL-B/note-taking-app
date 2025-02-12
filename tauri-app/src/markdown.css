@@ -13,17 +13,23 @@
   display: flex;
   margin:0 auto;
 }
-#markdown-container h1 {
+
+#markdown-container h1,
+#markdown-container h2,
+#markdown-container h3,
+#markdown-container h4,
+#markdown-container h5,
+#markdown-container h6 {
   color: var(--dark);
   border-bottom: var(--border);
   margin-bottom: 1rem;
+}
+
+#markdown-container h1 {
   font-size: 40px;
 }
-#markdown-container h2 {
-  color: var(--dark);
-  border-bottom: var(--border);
-  margin-bottom: 1rem;
-}
+
+
 #markdown-container p {
   margin-bottom: 0.5rem;
 }
@@ -88,4 +94,11 @@
 }
 #markdown-container tr:nth-child(odd){
   background:var(--lightgrey);
+}
+#markdown-container hr{
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: var(--border);
+  margin: 0 0.2rem;
 }

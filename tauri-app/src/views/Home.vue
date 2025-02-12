@@ -58,6 +58,7 @@
           @toggle-important-note="toggleImportantNote"
           :isImportant="selectedNote.important"
           v-model.modelValue="selectedNote.status"
+          @insert-item="insertItem"
         />
         <!-- note -->
         <div class="column-note-content">
@@ -113,7 +114,12 @@
               ></textarea>
             </div>
 
-            <div v-else id="markdown-container" class="oneViewMarkdown" v-html="getMarkdownHtml"></div>
+            <div
+              v-else
+              id="markdown-container"
+              class="oneViewMarkdown"
+              v-html="getMarkdownHtml"
+            ></div>
           </div>
           <Statusbar :noteLength="getContentNoteLength" />
         </div>
@@ -190,7 +196,9 @@ export default {
       isVisibleNotelist: true,
     };
   },
-
+  mounted() {
+    this.openNoteDemo();
+  },
   computed: {
     getMarkdownHtml() {
       let options = {
@@ -289,7 +297,37 @@ export default {
     },
   },
   methods: {
-
+    insertItem(item) {
+      console.log(item);
+      let text = "";
+      switch (item) {
+        case "heading1":
+          text = "# ";
+          break;
+        case "heading2":
+          text = "## ";
+          break;
+        case "heading3":
+          text = "### ";
+          break;
+        case "heading4":
+          text = "#### ";
+          break;
+        case "heading5":
+          text = "##### ";
+          break;
+        case "heading6":
+          text = "###### ";
+          break;
+        case "checkbox":
+          text = "- [ ] ";
+          break;
+        case "separator":
+          text = "---";
+          break;
+      }
+      this.selectedNote.content += text + "\r\n";
+    },
     getToday() {
       return new Date().toLocaleString("fr-FR").split(" ")[0];
     },
@@ -370,6 +408,37 @@ export default {
     },
     toggleNoteList() {
       this.isVisibleNotelist = !this.isVisibleNotelist;
+    },
+    openNoteDemo() {
+      const selectedFile = "/Thoth demo.txt";
+      const fileName = selectedFile
+        .replace(/^.*[\\\/]/, "")
+        .replace(/\.[^/.]+$/, "");
+
+      fetch(selectedFile)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de la récupération du fichier");
+          }
+          return response.text();
+        })
+        .then((content) => {
+          let newNote = {
+            id: Date.now(),
+            name: fileName,
+            date: new Date().toLocaleString("fr-FR"),
+            status: "todo",
+            color: "red",
+            content: content,
+            tags: [],
+            selected: true,
+          };
+
+          this.notes.push(newNote);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la lecture du fichier : ", error);
+        });
     },
     async openDocument() {
       const selectedFile = await open({
