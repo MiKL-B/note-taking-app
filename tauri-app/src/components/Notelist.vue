@@ -20,7 +20,7 @@
             class="color-circle"
             :class="`bg-${note.color}`"
           ></div>
-          <span id="note-title-name">
+          <span id="note-title-name" :style="note.selected ? '': 'color:var(--dark)'">
             {{ note.name }}
           </span>
         </h4>

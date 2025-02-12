@@ -96,9 +96,10 @@
               ></textarea>
             </div>
             <hr class="separator-column" />
+
             <div
               id="markdown-container"
-              v-html="getMarkdownHtml()"
+              v-html="getMarkdownHtml"
               ref="div2"
               @scroll="syncScroll('div2')"
             ></div>
@@ -111,11 +112,8 @@
                 spellcheck="false"
               ></textarea>
             </div>
-            <div
-              v-else
-              id="markdown-container"
-              v-html="getMarkdownHtml()"
-            ></div>
+
+            <div v-else id="markdown-container" class="oneViewMarkdown" v-html="getMarkdownHtml"></div>
           </div>
           <Statusbar :noteLength="getContentNoteLength" />
         </div>
@@ -131,7 +129,6 @@
     :color="colorNotification"
     :showNotification="isVisibleNotification"
   />
-  <!-- <Statusbar :noteLength="getContentNoteLength" /> -->
 </template>
 
 <script>
@@ -140,15 +137,16 @@ import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Notelist from "../components/Notelist.vue";
 import Notebar from "../components/Notebar.vue";
- import Statusbar from "../components/Statusbar.vue";
+import Statusbar from "../components/Statusbar.vue";
 import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-import { marked } from "marked";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 const appWindow = getCurrentWindow();
 export default {
@@ -194,6 +192,27 @@ export default {
   },
 
   computed: {
+    getMarkdownHtml() {
+      let options = {
+        async: false,
+        extensions: null,
+        hooks: null,
+        pedantic: false,
+        silent: false,
+        tokenizer: null,
+        walkTokens: null,
+        gfm: true,
+        sanitize: true,
+        tables: true,
+        breaks: true,
+        smartLists: true,
+        smartypants: false,
+      };
+
+      let dirtyHTML = marked(this.selectedNote.content, options);
+
+      return DOMPurify.sanitize(dirtyHTML);
+    },
     selectedNote() {
       const selectedNote = this.notes.find((note) => note.selected);
       return selectedNote ? selectedNote : "";
@@ -270,6 +289,7 @@ export default {
     },
   },
   methods: {
+
     getToday() {
       return new Date().toLocaleString("fr-FR").split(" ")[0];
     },
@@ -310,9 +330,7 @@ export default {
       this.sortedDate = !this.sortedDate;
       this.sortNotesDate(this.sortedDate);
     },
-    getMarkdownHtml() {
-      return marked(this.selectedNoteContent, { sanitize: true });
-    },
+
     toggleMarkdown() {
       this.isPreviewMode = !this.isPreviewMode;
     },
@@ -635,10 +653,7 @@ export default {
       }
       this.tags[index].color = color;
     },
-    // markdown
-    getMarkdownHtml() {
-      return marked(this.selectedNote.content, { sanitize: true });
-    },
+
     // exportASPDF
     exportASPDF() {
       let name = this.selectedNote.name || "Untitled";
@@ -785,7 +800,7 @@ export default {
 .column-note-content {
   background: var(--bg-note);
   color: var(--text-color-note);
-  width: calc(100vw - 463.5px);
+  min-width: 50%;
 }
 
 .col-3 {
@@ -845,9 +860,7 @@ export default {
   margin: auto;
   user-select: none;
 }
-img {
-  width: 100%;
-}
+
 #bothColumns {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
