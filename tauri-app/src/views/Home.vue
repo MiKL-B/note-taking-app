@@ -117,6 +117,7 @@
               v-html="getMarkdownHtml()"
             ></div>
           </div>
+          <Statusbar :noteLength="getContentNoteLength" />
         </div>
       </div>
       <div class="column-note img" v-else>
@@ -139,7 +140,7 @@ import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Notelist from "../components/Notelist.vue";
 import Notebar from "../components/Notebar.vue";
-// import Statusbar from "../components/Statusbar.vue";
+ import Statusbar from "../components/Statusbar.vue";
 import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
@@ -160,6 +161,7 @@ export default {
     Notebar,
     Notification,
     FilterNote,
+    Statusbar,
     Plus,
     Eye,
     EyeOff,
@@ -849,7 +851,7 @@ img {
 #bothColumns {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  height: calc(100vh - 170px);
+  height: calc(100vh - 200px);
 }
 .separator-column {
   border-left: none;
@@ -858,7 +860,7 @@ img {
   margin: 0 1rem;
 }
 #oneView {
-  height: calc(100vh - 170px);
+  height: calc(100vh - 200px);
 }
 #oneView div {
   height: 100%;

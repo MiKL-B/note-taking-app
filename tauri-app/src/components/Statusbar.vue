@@ -19,7 +19,6 @@ export default {
   bottom: 0;
   height: 30px;
   padding-left: 0.5rem;
-  background: var(--lightgrey);
   color: var(--dark2);
   display: flex;
   gap: 1rem;
