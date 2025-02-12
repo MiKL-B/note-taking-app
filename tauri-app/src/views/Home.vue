@@ -302,28 +302,48 @@ export default {
       let text = "";
       switch (item) {
         case "heading1":
-          text = "# ";
+          text = "# Heading 1";
           break;
         case "heading2":
-          text = "## ";
+          text = "## Heading 2";
           break;
         case "heading3":
-          text = "### ";
+          text = "### Heading 3";
           break;
         case "heading4":
-          text = "#### ";
+          text = "#### Heading 4";
           break;
         case "heading5":
-          text = "##### ";
+          text = "##### Heading 5";
           break;
         case "heading6":
-          text = "###### ";
+          text = "###### Heading 6";
           break;
         case "checkbox":
-          text = "- [ ] ";
+          text = "- [ ] Checkbox";
           break;
         case "separator":
           text = "---";
+          break;
+        case "blockquote":
+          text = "> Quote\r\n";
+          break;
+        case "image":
+          text = "![Alt text](https://picsum.photos/200/300 'A title')";
+          break;
+        case "code":
+          text = "```\r\n";
+          text += "code \r\n";
+          text += "```";
+          break;
+        case "table":
+          text = `| Column1 | Column2|
+| ------ | ------ |
+| Row 1| value 2|
+| Row 2|value 2 |\r\n`;
+          break;
+        case "link":
+          text = "[Link name](https://www.markdownguide.org/)";
           break;
       }
       this.selectedNote.content += text + "\r\n";

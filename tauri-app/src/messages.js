@@ -59,6 +59,11 @@ const messages = {
     heading6: "Heading 6",
     checkbox:"Checkbox",
     separator:"Separator",
+    blockquote:"Blockquote",
+    image:"Image",
+    code:"Code",
+    table:"Table",
+    link:"Link",
     // note
     note_name_here: "Note name here...",
     status: "Status",
@@ -158,6 +163,11 @@ const messages = {
     heading6: "Titre 6",
     checkbox:"Case à cocher",
     separator:"Séparateur",
+    blockquote:"Citation",
+    image:"Image",
+    code:"Code",
+    table:"Table",
+    link:"Lien",
     // note
     note_name_here: "Nom de la note ici...",
     status: "Statut",

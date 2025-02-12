@@ -102,3 +102,6 @@
   border-bottom: var(--border);
   margin: 0 0.2rem;
 }
+#markdown-container em {
+  font-style: italic;
+}

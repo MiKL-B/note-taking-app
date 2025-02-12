@@ -125,6 +125,11 @@ export default {
         "heading6",
         "checkbox",
         "separator",
+        "blockquote",
+        "image",
+        "code",
+        "table",
+        "link",
       ],
     };
   },
