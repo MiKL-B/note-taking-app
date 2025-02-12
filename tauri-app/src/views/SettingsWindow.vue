@@ -1,5 +1,5 @@
 <template>
-  <Titlebar :name="$t('settings')" :maximizable="false"/>
+  <Titlebar :name="$t('settings')" :minimizable="false" :maximizable="false"/>
   <div id="settings">
     <LanguageSwitcher />
     <FontSwitcher/>

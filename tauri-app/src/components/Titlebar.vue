@@ -2,7 +2,7 @@
   <div data-tauri-drag-region id="titlebar" class="titlebar">
     <span>{{ name }}</span>
     <div>
-      <span class="titlebar-button" @click="minimize">
+      <span class="titlebar-button" @click="minimize" v-if="minimizable">
         <Minus class="size-16"/>
       </span>
       <span class="titlebar-button" @click="maximize" v-if="maximizable">
@@ -26,6 +26,10 @@ export default {
     name: {
       type: String,
       default: "Thoth",
+    },
+    minimizable: {
+      type: Boolean,
+      default: true,
     },
     maximizable: {
       type: Boolean,
