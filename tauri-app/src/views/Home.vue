@@ -153,7 +153,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-
+import Note from "../note.js";
 const appWindow = getCurrentWindow();
 export default {
   name: "Home",
@@ -345,11 +345,27 @@ export default {
         case "link":
           text = "[Link name](https://www.markdownguide.org/)";
           break;
+        case "date":
+          text = this.getToday();
+          break;
+        case "time":
+          text = this.getTimeToday();
+          break;
       }
       this.selectedNote.content += text + "\r\n";
     },
+    getLocale() {
+      let locale = "fr-FR";
+      if (this.$i18n.locale === "en") {
+        locale = "en-EN";
+      }
+      return locale;
+    },
     getToday() {
-      return new Date().toLocaleString("fr-FR").split(" ")[0];
+      return new Date().toLocaleString(this.getLocale()).split(" ")[0];
+    },
+    getTimeToday() {
+      return new Date().toLocaleString(this.getLocale()).split(" ")[1];
     },
     sortNotes() {
       this.notes.sort((a, b) => {
@@ -501,20 +517,11 @@ export default {
       try {
         const content = await readTextFile(selectedFile);
 
-        let newNote = {
-          id: Date.now(),
-          name: fileName,
-          date: new Date().toLocaleString("fr-FR"),
-          status: "todo",
-          color: "red",
-          content: content,
-          tags: [],
-          selected: false,
-        };
-
-        this.notes.push(newNote);
+        let note = new Note(fileName);
+        note.content = content;
+        this.notes.push(note);
         this.showNotification(
-          this.$t("note_created", { note_name: newNote.name }),
+          this.$t("note_created", { note_name: note.name }),
           "green"
         );
       } catch (error) {
@@ -549,21 +556,10 @@ export default {
     },
     // note
     createNote() {
-      let newNote = {
-        id: Date.now(),
-        name: this.generateIncrementedName("Note"),
-        date: new Date().toLocaleString("fr-FR"),
-        status: "todo",
-        color: "red",
-        content: "",
-        tags: [],
-        selected: false,
-        pinned: false,
-        important: false,
-      };
-      this.notes.push(newNote);
+      let note = new Note(this.generateIncrementedName("Note"));
+      this.notes.push(note);
       this.showNotification(
-        this.$t("note_created", { note_name: newNote.name }),
+        this.$t("note_created", { note_name: note.name }),
         "green"
       );
       this.setDelayCreationNote();
@@ -585,19 +581,28 @@ export default {
       if (!this.selectedNote) {
         return;
       }
-      let copyNote = {
-        id: Date.now(),
-        name: this.selectedNote.name + " - " + this.$t("copy"),
-        date: new Date().toLocaleString("fr-FR"),
-        status: this.selectedNote.status,
-        color: this.selectedNote.color,
-        content: this.selectedNote.content,
-        tags: [],
-        selected: false,
-        pinned: false,
-        important: false,
-      };
-      this.notes.push(copyNote);
+
+      let name = this.selectedNote.name + " - " + this.$t("copy");
+      let status = this.selectedNote.status;
+      let color = this.selectedNote.color;
+      let content = this.selectedNote.content;
+      let tags = []
+      this.selectedNote.tags.forEach((tag) => {
+        let tagCopy = {
+          id: tag.id,
+          name: tag.name,
+          color: tag.color,
+          selected: false,
+        };
+        tags.push(tagCopy)
+      });
+      let note = new Note(name);
+      note.status = status;
+      note.color = color;
+      note.content = content;
+      note.tags = tags;
+
+      this.notes.push(note);
       this.showNotification(
         this.$t("note_duplicated", { note_name: this.selectedNote.name }),
         "green"

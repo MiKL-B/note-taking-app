@@ -64,6 +64,8 @@ const messages = {
     code:"Code",
     table:"Table",
     link:"Link",
+    date:"Date",
+    time:"Time",
     // note
     note_name_here: "Note name here...",
     status: "Status",
@@ -168,6 +170,8 @@ const messages = {
     code:"Code",
     table:"Table",
     link:"Lien",
+    date:"Date",
+    time:"Heure",
     // note
     note_name_here: "Nom de la note ici...",
     status: "Statut",

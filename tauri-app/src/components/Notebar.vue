@@ -130,6 +130,8 @@ export default {
         "code",
         "table",
         "link",
+        "date",
+        "time",
       ],
     };
   },
