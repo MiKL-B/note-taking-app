@@ -19,7 +19,7 @@
 - Toggle preview markdown
 - View both text / markdown
 - Notifications (just information)
-
+- Add context menu
 ---
 
 # Fixed
@@ -29,37 +29,37 @@
 - position layout container
 - height home window
 - remove minimize settings window
+- open details
 ---
 
 # Improved 
 - confirm before deleting note
 - Improve Style markdown
+- insert: other elements like date, image...
 
 # To fix
-- open details
 - settings font mounted ?
+- color markdown in dark mode
 ---
 
 # To improve
-- Improve textarea
+- Improve textarea impossible ?
 - Improve save functionnality
 - insert: heading ... at the right place
-- insert: other elements like date...
-- insert: Add image, audio and video
+- insert: Audio and video
+- Context menu 
 ---
 
 # To Implement
 - Folders and subfolders
-- View kanban, schedule
-- View drawing
+- View kanban, schedule, drawing
 - App branding
 - Accessibility (title..)
 - Export PDF
 - Export import settings
-- Set settings auto export pdf when saving note
 - Print
+- Set settings auto export pdf when saving note
 - define path in settings window to create a vault like obsidian to store notes
 - new -> mkfile
 - save -> save the file with the right id
 - Lock files / folders 
-- Add context menu
