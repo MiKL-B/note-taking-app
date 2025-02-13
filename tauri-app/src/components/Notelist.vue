@@ -52,10 +52,6 @@ export default {
     Trash2,
     Lock,
   },
-  data() {
-    return {};
-  },
-  mounted() {},
   methods: {
     selectNote(note) {
       this.$emit("select-note", note);

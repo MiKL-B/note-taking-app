@@ -17,7 +17,30 @@
       </span>
       <span class="text-dark">{{ item.count }}</span>
     </li>
-
+    <!-- folder -->
+    <!-- <li class="sidebar-item" @click="toggleFolderMenu">
+      <span class="sidebar-sub-label">
+        <Folder class="size-16" />
+        <span>Folder</span>
+      </span>
+      <span>
+        <ChevronDown v-if="!folderMenu" class="text-dark size-16" />
+        <ChevronUp v-else class="text-dark size-16" />
+      </span>
+    </li>
+    <ul v-if="folderMenu">
+      <li class="sidebar-item-folder">
+        <span class="flex align-center gap-4">
+          <Folder class="size-16" />
+          <span>Subfolder</span>
+        </span>
+        <ChevronDown class="text-dark size-16" />
+      </li>
+      <li class="sidebar-item-file">
+        <File class="size-16" />
+        <span>File.txt</span>
+      </li>
+    </ul> -->
     <!-- tags -->
     <li class="sidebar-item" @click="toggleTagsMenu">
       <span class="sidebar-sub-label">
@@ -40,7 +63,7 @@
         <span class="sidebar-sub-label">
           <details class="toolbar-details">
             <summary>
-              <Tag :style="`color: var(--${tag.color})`" width="20" />
+              <Tag :style="`color: var(--${tag.color})`" width="16" />
             </summary>
             <ul class="toolbar-menu">
               <li
@@ -79,43 +102,25 @@ import {
   FileWarning,
   ChevronDown,
   ChevronUp,
+  Folder,
 } from "lucide-vue-next";
 
 export default {
   name: "Sidebar",
   props: {
     tags: Array,
-    countAllNotes: {
-      type: Number,
-      default: 0,
-    },
-    countTodo: {
-      type: Number,
-      default: 0,
-    },
-    countInProgress: {
-      type: Number,
-      default: 0,
-    },
-    countFinished: {
-      type: Number,
-      default: 0,
-    },
-    countArchived: {
-      type: Number,
-      default: 0,
-    },
-    countPinned: {
-      type: Number,
-      default: 0,
-    },
-    countToday: {
-      type: Number,
-      default: 0,
-    },
-    countImportant: {
-      type: Number,
-      default: 0,
+    counters: {
+      type: Object,
+      default: () => ({
+        allNotes: 0,
+        pinned: 0,
+        important: 0,
+        today: 0,
+        todo: 0,
+        inProgress: 0,
+        finished: 0,
+        archived: 0,
+      }),
     },
   },
   emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
@@ -131,6 +136,7 @@ export default {
     FileWarning,
     ChevronDown,
     ChevronUp,
+    Folder,
   },
   data() {
     return {
@@ -149,6 +155,7 @@ export default {
         "pink",
       ],
       tagsMenu: false,
+      folderMenu: false,
     };
   },
   computed: {
@@ -156,45 +163,45 @@ export default {
       return [
         {
           label: "allnotes",
-          count: this.countAllNotes,
+          count: this.counters.allNotes,
           icon: File,
         },
         {
           label: "pinned",
-          count: this.countPinned,
+          count: this.counters.pinned,
           icon: Pin,
         },
         {
           label: "important",
-          count: this.countImportant,
+          count: this.counters.important,
           icon: FileWarning,
         },
         {
           label: "today",
-          count: this.countToday,
+          count: this.counters.today,
           icon: Calendar,
         },
         {
           label: "todo",
-          count: this.countTodo,
+          count: this.counters.todo,
           icon: null,
           color: "red",
         },
         {
           label: "inprogress",
-          count: this.countInProgress,
+          count: this.counters.inProgress,
           icon: null,
           color: "yellow",
         },
         {
           label: "finished",
-          count: this.countFinished,
+          count: this.counters.finished,
           icon: null,
           color: "green",
         },
         {
           label: "archived",
-          count: this.countArchived,
+          count: this.counters.archived,
           icon: Archive,
         },
       ];
@@ -206,6 +213,7 @@ export default {
       this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
+
     setColor(tag, color) {
       this.$emit("set-color", tag, color);
     },
@@ -218,13 +226,16 @@ export default {
     toggleTagsMenu() {
       this.tagsMenu = !this.tagsMenu;
     },
+    toggleFolderMenu() {
+      this.folderMenu = !this.folderMenu;
+    },
   },
 };
 </script>
 <style scoped>
 #sidebar {
   padding: 0 0 0.5rem 0;
-  height:100%;
+  height: 100%;
   overflow-y: hidden;
   background: var(--bg-sidebar);
   color: var(--text-color-sidebar);
@@ -319,5 +330,26 @@ export default {
 .tags-list {
   height: calc(100% - 375px);
   overflow-y: auto;
+}
+.sidebar-item-file {
+  list-style: none;
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.5rem;
+  transition: 0.3s ease;
+  padding-left: 2rem;
+}
+.sidebar-item-folder {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.5rem;
+  transition: 0.3s ease;
+  padding-left: 2rem;
 }
 </style>

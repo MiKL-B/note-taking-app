@@ -78,6 +78,7 @@ const messages = {
     data_imported: "The datas was imported!",
     tag_created: "{tag_name} was created!",
     tag_deleted: "{tag_name} was deleted!",
+    confirm_note_deleted:"Are you sure you want to delete {note_name}?",
     copy: "Copy",
     // filternote
     sortAZ: "Sort A -> Z",
@@ -184,6 +185,7 @@ const messages = {
     data_imported: "Les données ont été importées!",
     tag_created: "{tag_name} a bien été créé!",
     tag_deleted: "{tag_name} a bien été supprimé!",
+    confirm_note_deleted:"Etes-vous sûr de vouloir supprimer {note_name}?",
     copy: "Copie",
     // filternote
     sortAZ: "Tri A -> Z",

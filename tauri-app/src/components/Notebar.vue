@@ -37,7 +37,7 @@
           </span>
         </li>
       </ul>
-      <ul id="suggestion-list" v-else-if="isVisibleSuggestionList">
+      <ul id="suggestion-list" v-else-if="isVisibleSuggestionList && secondList.length > 0">
         <li
           class="flex align-center gap-4"
           v-for="suggestion in secondList"

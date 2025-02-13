@@ -12,14 +12,7 @@
       <div id="column-left" class="col-3" v-if="isVisibleSidebar">
         <Sidebar
           :tags="tags"
-          :countAllNotes="notes.length"
-          :countTodo="getCountTodo"
-          :countInProgress="getCountInProgress"
-          :countFinished="getCountFinished"
-          :countArchived="getCountArchived"
-          :countPinned="getCountPinned"
-          :countToday="getCountToday"
-          :countImportant="getCountImportant"
+          :counters="getCountNotes"
           @delete-tag="deleteTag"
           @update-tag-name="handleUpdateTagName"
           @select-filter="handleFilter"
@@ -216,6 +209,13 @@ export default {
         smartLists: true,
         smartypants: false,
       };
+      const renderer = new marked.Renderer();
+
+      renderer.link = (token) => {
+        return `<a href="${token.href}" title="${token.title}" target="_blank">${token.text}</a>`;
+      };
+
+      marked.use({ renderer });
 
       let dirtyHTML = marked(this.selectedNote.content, options);
 
@@ -239,6 +239,7 @@ export default {
       }
       return count;
     },
+
     filteredNotes() {
       switch (this.filter) {
         case "todo":
@@ -272,33 +273,30 @@ export default {
           });
       }
     },
-    getCountTodo() {
-      return this.notes.filter((note) => note.status === "todo").length;
-    },
-    getCountInProgress() {
-      return this.notes.filter((note) => note.status === "inprogress").length;
-    },
-    getCountFinished() {
-      return this.notes.filter((note) => note.status === "finished").length;
-    },
-    getCountArchived() {
-      return this.notes.filter((note) => note.status === "archived").length;
-    },
-    getCountPinned() {
-      return this.notes.filter((note) => note.pinned === true).length;
-    },
-    getCountToday() {
-      return this.notes.filter(
-        (note) => note.date.split(" ")[0] === this.getToday()
-      ).length;
-    },
-    getCountImportant() {
-      return this.notes.filter((note) => note.important === true).length;
+    getCountNotes() {
+      return {
+        allNotes: this.notes.filter((note) => {
+          return note.name
+            .toLowerCase()
+            .includes(this.searchNote.toLowerCase());
+        }).length,
+        todo: this.notes.filter((note) => note.status === "todo").length,
+        inProgress: this.notes.filter((note) => note.status === "inprogress")
+          .length,
+        finished: this.notes.filter((note) => note.status === "finished")
+          .length,
+        archived: this.notes.filter((note) => note.status === "archived")
+          .length,
+        pinned: this.notes.filter((note) => note.pinned === true).length,
+        today: this.notes.filter(
+          (note) => note.date.split(" ")[0] === this.getToday()
+        ).length,
+        important: this.notes.filter((note) => note.important === true).length,
+      };
     },
   },
   methods: {
     insertItem(item) {
-      console.log(item);
       let text = "";
       switch (item) {
         case "heading1":
@@ -586,7 +584,7 @@ export default {
       let status = this.selectedNote.status;
       let color = this.selectedNote.color;
       let content = this.selectedNote.content;
-      let tags = []
+      let tags = [];
       this.selectedNote.tags.forEach((tag) => {
         let tagCopy = {
           id: tag.id,
@@ -594,7 +592,7 @@ export default {
           color: tag.color,
           selected: false,
         };
-        tags.push(tagCopy)
+        tags.push(tagCopy);
       });
       let note = new Note(name);
       note.status = status;
@@ -625,9 +623,10 @@ export default {
       note.selected = true;
     },
     async deleteNote(note) {
-      const confirmed = await confirm(
-        `Are you sure you want to delete ${note.name}?`
-      );
+      let msgConfirm = this.$t("confirm_note_deleted", {
+        note_name: note.name,
+      });
+      const confirmed = await confirm(msgConfirm);
 
       if (!confirmed) {
         return;
@@ -636,10 +635,8 @@ export default {
 
       if (index > -1) {
         this.notes.splice(index, 1);
-        this.showNotification(
-          this.$t("note_deleted", { note_name: note.name }),
-          "green"
-        );
+        let msgDeleted = this.$t("note_deleted", { note_name: note.name });
+        this.showNotification(msgDeleted, "green");
       }
     },
     changeNoteStatus(newStatus) {
@@ -662,7 +659,6 @@ export default {
     },
 
     // tag
-
     deleteTag(tag) {
       const index = this.tags.findIndex((t) => t.id === tag.id);
 
@@ -674,10 +670,8 @@ export default {
         }
 
         this.tags.splice(index, 1);
-        this.showNotification(
-          this.$t("tag_deleted", { tag_name: tag.name }),
-          "green"
-        );
+        let msgDeleted = this.$t("tag_deleted", { tag_name: tag.name });
+        this.showNotification(msgDeleted, "green");
       }
     },
     addTag(tag) {
@@ -702,10 +696,8 @@ export default {
       if (!existingTag) {
         this.tags.push(tagtoAdd);
         this.selectedNote.tags.push(tagtoAdd);
-        this.showNotification(
-          this.$t("tag_created", { tag_name: tagtoAdd.name }),
-          "green"
-        );
+        let msgCreated = this.$t("tag_created", { tag_name: tagtoAdd.name });
+        this.showNotification(msgCreated, "green");
         return;
       }
       tagtoAdd.color = existingTag.color;

@@ -20,6 +20,8 @@ _This will also be italic_
 ## Bold and Italic
 _You **can** combine them_
 
+## Strikethrough
+~~Text here~~
 
 ## Separator
 ---
