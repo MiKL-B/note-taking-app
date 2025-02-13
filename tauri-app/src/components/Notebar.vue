@@ -1,11 +1,16 @@
 <template>
   <div id="notebar" @wheel.prevent="handleScroll">
     <!-- status -->
-    <select :value="modelValue" @change="changeNoteStatus($event.target.value)" :title="$t('status')">
+    <select
+      :value="modelValue"
+      @change="changeNoteStatus($event.target.value)"
+      :title="$t('status')"
+    >
       <option disabled selected>{{ $t("status") }}</option>
       <option :value="item" v-for="item in status">{{ $t(item) }}</option>
     </select>
     <!-- add tag -->
+
     <div id="suggestion-container">
       <input
         type="text"
@@ -14,9 +19,12 @@
         @keyup.enter="addTagToNote"
         :placeholder="$t('add_tags')"
         pattern="[a-zA-ZÀ-ÿ]+"
-        style="max-width: 120px"
+        style="max-width: 120px; user-select: none"
       />
-
+      <ChevronDown
+        @click="toggleSuggestion"
+        class="suggestion-chevron size-16"
+      />
       <ul id="suggestion-list" v-if="suggestions.length > 0">
         <li
           class="flex align-center gap-4"
@@ -29,11 +37,23 @@
           </span>
         </li>
       </ul>
+      <ul id="suggestion-list" v-else-if="isVisibleSuggestionList">
+        <li
+          class="flex align-center gap-4"
+          v-for="suggestion in secondList"
+          @click="selectSuggestion(suggestion)"
+        >
+          <Tag :style="`color: var(--${suggestion.color}) `" class="size-16" />
+          <span>
+            {{ suggestion.name }}
+          </span>
+        </li>
+      </ul>
     </div>
     <!-- insert -->
     <select v-model="insertValue" @change="insertItem" :title="$t('insert')">
       <option disabled selected>{{ $t("insert") }}</option>
-      <option :value="item" v-for="item in insertItems" >{{ $t(item) }}</option>
+      <option :value="item" v-for="item in insertItems">{{ $t(item) }}</option>
     </select>
     <span class="separator-y"></span>
     <!-- important -->
@@ -85,6 +105,7 @@ import {
   Pin,
   PinOff,
   FileWarning,
+  ChevronDown,
 } from "lucide-vue-next";
 export default {
   name: "Notebar",
@@ -97,6 +118,7 @@ export default {
     Pin,
     PinOff,
     FileWarning,
+    ChevronDown,
   },
   props: ["tags", "showBoth", "modelValue", "isPinned", "isImportant"],
   emits: [
@@ -107,15 +129,17 @@ export default {
     "update-status",
     "toggle-pin-note",
     "toggle-important-note",
-    "insert-item"
+    "insert-item",
   ],
   data() {
     return {
       isPreviewMode: false,
+      isVisibleSuggestionList: false,
+      secondList:this.tags,
       input: "",
       status: ["todo", "inprogress", "finished", "archived"],
       suggestions: [],
-      insertValue:"",
+      insertValue: "",
       insertItems: [
         "heading1",
         "heading2",
@@ -184,12 +208,16 @@ export default {
     selectSuggestion(suggestion) {
       this.input = suggestion.name;
       this.suggestions = [];
+      this.isVisibleSuggestionList = false;
       this.addTagToNote();
     },
-    insertItem(){
-      this.$emit('insert-item',this.insertValue);
+    insertItem() {
+      this.$emit("insert-item", this.insertValue);
       this.insertValue = "";
-    }
+    },
+    toggleSuggestion() {
+      this.isVisibleSuggestionList = !this.isVisibleSuggestionList;
+    },
   },
 };
 </script>
@@ -222,9 +250,16 @@ export default {
 #suggestion-list li {
   padding: 0.2rem;
   border-radius: 5px;
+  user-select: none;
 }
 #suggestion-list li:hover {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
+}
+.suggestion-chevron {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  height: 100%;
 }
 </style>
