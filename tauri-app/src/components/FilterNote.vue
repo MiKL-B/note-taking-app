@@ -1,8 +1,8 @@
 <template>
   <div id="filter-note">
-    <details class="toolbar-details" :title="$t('filters_sort')">
-      <summary class="app-btn"><Filter class="size-16" /></summary>
-      <ul class="toolbar-menu">
+    <DetailsCompo :title="$t('filters_sort')" btn="app-btn">
+      <template v-slot:header><Filter class="size-16" /></template>
+      <template v-slot:content>
         <li class="flex gap-4 align-center" @click="sortNotesAZ">
           <ArrowDownAZ v-if="sortAZ" class="size-16" />
           <ArrowUpZA v-else class="size-16" />
@@ -16,8 +16,9 @@
           <FilterX class="size-16" />
           <span>{{ $t("clear_filter") }}</span>
         </li>
-      </ul>
-    </details>
+      </template>
+    </DetailsCompo>
+
     <input
       type="text"
       :value="modelValue"
@@ -25,7 +26,11 @@
       @input="updateSearchNote($event.target.value)"
       style="width: 160px"
     />
-    <button :disabled="!canCreateNote" @click="createNote" :title="$t('create_note')">
+    <button
+      :disabled="!canCreateNote"
+      @click="createNote"
+      :title="$t('create_note')"
+    >
       <Plus class="size-16" />
     </button>
   </div>
@@ -40,6 +45,7 @@ import {
   Calendar,
   FilterX,
 } from "lucide-vue-next";
+import DetailsCompo from "./DetailsCompo.vue";
 
 export default {
   name: "FilterNote",
@@ -50,14 +56,15 @@ export default {
     Filter,
     Calendar,
     FilterX,
+    DetailsCompo,
   },
-  props: ["modelValue","canCreateNote"],
+  props: ["modelValue", "canCreateNote"],
   emits: [
     "update:modelValue",
     "create-note",
     "sort-notes-AZ",
     "sort-notes-date",
-    "sort-notes-clear"
+    "sort-notes-clear",
   ],
   data() {
     return {
@@ -77,10 +84,10 @@ export default {
       this.sortDate = !this.sortDate;
       this.$emit("sort-notes-date");
     },
-    clearFilterSort(){
+    clearFilterSort() {
       this.sortAZ = true;
       this.sortDate = true;
-      this.$emit("sort-notes-clear")
+      this.$emit("sort-notes-clear");
     },
     updateSearchNote(value) {
       this.$emit("update:modelValue", value);

@@ -1,25 +1,20 @@
 <template>
   <ul id="sidebar">
+    <!-- notes -->
     <li
-      class="sidebar-item"
-      @click="selectFilter(item.label)"
-      :class="{ filterselected: selectedFilter === item.label }"
-      v-for="item in computedItems"
+      class="sidebar-item justify-between"
+      @click="selectFilter('allnotes')"
+      :class="{ filterselected: selectedFilter === 'allnotes' }"
     >
-      <span class="sidebar-sub-label">
-        <div
-          v-if="item.icon === null"
-          class="color-circle"
-          :class="`bg-${item.color}`"
-        ></div>
-        <component v-else :is="item.icon" class="size-16"></component>
-        <span>{{ $t(item.label) }}</span>
+      <span class="flex align-center gap-4">
+        <File class="size-16 text-dark" />
+        <span>{{ $t("allnotes") }}</span>
       </span>
-      <span class="text-dark">{{ item.count }}</span>
+      <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
     <!-- folder -->
-    <!-- <li class="sidebar-item" @click="toggleFolderMenu">
-      <span class="sidebar-sub-label">
+    <!-- <li class="sidebar-item justify-between" @click="toggleFolderMenu">
+      <span class="flex align-center gap-4">
         <Folder class="size-16" />
         <span>Folder</span>
       </span>
@@ -29,21 +24,41 @@
       </span>
     </li>
     <ul v-if="folderMenu">
-      <li class="sidebar-item-folder">
-        <span class="flex align-center gap-4">
-          <Folder class="size-16" />
+      <li class="sidebar-item justify-between">
+        <span class="flex align-center gap-4 pl-2rem">
+          <Folder class="size-16 text-dark" />
           <span>Subfolder</span>
         </span>
         <ChevronDown class="text-dark size-16" />
       </li>
-      <li class="sidebar-item-file">
-        <File class="size-16" />
-        <span>File.txt</span>
+      <li class="sidebar-item">
+        <span class="flex align-center gap-4 pl-2rem">
+          <File class="size-16 text-dark" />
+          <span>File.txt</span>
+        </span>
       </li>
     </ul> -->
+    <!-- others -->
+    <li
+      class="sidebar-item justify-between"
+      @click="selectFilter(item.label)"
+      :class="{ filterselected: selectedFilter === item.label }"
+      v-for="item in computedItems"
+    >
+      <span class="flex align-center gap-4">
+        <div
+          v-if="item.icon === null"
+          class="color-circle"
+          :class="`bg-${item.color}`"
+        ></div>
+        <component v-else :is="item.icon" class="size-16 text-dark"></component>
+        <span>{{ $t(item.label) }}</span>
+      </span>
+      <span class="text-dark">{{ item.count }}</span>
+    </li>
     <!-- tags -->
-    <li class="sidebar-item" @click="toggleTagsMenu">
-      <span class="sidebar-sub-label">
+    <li class="sidebar-item justify-between" @click="toggleTagsMenu">
+      <span class="flex align-center gap-4">
         <Tags class="size-16" />
         <span>Tags</span>
       </span>
@@ -60,12 +75,12 @@
         class="sidebar-sub-item"
         v-for="tag in tags"
       >
-        <span class="sidebar-sub-label">
-          <details class="toolbar-details">
-            <summary>
+        <span class="flex align-center gap-4">
+          <DetailsCompo>
+            <template v-slot:header>
               <Tag :style="`color: var(--${tag.color})`" width="16" />
-            </summary>
-            <ul class="toolbar-menu">
+            </template>
+            <template v-slot:content>
               <li
                 class="flex gap-4 align-center"
                 v-for="color in colors"
@@ -74,8 +89,9 @@
                 <div class="color-circle" :class="`bg-${color}`"></div>
                 <span>{{ color }}</span>
               </li>
-            </ul>
-          </details>
+            </template>
+          </DetailsCompo>
+
           <input
             class="sidebar-input-tag"
             type="text"
@@ -104,7 +120,7 @@ import {
   ChevronUp,
   Folder,
 } from "lucide-vue-next";
-
+import DetailsCompo from "./DetailsCompo.vue";
 export default {
   name: "Sidebar",
   props: {
@@ -137,6 +153,7 @@ export default {
     ChevronDown,
     ChevronUp,
     Folder,
+    DetailsCompo,
   },
   data() {
     return {
@@ -161,11 +178,6 @@ export default {
   computed: {
     computedItems() {
       return [
-        {
-          label: "allnotes",
-          count: this.counters.allNotes,
-          icon: File,
-        },
         {
           label: "pinned",
           count: this.counters.pinned,
@@ -245,7 +257,6 @@ export default {
 .sidebar-item {
   list-style: none;
   display: flex;
-  justify-content: space-between;
   position: relative;
   align-items: center;
   gap: 0.5rem;
@@ -264,15 +275,8 @@ export default {
   padding-right: 0.1rem;
 }
 
-.sidebar-sub-label {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
 .sidebar-item:hover,
-.sidebar-sub-item:hover,
-#sidebar-tags-btn:hover {
+.sidebar-sub-item:hover {
   background: var(--bg-hover-sidebar);
   cursor: pointer;
 }
@@ -287,14 +291,6 @@ export default {
   padding: 0.7rem 0.5rem 0.7rem 2rem;
 }
 
-#sidebar-tags-btn {
-  height: 24px;
-  width: 24px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
 #sidebar-tag {
   transition: 0.3s ease;
 }
@@ -330,26 +326,5 @@ export default {
 .tags-list {
   height: calc(100% - 375px);
   overflow-y: auto;
-}
-.sidebar-item-file {
-  list-style: none;
-  display: flex;
-  position: relative;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 0.5rem;
-  transition: 0.3s ease;
-  padding-left: 2rem;
-}
-.sidebar-item-folder {
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 0.5rem;
-  transition: 0.3s ease;
-  padding-left: 2rem;
 }
 </style>

@@ -243,6 +243,12 @@ button[disabled]:hover{
 .bt-symbol {
   width: 40px;
 }
+.justify-between{
+  justify-content: space-between;
+}
+.pl-2rem{
+  padding-left:2rem;
+}
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
