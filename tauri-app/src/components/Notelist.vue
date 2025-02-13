@@ -1,5 +1,5 @@
 <template>
-  <div id="notelist">
+  <div id="notelist" @contextmenu.prevent="showContextMenu">
     <span id="notelist-nonotes" v-if="notes.length <= 0">{{
       $t("create_first_note")
     }}</span>
@@ -20,7 +20,10 @@
             class="color-circle"
             :class="`bg-${note.color}`"
           ></div>
-          <span id="note-title-name" :style="note.selected ? '': 'color:var(--dark)'">
+          <span
+            id="note-title-name"
+            :style="note.selected ? '' : 'color:var(--dark)'"
+          >
             {{ note.name }}
           </span>
         </h4>
@@ -39,18 +42,47 @@
       </div>
       <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
     </div>
+    <!-- context to move -->
+    <div v-if="showMenu" class="context" :style="menuStyle">
+      <ul class="context-menu">
+        <li @click="createNote" class="flex align-center gap-4">
+          <Plus class="text-dark size-16" />
+          {{ $t("create_note") }}
+        </li>
+        <!-- <hr class="separator-x" />
+        <li>item</li> -->
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import { Pin, Trash2, Lock } from "lucide-vue-next";
+import { Pin, Trash2, Lock, Plus } from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes"],
+  emits:["select-note","delete-note","create-note"],
   components: {
     Pin,
     Trash2,
     Lock,
+    Plus,
+  },
+  data() {
+    return {
+      showMenu: false,
+      menuStyle: {
+        left: "0px",
+        top: "0px",
+      },
+    };
+  },
+  // TODO 
+  mounted() {
+    document.addEventListener("click", this.closeMenu);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.closeMenu);
   },
   methods: {
     selectNote(note) {
@@ -58,6 +90,20 @@ export default {
     },
     deleteNote(note) {
       this.$emit("delete-note", note);
+    },
+    createNote(){
+      this.$emit("create-note")
+    },
+    // to move
+    showContextMenu(event) {
+      this.menuStyle = {
+        left: `${event.clientX}px`,
+        top: `${event.clientY}px`,
+      };
+      this.showMenu = true;
+    },
+    closeMenu() {
+      this.showMenu = false;
     },
   },
 };
@@ -136,6 +182,27 @@ export default {
   font-size: 14px;
 }
 .note-trash:hover {
+  cursor: pointer;
+}
+
+.context {
+  background-color: var(--bg-toolbar);
+  position: absolute;
+  z-index: 1;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  min-width: 100px;
+  user-select: none;
+}
+.context-menu li {
+  list-style-type: none;
+  padding: 0.2rem 0.5rem;
+  margin: 0.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.context-menu li:hover {
+  background: var(--bg-hover-toolbar);
   cursor: pointer;
 }
 </style>

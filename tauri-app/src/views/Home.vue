@@ -34,6 +34,7 @@
           :notes="filteredNotes"
           @select-note="selectNote"
           @delete-note="deleteNote"
+          @create-note="createNote"
         />
       </div>
       <div id="column-right" class="col-6" v-if="selectedNote">

@@ -61,4 +61,7 @@ export default {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
 }
+summary {
+  list-style-type: none;
+}
 </style>
