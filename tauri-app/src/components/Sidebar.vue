@@ -67,7 +67,7 @@
         <ChevronUp v-else class="text-dark size-16" />
       </span>
     </li>
-    <ul v-if="tagsMenu" class="tags-list">
+    <ul v-if="tagsMenu">
       <li
         id="sidebar-tag"
         @click="selectFilter(tag.name)"
@@ -249,8 +249,8 @@ export default {
 <style scoped>
 #sidebar {
   padding: 0 0 0.5rem 0;
-  height: 100%;
-  overflow-y: hidden;
+  height: calc(100vh - 66px);
+  overflow: auto;
   background: var(--bg-sidebar);
   color: var(--text-color-sidebar);
   border-right: var(--border);
@@ -325,8 +325,4 @@ export default {
   color: var(--text-color-sidebar);
 }
 
-.tags-list {
-  height: calc(100% - 375px);
-  overflow-y: auto;
-}
 </style>
