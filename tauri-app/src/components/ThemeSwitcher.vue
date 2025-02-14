@@ -2,7 +2,7 @@
   <div class="field">
     <label for="theme">{{ $t("theme") }}</label>
     <div class="flex align-center gap-4">
-      <input type="checkbox" @click="toggleTheme" :checked="theme === 'dark' ? true : false"/>
+      <input type="checkbox" @click="toggleTheme" :checked="theme === 'dark'"/>
       <span class="label">{{ theme === "light" ? $t("light") : $t("dark") }}</span>
     </div>
   </div>
@@ -14,28 +14,27 @@ export default {
   name: "ThemeSwitcher",
   data() {
     return {
-      theme: "",
+      theme: "light",
     };
   },
 
   mounted() {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) {
-      this.theme = storedTheme;
-      this.applyTheme(this.theme);
-    } else {
-      this.applyTheme(this.theme);
-    }
+    let storedTheme = localStorage.getItem("theme");
+    if (!storedTheme) {
+      storedTheme = "light";
+    } 
+    this.theme = storedTheme;
+    this.updateTheme(this.theme);
   },
   methods: {
     toggleTheme() {
       this.theme = this.theme === "light" ? "dark" : "light";
-      this.applyTheme(this.theme);
-      localStorage.setItem("theme", this.theme);
-      emit("theme-changed", this.theme);
+      this.updateTheme(this.theme)
     },
-    applyTheme(theme) {
-      document.documentElement.setAttribute("data-theme", theme);
+    updateTheme(newTheme) {
+      localStorage.setItem("theme", newTheme);
+      document.documentElement.setAttribute("data-theme", newTheme);
+      emit("theme-changed", newTheme);
     },
   },
 };

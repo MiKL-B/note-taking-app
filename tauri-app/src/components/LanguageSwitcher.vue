@@ -1,8 +1,8 @@
 <template>
   <div class="field">
     <label for="language">{{ $t("language") }}</label>
-    <select name="language" v-model="language" @change="changeLanguage">
-      <option value="" disabled selected>{{ $t("select_language") }}</option>
+    <select name="language" v-model="language" @change="updateLanguage">
+      <option disabled selected>{{ $t("select_language") }}</option>
       <option value="en">{{ $t("english") }}</option>
       <option value="fr">{{ $t("french") }}</option>
     </select>
@@ -16,19 +16,20 @@ export default {
   name: "LanguageSwitcher",
   data() {
     return {
-      language: "",
+      language: "en",
     };
   },
   mounted() {
-    const storedLanguage = localStorage.getItem("language");
-    if (storedLanguage) {
-      this.language = storedLanguage;
+    let storedLanguage = localStorage.getItem("language");
+    if (!storedLanguage) {
+      storedLanguage = "en";
     }
-    this.$i18n.locale = this.language;
+    this.language = storedLanguage;
+    this.updateLanguage();
   },
 
   methods: {
-    changeLanguage() {
+    updateLanguage() {
       localStorage.setItem("language", this.language);
       this.$i18n.locale = this.language;
       emit("language-changed", this.language);
@@ -45,7 +46,7 @@ export default {
 label {
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color:var(--text-color-label);
+  color: var(--text-color-label);
 }
 .setting-info {
   margin: 0.5rem 0;

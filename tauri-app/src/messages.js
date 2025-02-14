@@ -45,7 +45,7 @@ const messages = {
     // notebar
     font: "Font",
     font_size: "Font size",
-    duplicate: "Duplicate note",
+    duplicate_note: "Duplicate note",
     pin_note: "Pin note",
     unpin_note: "Unpin note",
     important_note: "Define as important",
@@ -152,7 +152,7 @@ const messages = {
     // notebar
     font: "Police",
     font_size: "Taille de la police",
-    duplicate: "Dupliquer note",
+    duplicate_note: "Dupliquer note",
     pin_note: "Epingler note",
     unpin_note: "Désépingler note",
     important_note: "Définir comme important",

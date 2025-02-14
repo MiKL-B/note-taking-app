@@ -1,8 +1,8 @@
 <template>
   <div class="field">
     <label for="font">{{ $t("font") }}</label>
-    <select name="font" v-model="font" @change="changeFont">
-      <option value="" disabled selected>{{ $t("select_font") }}</option>
+    <select name="font" v-model="font" @change="updateFont">
+      <option disabled selected>{{ $t("select_font") }}</option>
       <option v-for="font in fonts" :value="font">{{ font }}</option>
     </select>
     <span class="setting-info">{{ $t("font_description") }}</span>
@@ -15,30 +15,27 @@ export default {
   name: "FontSwitcher",
   data() {
     return {
-      font: "",
+      font: "Inter",
       fonts: ["Inter", "Roboto", "Space Grotesk"],
     };
   },
   mounted() {
-    const storedFont = localStorage.getItem("font");
-    this.applyFont(this.font);
-    if (storedFont) {
-      this.font = storedFont;
-      this.applyFont(this.font);
+    let storedFont = localStorage.getItem("font");
+    if (!storedFont) {
+      storedFont = "Inter";
     }
+    this.font = storedFont;
+    this.updateFont()
   },
 
   methods: {
-    changeFont() {
+    updateFont() {
       localStorage.setItem("font", this.font);
-      this.applyFont(this.font);
-      emit("font-changed", this.font);
-    },
-    applyFont(font) {
-      const elements = document.querySelectorAll("*"); 
+      const elements = document.querySelectorAll("*");
       elements.forEach((element) => {
-        element.style.fontFamily = font; 
+        element.style.fontFamily = this.font;
       });
+      emit("font-changed", this.font);
     },
   },
 };

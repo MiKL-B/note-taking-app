@@ -9,41 +9,69 @@ export default {
   components: {
     RouterView,
   },
+  data() {
+    return {
+      language: "en",
+      theme: "light",
+      font: "Inter",
+    };
+  },
 
   mounted() {
-    const storedLanguage = localStorage.getItem("language");
-    if (storedLanguage) {
-      this.$i18n.locale = storedLanguage;
-      listen("language-changed", (event) => {
-        const newLanguage = event.payload;
-        this.$i18n.locale = newLanguage;
-      });
+    // language
+    let storedLanguage = localStorage.getItem("language");
+    if (!storedLanguage) {
+      storedLanguage = "en";
     }
-    const storedTheme = localStorage.getItem("theme");
-    this.applyTheme(storedTheme);
-    if (storedTheme) {
-      listen("theme-changed", (event) => {
-        const newTheme = event.payload;
-        this.applyTheme(newTheme);
-      });
+    this.language = storedLanguage;
+    this.updateLanguage(this.language);
+
+    // theme
+    let storedTheme = localStorage.getItem("theme");
+    if (!storedTheme) {
+      storedTheme = "light";
     }
-    const storedFont = localStorage.getItem("font");
-    this.applyFont(storedFont);
-    if (storedFont) {
-      listen("font-changed", (event) => {
-        const newFont = event.payload;
-        this.applyFont(newFont);
-      });
+    this.theme = storedTheme;
+    this.updateTheme(this.theme);
+
+    // font
+    let storedFont = localStorage.getItem("font");
+    if (!storedFont) {
+      storedFont = "Inter";
     }
+    this.font = storedFont;
+    this.updateFont(this.font);
   },
   methods: {
-    applyTheme(theme) {
-      document.documentElement.setAttribute("data-theme", theme);
+    // language
+    updateLanguage(newLanguage) {
+      localStorage.setItem("language", newLanguage);
+      listen("language-changed", (event) => {
+        newLanguage = event.payload;
+        this.$i18n.locale = newLanguage;
+      });
+      this.$i18n.locale = newLanguage;
     },
-    applyFont(font) {
+    // theme
+    updateTheme(newTheme) {
+      localStorage.setItem("theme", newTheme);
+      listen("theme-changed", (event) => {
+        document.documentElement.setAttribute("data-theme", event.payload);
+      });
+      document.documentElement.setAttribute("data-theme", newTheme);
+    },
+    // font
+    updateFont(newFont) {
+      localStorage.setItem("font", newFont);
+      listen("font-changed", (event) => {
+        const elements = document.querySelectorAll("*");
+        elements.forEach((element) => {
+          element.style.fontFamily = event.payload;
+        });
+      });
       const elements = document.querySelectorAll("*");
       elements.forEach((element) => {
-        element.style.fontFamily = font;
+        element.style.fontFamily = newFont;
       });
     },
   },

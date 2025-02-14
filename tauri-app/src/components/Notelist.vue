@@ -1,5 +1,5 @@
 <template>
-  <div id="notelist" @contextmenu.prevent="showContextMenu">
+  <div id="notelist" @contextmenu.prevent="showContextMenuOnNotelist">
     <span id="notelist-nonotes" v-if="notes.length <= 0">{{
       $t("create_first_note")
     }}</span>
@@ -9,6 +9,7 @@
       v-for="note in notes"
       :class="note.selected ? 'note-selected' : ''"
       @click="selectNote(note)"
+      @contextmenu.prevent="showContextMenu($event, note)"
     >
       <div id="note">
         <h4 class="note-title">
@@ -49,24 +50,41 @@
           <Plus class="text-dark size-16" />
           {{ $t("create_note") }}
         </li>
-        <!-- <hr class="separator-x" />
-        <li>item</li> -->
+        <li @click="duplicateNote" class="flex align-center gap-4">
+          <CopyPlus class="text-dark size-16" />
+          {{ $t("duplicate_note") }}
+        </li>
+        <hr class="separator-x" />
+        <li @click="togglePinNote" class="flex align-center gap-4">
+          <PinOff v-if="isPinned" class="text-dark size-16" />
+          <Pin v-else class="text-dark size-16" />
+          {{ isPinned ? $t("unpin_note") : $t("pin_note") }}
+        </li>
       </ul>
     </div>
+    <!--  -->
   </div>
 </template>
 
 <script>
-import { Pin, Trash2, Lock, Plus } from "lucide-vue-next";
+import { Pin, PinOff, Trash2, Lock, Plus, CopyPlus } from "lucide-vue-next";
 export default {
   name: "Notelist",
-  props: ["notes"],
-  emits:["select-note","delete-note","create-note"],
+  props: ["notes", "isPinned"],
+  emits: [
+    "select-note",
+    "delete-note",
+    "create-note",
+    "duplicate-note",
+    "toggle-pin-note",
+  ],
   components: {
     Pin,
+    PinOff,
     Trash2,
     Lock,
     Plus,
+    CopyPlus,
   },
   data() {
     return {
@@ -77,7 +95,7 @@ export default {
       },
     };
   },
-  // TODO 
+  // TODO
   mounted() {
     document.addEventListener("click", this.closeMenu);
   },
@@ -91,11 +109,25 @@ export default {
     deleteNote(note) {
       this.$emit("delete-note", note);
     },
-    createNote(){
-      this.$emit("create-note")
+    createNote() {
+      this.$emit("create-note");
+    },
+    duplicateNote() {
+      this.$emit("duplicate-note");
+    },
+    togglePinNote() {
+      this.$emit("toggle-pin-note");
     },
     // to move
-    showContextMenu(event) {
+    showContextMenu(event, note) {
+      this.menuStyle = {
+        left: `${event.clientX}px`,
+        top: `${event.clientY}px`,
+      };
+      this.showMenu = true;
+      this.selectNote(note);
+    },
+    showContextMenuOnNotelist(event) {
       this.menuStyle = {
         left: `${event.clientX}px`,
         top: `${event.clientY}px`,

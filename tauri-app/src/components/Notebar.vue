@@ -75,7 +75,7 @@
       <Pin v-else class="size-16" />
     </button>
     <!-- duplicate -->
-    <button @click="duplicateNote" :title="$t('duplicate')">
+    <button @click="duplicateNote" :title="$t('duplicate_note')">
       <CopyPlus class="size-16" />
     </button>
     <span class="separator-y"></span>
@@ -208,6 +208,7 @@ export default {
     selectSuggestion(suggestion) {
       this.input = suggestion.name;
       this.suggestions = [];
+      this.secondList = this.tags
       this.isVisibleSuggestionList = false;
       this.addTagToNote();
     },

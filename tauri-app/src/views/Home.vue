@@ -35,6 +35,9 @@
           @select-note="selectNote"
           @delete-note="deleteNote"
           @create-note="createNote"
+          @duplicate-note="duplicateNote"
+          @toggle-pin-note="togglePinNote"
+          :isPinned="selectedNote.pinned"
         />
       </div>
       <div id="column-right" class="col-6" v-if="selectedNote">

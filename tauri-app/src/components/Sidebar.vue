@@ -13,9 +13,9 @@
       <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
     <!-- folder -->
-    <!-- <li class="sidebar-item justify-between" @click="toggleFolderMenu">
+    <li class="sidebar-item justify-between" @click="toggleFolderMenu">
       <span class="flex align-center gap-4">
-        <Folder class="size-16" />
+        <Folder class="size-16 text-dark" />
         <span>Folder</span>
       </span>
       <span>
@@ -37,7 +37,7 @@
           <span>File.txt</span>
         </span>
       </li>
-    </ul> -->
+    </ul>
     <!-- others -->
     <li
       class="sidebar-item justify-between"
@@ -59,7 +59,7 @@
     <!-- tags -->
     <li class="sidebar-item justify-between" @click="toggleTagsMenu">
       <span class="flex align-center gap-4">
-        <Tags class="size-16" />
+        <Tags class="size-16 text-dark" />
         <span>Tags</span>
       </span>
       <span>
