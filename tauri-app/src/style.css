@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap');@import "./markdown.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap");
+@import "./markdown.css";
 :root {
   --white: #ffffff;
   --lightgrey: #f9f9fa;
@@ -16,9 +17,9 @@
   --blue: #61afef;
   --purple: #c678dd;
   --pink: #f556e8;
-  --cyan:#56B6C2;
-  --orange:#e0a63b;
-  --brown:#a37f4f;
+  --cyan: #56b6c2;
+  --orange: #e0a63b;
+  --brown: #a37f4f;
   /* EVERFOREST */
   --bgdim: #353941;
   --bg0: #333c43;
@@ -51,8 +52,8 @@
   --text-color-button: var(--dark2);
   --bg-hover-button: var(--lightgrey);
   --text-color-button-disabled: var(--grey);
- /* label */
- --text-color-label:var(--dark2);
+  /* label */
+  --text-color-label: var(--dark2);
   /* input */
   --text-color-input: var(--dark2);
   /* option */
@@ -84,13 +85,16 @@
   --bg-notelist: var(--white);
   --text-color-notelist: var(--dark2);
   --bg-note-selected: #f4f4f5;
-  --bg-drag-placeholder:var(--lightgrey3);
+  --bg-drag-placeholder: var(--lightgrey3);
   /* notebar */
   --bg-notebar: var(--white);
   --text-color-notebar: var(--dark2);
   /* note */
   --bg-note: var(--white);
   --text-color-note: var(--dark2);
+  /* markdown */
+  --bg-color-markdown: var(--lightgrey);
+  --text-color-markdown: var(--dark);
 }
 [data-theme="dark"] {
   /* body */
@@ -102,7 +106,7 @@
   --bg-hover-button: #353941;
   --text-color-button-disabled: var(--dark);
   /* label */
-  --text-color-label:var(--lightgrey);
+  --text-color-label: var(--lightgrey);
   /* input */
   --text-color-input: var(--lightgrey);
   /* option */
@@ -134,13 +138,16 @@
   --bg-notelist: var(--dark2);
   --text-color-notelist: var(--lightgrey);
   --bg-note-selected: #353941;
-  --bg-drag-placeholder:var(--dark);
+  --bg-drag-placeholder: var(--dark);
   /* notebar */
   --bg-notebar: var(--dark2);
   --text-color-notebar: var(--lightgrey);
   /* note */
   --bg-note: var(--dark2);
   --text-color-note: var(--lightgrey);
+  /* markdown */
+  --bg-color-markdown: var(--dark);
+  --text-color-markdown: var(--lightgrey);
 }
 
 * {
@@ -156,8 +163,8 @@ body {
   background: var(--bg-body);
   height: 100vh;
 }
-#app{
-  height:100%;
+#app {
+  height: 100%;
 }
 .lucide {
   display: flex;
@@ -228,7 +235,8 @@ button,
   cursor: pointer;
 }
 
-button:hover, .app-btn:hover {
+button:hover,
+.app-btn:hover {
   cursor: pointer;
   background: var(--bg-hover-button);
 }
@@ -236,17 +244,17 @@ button[disabled] {
   color: var(--text-color-button-disabled);
   cursor: not-allowed;
 }
-button[disabled]:hover{
-  background:transparent;
+button[disabled]:hover {
+  background: transparent;
 }
 .bt-symbol {
   width: 40px;
 }
-.justify-between{
+.justify-between {
   justify-content: space-between;
 }
-.pl-2rem{
-  padding-left:2rem;
+.pl-2rem {
+  padding-left: 2rem;
 }
 /* scrollbar */
 ::-webkit-scrollbar {
@@ -312,20 +320,23 @@ button[disabled]:hover{
 .bg-purple {
   background: var(--purple);
 }
-.bg-pink{
-  background:var(--pink);
+.bg-pink {
+  background: var(--pink);
 }
-.bg-orange{
-  background:var(--orange);
+.bg-orange {
+  background: var(--orange);
 }
 .bg-cyan {
-  background:var(--cyan);
+  background: var(--cyan);
 }
-.bg-brown{
-  background:var(--brown);
+.bg-brown {
+  background: var(--brown);
 }
 .text-dark {
   color: var(--dark);
+}
+.text-red {
+  color: var(--red);
 }
 .tag {
   font-size: 12px;

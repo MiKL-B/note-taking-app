@@ -20,7 +20,7 @@
 #markdown-container h4,
 #markdown-container h5,
 #markdown-container h6 {
-  color: var(--dark);
+  color: var(--text-color-markdown);
   border-bottom: var(--border);
   margin-bottom: 1rem;
 }
@@ -50,7 +50,7 @@
 }
 
 #markdown-container pre {
-  background: var(--lightgrey);
+  background: var(--bg-color-markdown);
   border: var(--border);
   border-radius: 5px;
   padding: 0.5rem;
@@ -61,7 +61,7 @@
   width: 100%;
 }
 #markdown-container code {
-  color: var(--dark2);
+  color:var(--text-color-markdown);
 }
 #markdown-container input[type="checkbox"] {
   height: 100%;
@@ -85,16 +85,14 @@
   border-collapse: collapse;
 }
 #markdown-container th{
-  background:var(--lightgrey3);
+  background:var(--bg-color-markdown);
   padding:0.5rem;
 }
 #markdown-container td{
   padding:0.5rem;
   border:var(--border);
 }
-#markdown-container tr:nth-child(odd){
-  background:var(--lightgrey);
-}
+
 #markdown-container hr{
   border-top: none;
   border-left: none;

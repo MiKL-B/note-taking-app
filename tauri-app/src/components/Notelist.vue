@@ -1,5 +1,9 @@
 <template>
-  <div id="notelist" @contextmenu.prevent="showContextMenuOnNotelist">
+  <div
+    id="notelist"
+    @contextmenu.prevent="showContextMenuOnNotelist"
+    @click="showMenu = false"
+  >
     <span id="notelist-nonotes" v-if="notes.length <= 0">{{
       $t("create_first_note")
     }}</span>
@@ -8,7 +12,7 @@
       id="note-container"
       v-for="note in notes"
       :class="note.selected ? 'note-selected' : ''"
-      @click="selectNote(note)"
+      @click.stop="selectNote(note)"
       @contextmenu.prevent="showContextMenu($event, note)"
     >
       <div id="note">
@@ -50,19 +54,43 @@
           <Plus class="text-dark size-16" />
           {{ $t("create_note") }}
         </li>
-        <li @click="duplicateNote" class="flex align-center gap-4">
-          <CopyPlus class="text-dark size-16" />
+        <li
+          @click="duplicateNote"
+          class="flex align-center gap-4"
+          :class="selectedNote ? '' : 'disabled'"
+        >
+          <CopyPlus class="size-16" :class="selectedNote ? 'text-dark' : ''" />
           {{ $t("duplicate_note") }}
         </li>
         <hr class="separator-x" />
-        <li @click="togglePinNote" class="flex align-center gap-4">
-          <PinOff v-if="isPinned" class="text-dark size-16" />
-          <Pin v-else class="text-dark size-16" />
+        <li
+          @click="togglePinNote"
+          class="flex align-center gap-4"
+          :class="selectedNote ? '' : 'disabled'"
+        >
+          <PinOff
+            v-if="isPinned"
+            class="size-16"
+            :class="selectedNote ? 'text-dark' : ''"
+          />
+          <Pin
+            v-else
+            class="size-16"
+            :class="selectedNote ? 'text-dark' : ''"
+          />
           {{ isPinned ? $t("unpin_note") : $t("pin_note") }}
+        </li>
+        <hr class="separator-x" />
+        <li
+          @click="deleteNoteContext"
+          class="flex align-center gap-4"
+          :class="selectedNote ? '' : 'disabled'"
+        >
+          <Trash2 class="size-16" :class="selectedNote ? 'text-red' : ''" />
+          {{ $t("delete_note") }}
         </li>
       </ul>
     </div>
-    <!--  -->
   </div>
 </template>
 
@@ -70,7 +98,7 @@
 import { Pin, PinOff, Trash2, Lock, Plus, CopyPlus } from "lucide-vue-next";
 export default {
   name: "Notelist",
-  props: ["notes", "isPinned"],
+  props: ["notes", "isPinned", "selectedNote"],
   emits: [
     "select-note",
     "delete-note",
@@ -105,9 +133,15 @@ export default {
   methods: {
     selectNote(note) {
       this.$emit("select-note", note);
+      this.showMenu = false;
     },
     deleteNote(note) {
       this.$emit("delete-note", note);
+    },
+    deleteNoteContext() {
+      if (this.selectedNote) {
+        this.deleteNote(this.selectedNote);
+      }
     },
     createNote() {
       this.$emit("create-note");
@@ -118,6 +152,7 @@ export default {
     togglePinNote() {
       this.$emit("toggle-pin-note");
     },
+
     // to move
     showContextMenu(event, note) {
       this.menuStyle = {

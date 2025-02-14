@@ -32,6 +32,7 @@
         <!-- notelist -->
         <Notelist
           :notes="filteredNotes"
+          :selectedNote="selectedNote"
           @select-note="selectNote"
           @delete-note="deleteNote"
           @create-note="createNote"
@@ -611,11 +612,20 @@ export default {
       }, duration);
     },
     selectNote(note) {
+      // if (note.selected) {
+      //   note.selected = false;
+      // } else {
+      //   this.notes.forEach((n) => {
+      //     n.selected = false;
+      //   });
+      //   note.selected = true;
+      // }
       this.notes.forEach((n) => {
-        n.selected = false;
-      });
-      note.selected = true;
+          n.selected = false;
+        });
+        note.selected = true;
     },
+
     async deleteNote(note) {
       let msgConfirm = this.$t("confirm_note_deleted", {
         note_name: note.name,
@@ -964,7 +974,8 @@ export default {
 .app-btn.disabled,
 .disabled {
   color: var(--text-color-button-disabled);
-  cursor: not-allowed;
+  cursor: not-allowed !important;
   user-select: none;
 }
+
 </style>
