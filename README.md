@@ -18,6 +18,7 @@
 - View both text / markdown
 - Notifications (just information)
 - Add context menu
+- Folders and subfolders (push as notes for the moment)
 ---
 
 # Fixed
@@ -54,7 +55,7 @@
 ---
 
 # To Implement
-- Folders and subfolders
+- Create treeview for folders, subfolders as well as files
 - View kanban, schedule, drawing
 - App branding
 - Accessibility (title..)
@@ -67,3 +68,4 @@
 - save -> save the file with the right id
 - Lock files / folders 
 - Debug with log files
+- Create alert, confirm, modal
