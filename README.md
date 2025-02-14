@@ -30,6 +30,9 @@
 - height home window
 - remove minimize settings window
 - open details
+- settings font mounted ?
+- open close same button details
+- details sidebar color
 ---
 
 # Improved 
@@ -38,8 +41,9 @@
 - insert: other elements like date, image...
 
 # To fix
-- settings font mounted ?
 - color markdown in dark mode
+- sort does not work
+- multiple tags notebar list
 ---
 
 # To improve
