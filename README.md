@@ -1,6 +1,4 @@
 # Implemented
-
-## App
 - CRUD Notes and tags
 - Search by name
 - Sort asc-desc, date, clear sort
@@ -34,6 +32,7 @@
 - open close same button details
 - details sidebar color
 - sidebar overflow y
+- sort does not work
 ---
 
 # Improved 
@@ -43,7 +42,6 @@
 
 # To fix
 - color markdown in dark mode
-- sort does not work
 - multiple tags notebar list
 ---
 
@@ -68,3 +66,4 @@
 - new -> mkfile
 - save -> save the file with the right id
 - Lock files / folders 
+- Debug with log files
