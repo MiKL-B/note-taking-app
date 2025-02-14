@@ -33,6 +33,7 @@
 - details sidebar color
 - sidebar overflow y
 - sort does not work
+- color markdown in dark mode
 ---
 
 # Improved 
@@ -41,7 +42,6 @@
 - insert: other elements like date, image...
 
 # To fix
-- color markdown in dark mode
 - multiple tags notebar list
 ---
 
