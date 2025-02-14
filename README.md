@@ -33,6 +33,7 @@
 - settings font mounted ?
 - open close same button details
 - details sidebar color
+- sidebar overflow y
 ---
 
 # Improved 
