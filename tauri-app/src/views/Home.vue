@@ -119,7 +119,10 @@
               v-html="getMarkdownHtml"
             ></div>
           </div>
-          <Statusbar :noteLength="getContentNoteLength" />
+          <Statusbar
+            :characterCount="getCharacterNoteCount"
+            :wordCount="getWordNoteCount"
+          />
         </div>
       </div>
       <div class="column-note img" v-else>
@@ -146,12 +149,20 @@ import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import {
+  readTextFile,
+  writeTextFile,
+  readDir,
+  BaseDirectory,
+  exists,
+} from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import Note from "../note.js";
+import { join } from "@tauri-apps/api/path";
+
 const appWindow = getCurrentWindow();
 export default {
   name: "Home",
@@ -192,6 +203,7 @@ export default {
       canCreateNote: true,
       isVisibleSidebar: true,
       isVisibleNotelist: true,
+      folderName: "notes_folder",
     };
   },
   mounted() {
@@ -230,9 +242,13 @@ export default {
       const selectedNote = this.notes.find((note) => note.selected);
       return selectedNote ? selectedNote : "";
     },
-    getContentNoteLength() {
+    getCharacterNoteCount() {
       const selectedNote = this.notes.find((note) => note.selected);
       return selectedNote ? selectedNote.content.length : "";
+    },
+    getWordNoteCount() {
+      const selectedNote = this.notes.find((note) => note.selected);
+      return selectedNote ? selectedNote.content.split(" ").length - 1 : "";
     },
     getContentNoteLine() {
       let count = 0;
@@ -423,6 +439,9 @@ export default {
         case "open":
           this.openDocument();
           break;
+        case "openfolder":
+          this.openFolder();
+          break;
         case "save":
           this.saveDocument();
           break;
@@ -468,6 +487,44 @@ export default {
         .catch((error) => {
           console.error("Erreur lors de la lecture du fichier : ", error);
         });
+    },
+    async openFolder() {
+      const path = await open({
+        directory: true,
+        multiple: false,
+        // defaultPath: await homeDir(),
+      });
+      if (!path) {
+        return;
+      }
+      await this.readContentFolder(path);
+    },
+
+    async readContentFolder(path) {
+      try {
+        const entries = await readDir(path, { recursive: true });
+
+        for (const entry of entries) {
+          const filePath = await join(path, entry.name);
+          if (entry.isFile) {
+            try {
+              const fileContent = await readTextFile(filePath);
+              let note = new Note(entry.name);
+              note.content = fileContent;
+              this.notes.push(note);
+            } catch (err) {
+              console.error(
+                `Erreur lors de la lecture du fichier ${entry.name} :`,
+                err
+              );
+            }
+          } else if (entry.isDirectory) {
+            await this.readContentFolder(filePath);
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors de la lecture du dossier:", error);
+      }
     },
     async openDocument() {
       const selectedFile = await open({
@@ -621,9 +678,9 @@ export default {
       //   note.selected = true;
       // }
       this.notes.forEach((n) => {
-          n.selected = false;
-        });
-        note.selected = true;
+        n.selected = false;
+      });
+      note.selected = true;
     },
 
     async deleteNote(note) {
@@ -977,5 +1034,4 @@ export default {
   cursor: not-allowed !important;
   user-select: none;
 }
-
 </style>

@@ -4,6 +4,7 @@ const messages = {
     appnotes: "Taking-note App",
     // statusbar
     characters: "Characters",
+    words:"Words",
     // toolbar
     language: "Language",
     theme: "Theme",
@@ -112,6 +113,7 @@ const messages = {
     appnotes: "Application de prise de note",
     // statusbar
     characters: "Caractères",
+    words:"Mots",
     // toolbar
     language: "Langue",
     theme: "Thème",

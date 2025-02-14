@@ -1,15 +1,16 @@
 <template>
   <div id="statusbar">
-    <span v-if="noteLength !== ''"
-      >{{ $t("characters") }}: {{ noteLength }}</span
+    <span v-if="characterCount !== ''"
+      >{{ $t("characters") }}: {{ characterCount }}</span
     >
+    <span>{{ $t("words") }}: {{ wordCount }}</span>
   </div>
 </template>
 
 <script>
 export default {
   name: "Statusbar",
-  props: ["noteLength"],
+  props: ["characterCount","wordCount"],
 };
 </script>
 <style>

@@ -9,6 +9,9 @@
         <li @click="onSubMenuClick('open')">
           {{ $t("open") }}
         </li>
+        <li @click="onSubMenuClick('openfolder')">
+          {{ $t("openfolder") }}
+        </li>
         <li @click="onSubMenuClick('save')">
           {{ $t("save") }}
         </li>
