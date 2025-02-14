@@ -1,7 +1,7 @@
 <template>
   <div id="filter-note">
-    <DetailsCompo :title="$t('filters_sort')" btn="app-btn">
-      <template v-slot:header><Filter class="size-16" /></template>
+    
+    <DetailsCompo title="" :icon="filter" btn="app-btn">
       <template v-slot:content>
         <li class="flex gap-4 align-center" @click="sortNotesAZ">
           <ArrowDownAZ v-if="sortAZ" class="size-16" />
@@ -70,6 +70,7 @@ export default {
     return {
       sortAZ: true,
       sortDate: true,
+      filter:Filter
     };
   },
   methods: {

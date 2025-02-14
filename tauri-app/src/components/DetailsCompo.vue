@@ -1,54 +1,63 @@
 <template>
-  <details class="toolbar-details" :title="title" @click="handleClickOnDetails">
-    <summary :class="btn">
-      <slot name="header"></slot>
-    </summary>
-
-    <ul class="details-menu">
+  <div class="details" ref="dropdown">
+    <span @click="toggleDropdown" :class="btn">
+      {{ title }}
+      <component
+        v-if="title === ''"
+        :is="icon"
+        class="size-16"
+        :style="styleIcon"
+      ></component>
+    </span>
+    <ul class="details-menu" v-if="isOpen" @click="toggleDropdown">
       <slot name="content"></slot>
     </ul>
-  </details>
+  </div>
 </template>
 
 <script>
 export default {
   name: "DetailsCompo",
-  props: ["title", "btn"],
-  mounted() {
-    document.addEventListener("click", this.closeDetails);
+  props: ["title", "btn", "icon", "styleIcon"],
+
+  data() {
+    return {
+      isOpen: false,
+      selectedOption: null,
+    };
   },
-  beforeDestroy() {
-    document.removeEventListener("click", this.closeDetails);
+  mounted() {
+    document.addEventListener("click", this.handleClickOutside);
+  },
+  beforeUnmount() {
+    document.removeEventListener("click", this.handleClickOutside);
   },
   methods: {
-    handleClickOnDetails() {
-      let detailsOpened = document.querySelectorAll(".toolbar-details");
-      for (const item of detailsOpened) {
-        if (this != item) {
-          item.removeAttribute("open");
-        }
-      }
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
     },
-    closeDetails(event) {
-      if (!event.target.closest("details")) {
-        let detailsOpened = document.querySelectorAll(".toolbar-details");
-        detailsOpened.forEach((item) => {
-          item.removeAttribute("open");
-        });
+    handleClickOutside(event) {
+      if (this.isOpen && !this.$refs.dropdown.contains(event.target)) {
+        this.isOpen = false;
       }
     },
   },
 };
 </script>
 <style>
+.details {
+  display: flex;
+  position: relative;
+}
 .details-menu {
   background-color: var(--bg-toolbar);
   position: absolute;
   z-index: 1;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  min-width: 100px;
   user-select: none;
+  top: 33px;
+  width: 200px;
 }
 .details-menu li {
   list-style-type: none;

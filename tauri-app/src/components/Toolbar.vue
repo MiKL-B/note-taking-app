@@ -2,7 +2,6 @@
   <div id="toolbar">
     <!-- file -->
     <DetailsCompo :title="$t('file')" btn="toolbar-btn">
-      <template v-slot:header>{{ $t("file") }}</template>
       <template v-slot:content>
         <li @click="onSubMenuClick('new')">
           {{ $t("new") }}
@@ -28,7 +27,6 @@
     </DetailsCompo>
     <!-- view -->
     <DetailsCompo :title="$t('view')" btn="toolbar-btn">
-      <template v-slot:header>{{ $t("view") }}</template>
       <template v-slot:content>
         <li @click="toggleSidebar" class="flex align-center gap-4">
           <Check v-if="isVisibleSidebar" class="size-16 text-dark" />
@@ -69,6 +67,11 @@ export default {
     return {
       isVisibleSidebar: true,
       isVisibleNotelist: true,
+      items:[
+        {
+          label:"new"
+        }
+      ]
     };
   },
   methods: {

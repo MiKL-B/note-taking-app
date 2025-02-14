@@ -76,10 +76,11 @@
         v-for="tag in tags"
       >
         <span class="flex align-center gap-4">
-          <DetailsCompo>
-            <template v-slot:header>
-              <Tag :style="`color: var(--${tag.color})`" width="16" />
-            </template>
+          <DetailsCompo
+            title=""
+            :icon="tagIcon"
+            :styleIcon="`color: var(--${tag.color})`"
+          >
             <template v-slot:content>
               <li
                 class="flex gap-4 align-center"
@@ -173,6 +174,7 @@ export default {
       ],
       tagsMenu: false,
       folderMenu: false,
+      tagIcon: Tag,
     };
   },
   computed: {
