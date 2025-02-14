@@ -13,7 +13,7 @@
     "windows": [
       {
         "title": "Thoth",
-        "minHeight": 600,
+        "minHeight": 680,
         "minWidth": 1060,
         "decorations": false,
         "center":true

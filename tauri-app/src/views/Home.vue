@@ -379,14 +379,12 @@ export default {
         return 0;
       });
     },
-    sortNotesDate(ascending) {
+    sortNotesDate() {
       this.notes.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        if (ascending) {
-          return dateA - dateB;
+        if (this.sortedDate) {
+          return a.timestamp - b.timestamp;
         } else {
-          return dateB - dateA;
+          return b.timestamp - a.timestamp;
         }
       });
     },
@@ -400,11 +398,11 @@ export default {
     clearFilterSort() {
       this.sortedAsc = true;
       this.sortedDate = true;
-      this.sortNotesDate(true);
+      this.sortNotesDate();
     },
     toggleSortByDate() {
       this.sortedDate = !this.sortedDate;
-      this.sortNotesDate(this.sortedDate);
+      this.sortNotesDate();
     },
 
     toggleMarkdown() {
@@ -461,18 +459,10 @@ export default {
           return response.text();
         })
         .then((content) => {
-          let newNote = {
-            id: Date.now(),
-            name: fileName,
-            date: new Date().toLocaleString("fr-FR"),
-            status: "todo",
-            color: "red",
-            content: content,
-            tags: [],
-            selected: true,
-          };
-
-          this.notes.push(newNote);
+          let note = new Note(fileName);
+          note.content = content;
+          note.selected = true;
+          this.notes.push(note);
         })
         .catch((error) => {
           console.error("Erreur lors de la lecture du fichier : ", error);

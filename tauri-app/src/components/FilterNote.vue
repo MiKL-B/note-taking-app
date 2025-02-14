@@ -6,11 +6,11 @@
         <li class="flex gap-4 align-center" @click="sortNotesAZ">
           <ArrowDownAZ v-if="sortAZ" class="size-16" />
           <ArrowUpZA v-else class="size-16" />
-          <span>{{ sortAZ ? $t("sortAZ") : $t("sortZA") }}</span>
+          <span>{{ sortAZ ? $t("sortZA") : $t("sortAZ") }}</span>
         </li>
         <li class="flex gap-4 align-center" @click="sortNotesByDate">
           <Calendar class="size-16" />
-          <span>{{ sortDate ? $t("sort_oldest") : $t("sort_newest") }}</span>
+          <span>{{ sortDate ? $t("sort_newest") : $t("sort_oldest") }}</span>
         </li>
         <li class="flex gap-4 align-center" @click="clearFilterSort">
           <FilterX class="size-16" />

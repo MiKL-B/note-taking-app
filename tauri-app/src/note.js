@@ -2,6 +2,7 @@ export default class Note {
   constructor(
     name,
     id = Date.now(),
+    timestamp = Date.now(),
     date = new Date().toLocaleString("fr-FR"),
     status = "todo",
     color = "red",
@@ -13,6 +14,7 @@ export default class Note {
   ) {
     this.name = name;
     this.id = id;
+    this.timestamp = timestamp;
     this.date = date;
     this.status = status;
     this.color = color;
