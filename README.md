@@ -47,7 +47,7 @@
 ---
 
 # To improve
-- Improve textarea impossible ?
+- Improve textarea impossible ? --> change to a contenteditable true ?
 - Improve save functionnality
 - insert: heading ... at the right place
 - insert: Audio and video
