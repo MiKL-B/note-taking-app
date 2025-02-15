@@ -13,7 +13,7 @@
       <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
     <!-- folder -->
-    <li class="sidebar-item justify-between" @click="toggleFolderMenu">
+    <!-- <li class="sidebar-item justify-between" @click="toggleFolderMenu">
       <span class="flex align-center gap-4">
         <Folder class="size-16 text-dark" />
         <span>Folder</span>
@@ -37,7 +37,8 @@
           <span>File.txt</span>
         </span>
       </li>
-    </ul>
+    </ul> -->
+  
     <!-- others -->
     <li
       class="sidebar-item justify-between"
@@ -177,6 +178,7 @@ export default {
       tagIcon: Tag,
     };
   },
+
   computed: {
     computedItems() {
       return [
@@ -227,7 +229,6 @@ export default {
       this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
-
     setColor(tag, color) {
       this.$emit("set-color", tag, color);
     },

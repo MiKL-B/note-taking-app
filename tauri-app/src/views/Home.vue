@@ -12,6 +12,7 @@
       <div id="column-left" class="col-3" v-if="isVisibleSidebar">
         <Sidebar
           :tags="tags"
+          :treeData="filePaths"
           :counters="getCountNotes"
           @delete-tag="deleteTag"
           @update-tag-name="handleUpdateTagName"
@@ -77,7 +78,7 @@
             <span
               class="tag"
               v-for="tag in selectedNote.tags"
-              :style="` background: var(--${tag.color} `"
+              :style="`background: var(--${tag.color})`"
               >{{ tag.name }}
               <span class="delete-tag-btn" @click="deleteTagNote(tag)"
                 ><X class="size-16" />
@@ -138,7 +139,7 @@
   />
 </template>
 
-<script>
+<script lang="ts">
 import Titlebar from "../components/Titlebar.vue";
 import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
@@ -149,18 +150,12 @@ import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import {
-  readTextFile,
-  writeTextFile,
-  readDir,
-  BaseDirectory,
-  exists,
-} from "@tauri-apps/plugin-fs";
+import { readTextFile, writeTextFile, readDir } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import Note from "../note.js";
+import Note from "../note.ts";
 import { join } from "@tauri-apps/api/path";
 
 const appWindow = getCurrentWindow();
@@ -203,7 +198,7 @@ export default {
       canCreateNote: true,
       isVisibleSidebar: true,
       isVisibleNotelist: true,
-      folderName: "notes_folder",
+      filePaths:[],
     };
   },
   mounted() {
@@ -235,59 +230,48 @@ export default {
       marked.use({ renderer });
 
       let dirtyHTML = marked(this.selectedNote.content, options);
-
       return DOMPurify.sanitize(dirtyHTML);
     },
     selectedNote() {
-      const selectedNote = this.notes.find((note) => note.selected);
+      const selectedNote = this.notes.find((note:Note) => note.selected);
       return selectedNote ? selectedNote : "";
     },
     getCharacterNoteCount() {
-      const selectedNote = this.notes.find((note) => note.selected);
+      const selectedNote = this.notes.find((note:Note) => note.selected);
       return selectedNote ? selectedNote.content.length : "";
     },
     getWordNoteCount() {
-      const selectedNote = this.notes.find((note) => note.selected);
+      const selectedNote = this.notes.find((note:Note) => note.selected);
       return selectedNote ? selectedNote.content.split(" ").length - 1 : "";
-    },
-    getContentNoteLine() {
-      let count = 0;
-      const a = document.querySelector("textarea");
-      for (let i = 0; i < this.selectedNote.content.length; i++) {
-        if (this.selectedNote.content[i] == "\n") {
-          count++;
-        }
-      }
-      return count;
     },
 
     filteredNotes() {
       switch (this.filter) {
         case "todo":
-          return this.notes.filter((note) => note.status === "todo");
+          return this.notes.filter((note:Note) => note.status === "todo");
         case "inprogress":
-          return this.notes.filter((note) => note.status === "inprogress");
+          return this.notes.filter((note:Note) => note.status === "inprogress");
         case "finished":
-          return this.notes.filter((note) => note.status === "finished");
+          return this.notes.filter((note:Note) => note.status === "finished");
         case "archived":
-          return this.notes.filter((note) => note.status === "archived");
+          return this.notes.filter((note:Note) => note.status === "archived");
         case "":
         case "allnotes":
-          return this.notes.filter((note) => {
+          return this.notes.filter((note:Note) => {
             return note.name
               .toLowerCase()
               .includes(this.searchNote.toLowerCase());
           });
         case "pinned":
-          return this.notes.filter((note) => note.pinned === true);
+          return this.notes.filter((note:Note) => note.pinned === true);
         case "today":
           return this.notes.filter(
             (note) => note.date.split(" ")[0] === this.getToday()
           );
         case "important":
-          return this.notes.filter((note) => note.important === true);
+          return this.notes.filter((note:Note) => note.important === true);
         default:
-          return this.notes.filter((note) => {
+          return this.notes.filter((note:Note) => {
             return note.tags.some((tag) =>
               tag.name.toLowerCase().includes(this.filter.toLowerCase())
             );
@@ -296,28 +280,28 @@ export default {
     },
     getCountNotes() {
       return {
-        allNotes: this.notes.filter((note) => {
+        allNotes: this.notes.filter((note:Note) => {
           return note.name
             .toLowerCase()
             .includes(this.searchNote.toLowerCase());
         }).length,
-        todo: this.notes.filter((note) => note.status === "todo").length,
-        inProgress: this.notes.filter((note) => note.status === "inprogress")
+        todo: this.notes.filter((note:Note) => note.status === "todo").length,
+        inProgress: this.notes.filter((note:Note) => note.status === "inprogress")
           .length,
-        finished: this.notes.filter((note) => note.status === "finished")
+        finished: this.notes.filter((note:Note) => note.status === "finished")
           .length,
-        archived: this.notes.filter((note) => note.status === "archived")
+        archived: this.notes.filter((note:Note) => note.status === "archived")
           .length,
-        pinned: this.notes.filter((note) => note.pinned === true).length,
+        pinned: this.notes.filter((note:Note) => note.pinned === true).length,
         today: this.notes.filter(
           (note) => note.date.split(" ")[0] === this.getToday()
         ).length,
-        important: this.notes.filter((note) => note.important === true).length,
+        important: this.notes.filter((note:Note) => note.important === true).length,
       };
     },
   },
   methods: {
-    insertItem(item) {
+    insertItem(item:string) {
       let text = "";
       switch (item) {
         case "heading1":
@@ -387,7 +371,7 @@ export default {
       return new Date().toLocaleString(this.getLocale()).split(" ")[1];
     },
     sortNotes() {
-      this.notes.sort((a, b) => {
+      this.notes.sort((a:Note, b:Note) => {
         if (a.name < b.name) {
           return -1;
         } else if (b.name < a.name) {
@@ -397,7 +381,7 @@ export default {
       });
     },
     sortNotesDate() {
-      this.notes.sort((a, b) => {
+      this.notes.sort((a:Note, b:Note) => {
         if (this.sortedDate) {
           return a.timestamp - b.timestamp;
         } else {
@@ -428,10 +412,10 @@ export default {
     toggleShowBothTextareaPreview() {
       this.showBoth = !this.showBoth;
     },
-    handleFilter(filter) {
+    handleFilter(filter:string) {
       this.filter = filter;
     },
-    handleAction(action) {
+    handleAction(action:string) {
       switch (action) {
         case "new":
           this.createNote();
@@ -497,15 +481,20 @@ export default {
       if (!path) {
         return;
       }
+
       await this.readContentFolder(path);
     },
-
-    async readContentFolder(path) {
+  
+    async readContentFolder(path: string) {
       try {
-        const entries = await readDir(path, { recursive: true });
-
+        let options: object = {
+          recursive: true,
+        };
+      
+        const entries = await readDir(path, options);
         for (const entry of entries) {
           const filePath = await join(path, entry.name);
+       
           if (entry.isFile) {
             try {
               const fileContent = await readTextFile(filePath);
@@ -519,6 +508,7 @@ export default {
               );
             }
           } else if (entry.isDirectory) {
+      
             await this.readContentFolder(filePath);
           }
         }
@@ -596,7 +586,7 @@ export default {
     togglePreviewMode() {
       this.isPreviewMode = !this.isPreviewMode;
     },
-    generateIncrementedName(baseTitle) {
+    generateIncrementedName(baseTitle:string) {
       if (!this.noteCounters[baseTitle]) {
         this.noteCounters[baseTitle] = 1;
       } else {
@@ -659,7 +649,7 @@ export default {
       );
       this.setDelayCreationNote();
     },
-    showNotification(message, color) {
+    showNotification(message:string, color:string) {
       this.isVisibleNotification = true;
       this.messageNotification = message;
       this.colorNotification = color;
@@ -668,7 +658,7 @@ export default {
         this.isVisibleNotification = false;
       }, duration);
     },
-    selectNote(note) {
+    selectNote(note:Note) {
       // if (note.selected) {
       //   note.selected = false;
       // } else {
@@ -677,13 +667,13 @@ export default {
       //   });
       //   note.selected = true;
       // }
-      this.notes.forEach((n) => {
+      this.notes.forEach((n:Note) => {
         n.selected = false;
       });
       note.selected = true;
     },
 
-    async deleteNote(note) {
+    async deleteNote(note:Note) {
       let msgConfirm = this.$t("confirm_note_deleted", {
         note_name: note.name,
       });
@@ -692,7 +682,7 @@ export default {
       if (!confirmed) {
         return;
       }
-      const index = this.notes.findIndex((n) => n.id === note.id);
+      const index = this.notes.findIndex((n:Note) => n.id === note.id);
 
       if (index > -1) {
         this.notes.splice(index, 1);
@@ -700,7 +690,7 @@ export default {
         this.showNotification(msgDeleted, "green");
       }
     },
-    changeNoteStatus(newStatus) {
+    changeNoteStatus(newStatus:string) {
       this.selectedNote.status = newStatus;
       switch (this.selectedNote.status) {
         case "todo":

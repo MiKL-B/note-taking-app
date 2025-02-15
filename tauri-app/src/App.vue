@@ -5,7 +5,7 @@
 import { RouterView } from "vue-router";
 import { listen } from "@tauri-apps/api/event";
 export default {
-  name: "App",
+  name: 'App',
   components: {
     RouterView,
   },
