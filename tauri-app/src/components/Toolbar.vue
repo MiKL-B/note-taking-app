@@ -3,17 +3,25 @@
     <!-- file -->
     <DetailsCompo :title="$t('file')" btn="toolbar-btn">
       <template v-slot:content>
-        <li @click="onSubMenuClick('new')">
-          {{ $t("new") }}
+        <li @click="onSubMenuClick('newnote')">
+          {{ $t("newnote") }}
         </li>
-        <li @click="onSubMenuClick('open')">
-          {{ $t("open") }}
+        <li @click="onSubMenuClick('newfolder')">
+          {{ $t("newfolder") }}
+        </li>
+        <hr class="separator-x">
+        <li @click="onSubMenuClick('opennote')">
+          {{ $t("opennote") }}
         </li>
         <li @click="onSubMenuClick('openfolder')">
           {{ $t("openfolder") }}
         </li>
+        <hr class="separator-x">
         <li @click="onSubMenuClick('save')">
           {{ $t("save") }}
+        </li>
+        <li @click="onSubMenuClick('saveas')">
+          {{ $t("saveas") }}
         </li>
         <hr class="separator-x" />
         <li @click="onSubMenuClick('exportjson')">
