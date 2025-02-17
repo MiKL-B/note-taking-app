@@ -19,6 +19,7 @@
 - Notifications (just information)
 - Add context menu
 - Folders and subfolders (push as notes for the moment)
+- Create treeview for folders, subfolders as well as files
 ---
 
 # Fixed
@@ -52,6 +53,7 @@
 - insert: heading ... at the right place
 - insert: Audio and video
 - Context menu 
+- Manage permissions for treeview
 ---
 
 # To Implement
@@ -70,8 +72,8 @@
 - "save" must be moved in "save as"
 - "new note" create a note and create file in the folder
 - can create many folders (vault) ?
+- Allow save delete etc for files, (note = file)
 
-- Create treeview for folders, subfolders as well as files
 - View kanban, schedule, drawing
 - App branding
 - Accessibility (title..)
