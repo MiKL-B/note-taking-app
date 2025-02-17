@@ -1,6 +1,7 @@
 <template>
   <div id="home-container">
     <Titlebar />
+
     <Toolbar
       @action-clicked="handleAction"
       @display-about="displayAbout"
@@ -8,11 +9,12 @@
       @toggle-sidebar="toggleSidebar"
       @toggle-notelist="toggleNoteList"
     />
+    <!-- <TreeItem v-if="tree !== null" :node="tree" /> -->
     <div class="row">
       <div id="column-left" class="col-3" v-if="isVisibleSidebar">
         <Sidebar
           :tags="tags"
-          :treeData="filePaths"
+          :tree="tree"
           :counters="getCountNotes"
           @delete-tag="deleteTag"
           @update-tag-name="handleUpdateTagName"
@@ -150,14 +152,13 @@ import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { readTextFile, writeTextFile, readDir,BaseDirectory } from "@tauri-apps/plugin-fs";
+import { readTextFile, writeTextFile, readDir } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import Note from "../note.ts";
 import { join } from "@tauri-apps/api/path";
-
 const appWindow = getCurrentWindow();
 export default {
   name: "Home",
@@ -198,12 +199,13 @@ export default {
       canCreateNote: true,
       isVisibleSidebar: true,
       isVisibleNotelist: true,
-      filePaths: [],
+      tree: null,
     };
   },
   mounted() {
     this.openNoteDemo();
   },
+
   computed: {
     getMarkdownHtml() {
       let options = {
@@ -486,44 +488,62 @@ export default {
       const path = await open({
         directory: true,
         multiple: false,
-        // defaultPath: await homeDir(),
       });
       if (!path) {
         return;
       }
-
-      await this.readContentFolder(path);
+      try {
+        this.tree = await this.readContentFolder(path);
+      } catch (err) {
+        this.showNotification(
+          "Erreur lors de la lecture du dossier:",
+          err,
+          "red"
+        );
+      }
     },
 
     async readContentFolder(path: string) {
-      try {
-        let options: object = {
-          recursive: true,
+      let options: object = {
+        recursive: true,
+      };
+
+      const entries = await readDir(path, options);
+      let tree = {
+        name: path.replace(/\\/g, "/").split("/").pop() || "root",
+        path: path,
+        isDirectory: true,
+        children: [],
+      };
+
+      for (const entry of entries) {
+        const filePath = await join(path, entry.name);
+        let node = {
+          name: entry.name,
+          path: filePath,
+          isDirectory: entry.isDirectory,
+          children: [],
         };
 
-        const entries = await readDir(path, options);
-        for (const entry of entries) {
-          const filePath = await join(path, entry.name);
-
-          if (entry.isFile) {
-            try {
-              const fileContent = await readTextFile(filePath);
-              let note = new Note(entry.name);
-              note.content = fileContent;
-              this.notes.push(note);
-            } catch (err) {
-              console.error(
-                `Erreur lors de la lecture du fichier ${entry.name} :`,
-                err
-              );
-            }
-          } else if (entry.isDirectory) {
-            await this.readContentFolder(filePath);
+        if (entry.isFile) {
+          try {
+            const fileContent = await readTextFile(filePath);
+            let note = new Note(entry.name);
+            note.content = fileContent;
+            this.notes.push(note);
+          } catch (err) {
+            console.error(
+              `Erreur lors de la lecture du fichier ${entry.name} :`,
+              err
+            );
           }
+        } else if (entry.isDirectory) {
+          let arr = await this.readContentFolder(filePath);
+          node.children = arr.children;
         }
-      } catch (error) {
-        console.error("Erreur lors de la lecture du dossier:", error);
+        tree.children.push(node);
       }
+      return tree;
     },
     async openDocument() {
       const selectedFile = await open({
@@ -920,7 +940,7 @@ export default {
   height: 100%;
 }
 #column-left {
-  max-width: 200px;
+  max-width: 250px;
 }
 #column-middle {
   max-width: 263.5px;

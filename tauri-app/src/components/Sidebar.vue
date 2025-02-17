@@ -13,32 +13,8 @@
       <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
     <!-- folder -->
-    <!-- <li class="sidebar-item justify-between" @click="toggleFolderMenu">
-      <span class="flex align-center gap-4">
-        <Folder class="size-16 text-dark" />
-        <span>Folder</span>
-      </span>
-      <span>
-        <ChevronDown v-if="!folderMenu" class="text-dark size-16" />
-        <ChevronUp v-else class="text-dark size-16" />
-      </span>
-    </li>
-    <ul v-if="folderMenu">
-      <li class="sidebar-item justify-between">
-        <span class="flex align-center gap-4 pl-2rem">
-          <Folder class="size-16 text-dark" />
-          <span>Subfolder</span>
-        </span>
-        <ChevronDown class="text-dark size-16" />
-      </li>
-      <li class="sidebar-item">
-        <span class="flex align-center gap-4 pl-2rem">
-          <File class="size-16 text-dark" />
-          <span>File.txt</span>
-        </span>
-      </li>
-    </ul> -->
-  
+    <TreeItem v-if="tree !== null" :node="tree" />
+
     <!-- others -->
     <li
       class="sidebar-item justify-between"
@@ -123,10 +99,12 @@ import {
   Folder,
 } from "lucide-vue-next";
 import DetailsCompo from "./DetailsCompo.vue";
+import TreeItem from "./TreeItem.vue";
 export default {
   name: "Sidebar",
   props: {
     tags: Array,
+    tree: Object,
     counters: {
       type: Object,
       default: () => ({
@@ -156,6 +134,7 @@ export default {
     ChevronUp,
     Folder,
     DetailsCompo,
+    TreeItem,
   },
   data() {
     return {
@@ -174,7 +153,6 @@ export default {
         "pink",
       ],
       tagsMenu: false,
-      folderMenu: false,
       tagIcon: Tag,
     };
   },
@@ -241,13 +219,10 @@ export default {
     toggleTagsMenu() {
       this.tagsMenu = !this.tagsMenu;
     },
-    toggleFolderMenu() {
-      this.folderMenu = !this.folderMenu;
-    },
   },
 };
 </script>
-<style scoped>
+<style>
 #sidebar {
   padding: 0 0 0.5rem 0;
   height: calc(100vh - 66px);
@@ -325,5 +300,4 @@ export default {
 
   color: var(--text-color-sidebar);
 }
-
 </style>

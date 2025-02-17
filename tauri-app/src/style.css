@@ -347,3 +347,6 @@ button[disabled]:hover {
   padding: 0.1rem 0.2rem;
   border-radius: 5px;
 }
+ul{
+  list-style-type: none;
+}
