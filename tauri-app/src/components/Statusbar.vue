@@ -20,7 +20,7 @@ export default {
   bottom: 0;
   height: 30px;
   padding-left: 0.5rem;
-  color: var(--dark2);
+  color: var(--text-color-statusbar);
   display: flex;
   gap: 1rem;
   user-select: none;

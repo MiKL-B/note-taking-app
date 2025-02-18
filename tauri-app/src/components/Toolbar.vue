@@ -6,9 +6,9 @@
         <li @click="onSubMenuClick('newnote')">
           {{ $t("newnote") }}
         </li>
-        <li @click="onSubMenuClick('newfolder')">
+        <!-- <li @click="onSubMenuClick('newfolder')">
           {{ $t("newfolder") }}
-        </li>
+        </li> -->
         <hr class="separator-x">
         <li @click="onSubMenuClick('opennote')">
           {{ $t("opennote") }}
@@ -17,9 +17,9 @@
           {{ $t("openfolder") }}
         </li>
         <hr class="separator-x">
-        <li @click="onSubMenuClick('save')">
+        <!-- <li @click="onSubMenuClick('save')">
           {{ $t("save") }}
-        </li>
+        </li> -->
         <li @click="onSubMenuClick('saveas')">
           {{ $t("saveas") }}
         </li>

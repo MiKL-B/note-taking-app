@@ -98,5 +98,6 @@ export default {
 .tree-children {
   padding-left: 0.5rem;
   user-select: none;
+  border-left:var(--border);
 }
 </style>

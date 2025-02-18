@@ -95,6 +95,8 @@
   /* markdown */
   --bg-color-markdown: var(--lightgrey);
   --text-color-markdown: var(--dark);
+  /* statusbar */
+  --text-color-statusbar:var(--dark2);
 }
 [data-theme="dark"] {
   /* body */
@@ -148,6 +150,8 @@
   /* markdown */
   --bg-color-markdown: var(--dark);
   --text-color-markdown: var(--lightgrey);
+    /* statusbar */
+    --text-color-statusbar:var(--lightgrey);
 }
 
 * {

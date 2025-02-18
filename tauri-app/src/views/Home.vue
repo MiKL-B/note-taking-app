@@ -426,20 +426,20 @@ export default {
         case "newnote":
           this.createNote();
           break;
-        case "newfolder":
-          this.createFolder();
-          break;
+        // case "newfolder":
+        //   this.createFolder();
+        //   break;
         case "opennote":
           this.openDocument();
           break;
         case "openfolder":
           this.openFolder();
           break;
-        case "save":
-          this.saveDocument();
-          break;
+        // case "save":
+        //   this.saveDocument();
+        //   break;
         case "saveas":
-          this.saveAs();
+          this.saveAsDocument();
           break;
         case "exportjson":
           this.exportJSON();
@@ -598,7 +598,7 @@ export default {
       }
     },
 
-    async saveDocument() {
+    async saveAsDocument() {
       if (!this.selectedNote) {
         return;
       }
