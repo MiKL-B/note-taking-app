@@ -14,6 +14,7 @@
 - Change theme in the settings window
 - Change language in the settings window
 - Change font in the settings window
+- Change font size in the settings window
 - Toggle preview markdown
 - View both text / markdown
 - Notifications (just information)
@@ -42,6 +43,7 @@
 - confirm before deleting note
 - Improve Style markdown
 - insert: other elements like date, image...
+- Add menu item about info project and link github 
 
 # To fix
 - multiple tags notebar list
@@ -54,6 +56,7 @@
 - insert: Audio and video
 - Context menu 
 - Manage permissions for treeview
+- Add menu item documentation
 ---
 
 # To Implement
