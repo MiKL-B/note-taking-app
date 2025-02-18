@@ -44,6 +44,7 @@
           {{ note.content }}
         </p>
         <span class="note-date">{{ note.date }}</span>
+  
       </div>
       <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
     </div>

@@ -9,7 +9,6 @@
       @toggle-sidebar="toggleSidebar"
       @toggle-notelist="toggleNoteList"
     />
-    <!-- <TreeItem v-if="tree !== null" :node="tree" /> -->
     <div class="row">
       <div id="column-left" class="col-3" v-if="isVisibleSidebar">
         <Sidebar

@@ -19,7 +19,7 @@ export default class Note {
       name: string,
       id: number = Date.now(),
       timestamp: number = Date.now(),
-      date: string = Date.now().toLocaleString("fr-FR"),
+      date: string = new Date().toLocaleString("fr-FR"),
       status: string = "todo",
       color: string = "red",
       content: string = "",
