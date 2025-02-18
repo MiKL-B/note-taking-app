@@ -86,7 +86,7 @@
               </span>
             </span>
           </div>
-          <div id="bothColumns" v-if="showBoth">
+          <div id="bothColumns" v-show="showBoth">
             <div>
               <textarea
                 :placeholder="$t('enter_text_here')"
@@ -94,6 +94,7 @@
                 ref="div1"
                 @scroll="syncScroll('div1')"
                 spellcheck="false"
+                :style="dynamicStyle"
               ></textarea>
             </div>
             <hr class="separator-column" />
@@ -105,17 +106,17 @@
               @scroll="syncScroll('div2')"
             ></div>
           </div>
-          <div id="oneView" v-else>
-            <div v-if="!isPreviewMode">
+          <div id="oneView" v-show="!showBoth">
+            <div v-show="!isPreviewMode">
               <textarea
                 :placeholder="$t('enter_text_here')"
                 v-model="selectedNote.content"
                 spellcheck="false"
+                :style="dynamicStyle"
               ></textarea>
             </div>
-
             <div
-              v-else
+              v-show="isPreviewMode"
               id="markdown-container"
               class="oneViewMarkdown"
               v-html="getMarkdownHtml"
@@ -199,13 +200,33 @@ export default {
       isVisibleSidebar: true,
       isVisibleNotelist: true,
       tree: null,
+      fontSize: 16,
+      font: "Inter",
     };
   },
   mounted() {
     this.openNoteDemo();
+    // font
+    let storedFont = localStorage.getItem("font");
+    if (!storedFont) {
+      storedFont = "Inter";
+    }
+    this.font = storedFont;
+    // font size
+    let storedFontSize = localStorage.getItem("font-size");
+    if (!storedFontSize) {
+      storedFontSize = 16 + "px";
+    }
+    this.fontSize = storedFontSize + "px";
   },
 
   computed: {
+    dynamicStyle() {
+      return {
+        fontSize: this.fontSize,
+        fontFamily: this.font,
+      };
+    },
     getMarkdownHtml() {
       let options = {
         async: false,
@@ -888,7 +909,7 @@ export default {
       }
     },
     displayAbout() {
-      let msg = this.$t("developed");
+      let msg = `Thoth 0.1.0\r\n${this.$t("developed")}`;
       alert(msg + " Becquer Michaël.");
     },
     openWindow() {
@@ -900,7 +921,7 @@ export default {
         alwaysOnTop: true,
         center: true,
         width: 600,
-        height: 400,
+        height: 533,
       });
       webview.once("tauri://created", function () {
         document.body.style.pointerEvents = "none";

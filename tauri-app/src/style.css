@@ -211,7 +211,10 @@ input[type="color"]:hover {
   cursor: pointer;
   background: var(--lightgrey);
 }
-
+a{
+  color:var(--blue);
+  text-decoration: none;
+}
 textarea {
   outline: none;
   resize: none;
@@ -219,7 +222,6 @@ textarea {
   height: 100%;
   border: none;
   padding: 0.5rem;
-  font-size: 1rem;
   top: 4.5rem;
   bottom: 0;
   background: var(--bg-textarea);
@@ -243,6 +245,11 @@ button:hover,
 .app-btn:hover {
   cursor: pointer;
   background: var(--bg-hover-button);
+}
+button.danger{
+  border:1px solid var(--red);
+  color:var(--lightgrey);
+  background:var(--red);
 }
 button[disabled] {
   color: var(--text-color-button-disabled);

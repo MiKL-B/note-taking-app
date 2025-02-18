@@ -5,7 +5,7 @@
 import { RouterView } from "vue-router";
 import { listen } from "@tauri-apps/api/event";
 export default {
-  name: 'App',
+  name: "App",
   components: {
     RouterView,
   },
@@ -14,6 +14,7 @@ export default {
       language: "en",
       theme: "light",
       font: "Inter",
+      fontSize: 16,
     };
   },
 
@@ -41,6 +42,14 @@ export default {
     }
     this.font = storedFont;
     this.updateFont(this.font);
+
+    // font size
+    let storedFontSize = localStorage.getItem("font-size");
+    if (!storedFontSize) {
+      storedFontSize = 16;
+    }
+    this.fontSize = storedFontSize;
+    this.updateFontSize(this.fontSize);
   },
   methods: {
     // language
@@ -72,6 +81,21 @@ export default {
       const elements = document.querySelectorAll("*");
       elements.forEach((element) => {
         element.style.fontFamily = newFont;
+      });
+    },
+    // font size
+    updateFontSize(newSize) {
+      localStorage.setItem("font-size", newSize);
+      listen("font-size-changed", (event) => {
+        const elements = document.querySelectorAll("textarea");
+        elements.forEach((element) => {
+          element.style.fontSize = event.payload + "px";
+        });
+      });
+
+      const elements = document.querySelectorAll("textarea");
+      elements.forEach((element) => {
+        element.style.fontSize = newSize + "px";
       });
     },
   },

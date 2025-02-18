@@ -54,7 +54,22 @@
       </template>
     </DetailsCompo>
     <span class="toolbar-btn" @click="openWindow">{{ $t("settings") }}</span>
-    <span class="toolbar-btn" @click="displayAbout">{{ $t("about") }}</span>
+    <!-- <span class="toolbar-btn" @click="displayAbout">{{ $t("about") }}</span> -->
+    <DetailsCompo :title="$t('about')" btn="toolbar-btn">
+      <template v-slot:content>
+        <li class="flex align-center gap-4">
+          <a href="https://github.com/MiKL-B/" target="_blank">{{$t('website')}}</a>
+        </li>
+        <li @click="displayAbout" class="flex align-center gap-4">
+          {{ $t("developer") }}
+        </li>
+        <!-- <hr class="separator-x" />
+        <li>Kanban</li>
+        <li>Schedule</li>
+        <li>Drawing</li> -->
+      </template>
+    </DetailsCompo>
+    
   </div>
 </template>
 

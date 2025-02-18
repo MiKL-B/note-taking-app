@@ -49,6 +49,7 @@
           </span>
         </li>
       </ul>
+ 
     </div>
     <!-- insert -->
     <select v-model="insertValue" @change="insertItem" :title="$t('insert')">
@@ -135,7 +136,7 @@ export default {
     return {
       isPreviewMode: false,
       isVisibleSuggestionList: false,
-      secondList:this.tags,
+      secondList:[],
       input: "",
       status: ["todo", "inprogress", "finished", "archived"],
       suggestions: [],
@@ -159,6 +160,7 @@ export default {
       ],
     };
   },
+
   methods: {
     handleScroll(event) {
       const scrollSpeed = 0.2;
@@ -204,11 +206,11 @@ export default {
       } else {
         this.suggestions = [];
       }
+  
     },
     selectSuggestion(suggestion) {
       this.input = suggestion.name;
       this.suggestions = [];
-      this.secondList = this.tags
       this.isVisibleSuggestionList = false;
       this.addTagToNote();
     },

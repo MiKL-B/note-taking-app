@@ -7,6 +7,14 @@
     </select>
     <span class="setting-info">{{ $t("font_description") }}</span>
   </div>
+  <div class="field">
+    <label for="font-size">{{ $t("font_size") }}</label>
+    <select name="font-size" v-model="fontSize" @change="updateFontSize">
+      <option disabled selected>{{ $t("select_font_size") }}</option>
+      <option v-for="size in fontsSize" :value="size">{{ size }}</option>
+    </select>
+    <span class="setting-info">{{ $t("font_size_description") }}</span>
+  </div>
 </template>
 
 <script>
@@ -17,6 +25,8 @@ export default {
     return {
       font: "Inter",
       fonts: ["Inter", "Roboto", "Space Grotesk"],
+      fontSize: 16,
+      fontsSize: [12, 14, 16, 18, 20, 22, 24, 26],
     };
   },
   mounted() {
@@ -25,7 +35,14 @@ export default {
       storedFont = "Inter";
     }
     this.font = storedFont;
-    this.updateFont()
+    this.updateFont();
+
+    let storedFontSize = localStorage.getItem("font-size");
+    if (!storedFontSize) {
+      storedFontSize = 16;
+    }
+    this.fontSize = storedFontSize;
+    this.updateFontSize();
   },
 
   methods: {
@@ -36,6 +53,14 @@ export default {
         element.style.fontFamily = this.font;
       });
       emit("font-changed", this.font);
+    },
+    updateFontSize() {
+      localStorage.setItem("font-size", this.fontSize);
+      const elements = document.querySelectorAll("textarea");
+      elements.forEach((element) => {
+        element.style.fontSize = this.fontSize + "px";
+      });
+      emit("font-size-changed", this.fontSize);
     },
   },
 };

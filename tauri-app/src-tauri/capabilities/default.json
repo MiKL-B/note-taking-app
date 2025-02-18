@@ -23,6 +23,8 @@
     "fs:allow-desktop-meta-recursive",
     "fs:allow-resource-read-recursive",
     "fs:allow-resource-meta-recursive",
-    "fs:allow-applocaldata-write"
+    "fs:allow-applocaldata-write",
+    "opener:default",
+    "opener:allow-open-url"
   ]
 }

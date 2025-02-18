@@ -4,15 +4,8 @@
     <LanguageSwitcher />
     <FontSwitcher/>
     <ThemeSwitcher />
-
-        <!-- 
-    <select name="" id="">
-      <option value="" disabled selected>{{$t('font_size')}}</option>
-      <option value="">12</option>
-      <option value="">14</option>
-      <option value="">16</option>
-      <option value="">18</option>
-    </select> -->
+    <hr class="separator-x">
+    <button class="danger" @click="resetSettings">{{$t('reset_settings')}}</button>
   </div>
 </template>
 
@@ -29,6 +22,15 @@ export default {
     FontSwitcher,
     ThemeSwitcher,
   },
+  methods:{
+    resetSettings(){
+      localStorage.removeItem("theme")
+      localStorage.removeItem("font")
+      localStorage.removeItem("language")
+      localStorage.removeItem("font-size")
+      window.location.reload()
+    }
+  }
 };
 </script>
 <style>
