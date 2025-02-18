@@ -940,7 +940,7 @@ export default {
   height: 100%;
 }
 #column-left {
-  max-width: 250px;
+  max-width: 200px;
 }
 #column-middle {
   max-width: 263.5px;

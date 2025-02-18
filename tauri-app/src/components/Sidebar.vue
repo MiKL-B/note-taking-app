@@ -6,7 +6,7 @@
       @click="selectFilter('allnotes')"
       :class="{ filterselected: selectedFilter === 'allnotes' }"
     >
-      <span class="flex align-center gap-4">
+      <span class="flex align-center gap-4 ">
         <File class="size-16 text-dark" />
         <span>{{ $t("allnotes") }}</span>
       </span>
@@ -224,12 +224,12 @@ export default {
 </script>
 <style>
 #sidebar {
-  padding: 0 0 0.5rem 0;
   height: calc(100vh - 66px);
-  overflow: auto;
+  overflow-y: auto;
   background: var(--bg-sidebar);
   color: var(--text-color-sidebar);
   border-right: var(--border);
+
 }
 
 .sidebar-item {

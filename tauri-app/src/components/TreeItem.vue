@@ -10,7 +10,7 @@
         <Folder v-else class="text-dark size-16" />
       </div>
       <File v-else class="text-dark size-16" />
-      {{ node.name }}
+      <span class="tree-item-ellipsis" :title="node.name">{{ node.name }}</span>
     </span>
     <span v-if="node.isDirectory">
       <ChevronDown v-if="!isOpen" class="text-dark size-16" />
@@ -36,6 +36,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-vue-next";
+
 export default {
   name: "TreeItem",
   props: {
@@ -99,5 +100,11 @@ export default {
   padding-left: 0.5rem;
   user-select: none;
   border-left:var(--border);
+}
+.tree-item-ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 120px;
 }
 </style>
