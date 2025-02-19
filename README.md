@@ -47,6 +47,7 @@
 
 # To fix
 - multiple tags notebar list
+- filter today sidebar 
 ---
 
 # To improve
@@ -57,6 +58,7 @@
 - Context menu 
 - Manage permissions for treeview
 - Add menu item documentation
+- remove open note demo mounted and move in file menu 
 ---
 
 # To Implement
