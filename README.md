@@ -61,6 +61,7 @@
 - Context menu 
 - Manage permissions for treeview
 - Add menu item documentation
+- Improve import notes tags with restrictions 
 ---
 
 # To Implement
@@ -81,14 +82,13 @@
 - can create many folders (vault) ?
 - Allow save delete etc for files, (note = file)
 
+- Create documentation
 - View kanban, schedule, drawing
 - App branding
 - Accessibility (title..)
 - Export PDF
-- Export import settings
 - Print
 - Set settings auto export pdf when saving note
-
 - Lock files / folders 
 - Debug with log files
 - Create alert, confirm, modal
