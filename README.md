@@ -37,6 +37,7 @@
 - sidebar overflow y
 - sort does not work
 - color markdown in dark mode
+- filter today sidebar 
 ---
 
 # Improved 
@@ -44,10 +45,11 @@
 - Improve Style markdown
 - insert: other elements like date, image...
 - Add menu item about info project and link github 
+- remove open note demo mounted and move in file menu 
+---
 
 # To fix
 - multiple tags notebar list
-- filter today sidebar 
 ---
 
 # To improve
@@ -58,7 +60,6 @@
 - Context menu 
 - Manage permissions for treeview
 - Add menu item documentation
-- remove open note demo mounted and move in file menu 
 ---
 
 # To Implement
