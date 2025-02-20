@@ -107,8 +107,6 @@
           </div>
           <div id="oneView" v-show="!showBoth">
             <div v-show="!isPreviewMode">
-              {{font}}
-              {{fontSize}}
               <textarea
                 :placeholder="$t('enter_text_here')"
                 v-model="selectedNote.content"

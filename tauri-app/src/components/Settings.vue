@@ -28,6 +28,10 @@
        <Check v-if="theme === currentTheme" class="size-16 text-dark"/>
        {{$t(theme)}}
        </li>
+       <hr class="separator-x">
+       <!-- reset -->
+
+       <li @click="resetSettings" class="text-red">{{$t('reset_settings')}}</li>
       </template>
     </DetailsCompo>
 </template>
@@ -89,7 +93,13 @@ export default {
       this.currentTheme = newTheme;
       localStorage.setItem("theme",this.currentTheme);
       document.documentElement.setAttribute("data-theme", this.currentTheme);
-      }
+    },
+    resetSettings(){
+      this.selectLanguage("en");
+      this.selectFont("Inter");
+      this.selectFontSize(16);
+      this.selectTheme("light");
+    }
   },
 };
 </script>

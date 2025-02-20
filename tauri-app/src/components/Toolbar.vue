@@ -13,9 +13,6 @@
         <li @click="onSubMenuClick('opennote')">
           {{ $t("opennote") }}
         </li>
-        <li @click="onSubMenuClick('opennotedemo')">
-          {{$t('opennotedemo')}}
-        </li>
         <li @click="onSubMenuClick('openfolder')">
           {{ $t("openfolder") }}
         </li>
@@ -61,16 +58,16 @@
     <!-- about -->
     <DetailsCompo :title="$t('about')" btn="toolbar-btn">
       <template v-slot:content>
-        <li class="flex align-center gap-4">
+        <li @click="onSubMenuClick('opennotedemo')">
+          {{$t('opennotedemo')}}
+        </li>
+        <hr class="separator-x">
+        <li>
           <a href="https://github.com/MiKL-B/" target="_blank">{{$t('website')}}</a>
         </li>
-        <li @click="displayAbout" class="flex align-center gap-4">
+        <li @click="displayAbout">
           {{ $t("developer") }}
         </li>
-        <!-- <hr class="separator-x" />
-        <li>Kanban</li>
-        <li>Schedule</li>
-        <li>Drawing</li> -->
       </template>
     </DetailsCompo>
     
