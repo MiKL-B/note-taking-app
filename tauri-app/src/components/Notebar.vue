@@ -15,7 +15,6 @@
       <input
         type="text"
         v-model="input"
-        @input="updateSuggestions"
         @keyup.enter="addTagToNote"
         :placeholder="$t('add_tags')"
         pattern="[a-zA-ZÀ-ÿ]+"
@@ -25,31 +24,19 @@
         @click="toggleSuggestion"
         class="suggestion-chevron size-16"
       />
-      <ul id="suggestion-list" v-if="suggestions.length > 0">
+
+      <ul id="suggestion-list" v-if="isVisibleSuggestionList && tags.length > 0">
         <li
           class="flex align-center gap-4"
-          v-for="suggestion in suggestions"
-          @click="selectSuggestion(suggestion)"
+          v-for="tag in tags"
+          @click="selectSuggestion(tag)"
         >
-          <Tag :style="`color: var(--${suggestion.color}) `" class="size-16" />
+          <Tag :style="`color: var(--${tag.color}) `" class="size-16" />
           <span>
-            {{ suggestion.name }}
+            {{ tag.name }}
           </span>
         </li>
       </ul>
-      <ul id="suggestion-list" v-else-if="isVisibleSuggestionList && secondList.length > 0">
-        <li
-          class="flex align-center gap-4"
-          v-for="suggestion in secondList"
-          @click="selectSuggestion(suggestion)"
-        >
-          <Tag :style="`color: var(--${suggestion.color}) `" class="size-16" />
-          <span>
-            {{ suggestion.name }}
-          </span>
-        </li>
-      </ul>
- 
     </div>
     <!-- insert -->
     <select v-model="insertValue" @change="insertItem" :title="$t('insert')">
@@ -136,10 +123,8 @@ export default {
     return {
       isPreviewMode: false,
       isVisibleSuggestionList: false,
-      secondList:[],
       input: "",
       status: ["todo", "inprogress", "finished", "archived"],
-      suggestions: [],
       insertValue: "",
       insertItems: [
         "heading1",
@@ -177,7 +162,6 @@ export default {
     addTagToNote() {
       this.$emit("add-tag-note", this.input);
       this.input = "";
-      this.suggestions = [];
     },
     duplicateNote() {
       this.$emit("duplicate-note");
@@ -198,22 +182,12 @@ export default {
     changeNoteStatus(value) {
       this.$emit("update-status", value);
     },
-    updateSuggestions() {
-      if (this.input) {
-        this.suggestions = this.tags.filter((word) =>
-          word.name.toLowerCase().includes(this.input.toLowerCase())
-        );
-      } else {
-        this.suggestions = [];
-      }
-  
-    },
+
     selectSuggestion(suggestion) {
       this.input = suggestion.name;
-      this.suggestions = [];
-      this.isVisibleSuggestionList = false;
       this.addTagToNote();
     },
+
     insertItem() {
       this.$emit("insert-item", this.insertValue);
       this.insertValue = "";

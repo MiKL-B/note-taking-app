@@ -9,14 +9,14 @@
         <!-- <li @click="onSubMenuClick('newfolder')">
           {{ $t("newfolder") }}
         </li> -->
-        <hr class="separator-x">
+        <hr class="separator-x" />
         <li @click="onSubMenuClick('opennote')">
           {{ $t("opennote") }}
         </li>
         <li @click="onSubMenuClick('openfolder')">
           {{ $t("openfolder") }}
         </li>
-        <hr class="separator-x">
+        <hr class="separator-x" />
         <!-- <li @click="onSubMenuClick('save')">
           {{ $t("save") }}
         </li> -->
@@ -54,23 +54,24 @@
       </template>
     </DetailsCompo>
     <!-- settings -->
-    <Settings/>
+    <Settings />
     <!-- about -->
     <DetailsCompo :title="$t('about')" btn="toolbar-btn">
       <template v-slot:content>
         <li @click="onSubMenuClick('opennotedemo')">
-          {{$t('opennotedemo')}}
+          {{ $t("opennotedemo") }}
         </li>
-        <hr class="separator-x">
+        <hr class="separator-x" />
         <li>
-          <a href="https://github.com/MiKL-B/" target="_blank">{{$t('website')}}</a>
+          <a href="https://github.com/MiKL-B/" target="_blank">{{
+            $t("website")
+          }}</a>
         </li>
         <li @click="displayAbout">
           {{ $t("developer") }}
         </li>
       </template>
     </DetailsCompo>
-    
   </div>
 </template>
 
@@ -83,7 +84,7 @@ export default {
   components: {
     Check,
     DetailsCompo,
-    Settings
+    Settings,
   },
   emits: [
     "action-clicked",

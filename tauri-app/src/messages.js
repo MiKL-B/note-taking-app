@@ -40,7 +40,7 @@ const messages = {
     developer: "Developer",
     developed: "Application developed by",
     // sidebar
-    allnotes: "All notes",
+    allnotes: "Notes",
     todo: "To do",
     inprogress: "In progress",
     finished: "Finished",

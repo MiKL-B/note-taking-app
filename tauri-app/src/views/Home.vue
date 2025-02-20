@@ -158,7 +158,12 @@ import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
 
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { readTextFile, writeTextFile, readDir } from "@tauri-apps/plugin-fs";
+import {
+  readTextFile,
+  writeTextFile,
+  readDir,
+  BaseDirectory,
+} from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join } from "@tauri-apps/api/path";
 
@@ -261,7 +266,7 @@ export default {
           return this.notes.filter((note: Note) => note.status === "todo");
         case "inprogress":
           return this.notes.filter(
-            (note: Note) => note.status === "inprogress"
+            (note: Note) => note.status === "inprogress",
           );
         case "finished":
           return this.notes.filter((note: Note) => note.status === "finished");
@@ -278,14 +283,14 @@ export default {
           return this.notes.filter((note: Note) => note.pinned === true);
         case "today":
           return this.notes.filter(
-            (note) => note.date.split(" ")[0] === this.getToday()
+            (note) => note.date.split(" ")[0] === this.getToday(),
           );
         case "important":
           return this.notes.filter((note: Note) => note.important === true);
         default:
           return this.notes.filter((note: Note) => {
             return note.tags.some((tag) =>
-              tag.name.toLowerCase().includes(this.filter.toLowerCase())
+              tag.name.toLowerCase().includes(this.filter.toLowerCase()),
             );
           });
       }
@@ -299,7 +304,7 @@ export default {
         }).length,
         todo: this.notes.filter((note: Note) => note.status === "todo").length,
         inProgress: this.notes.filter(
-          (note: Note) => note.status === "inprogress"
+          (note: Note) => note.status === "inprogress",
         ).length,
         finished: this.notes.filter((note: Note) => note.status === "finished")
           .length,
@@ -307,7 +312,7 @@ export default {
           .length,
         pinned: this.notes.filter((note: Note) => note.pinned === true).length,
         today: this.notes.filter(
-          (note) => note.date.split(" ")[0] === this.getToday()
+          (note) => note.date.split(" ")[0] === this.getToday(),
         ).length,
         important: this.notes.filter((note: Note) => note.important === true)
           .length,
@@ -502,7 +507,7 @@ export default {
         this.showNotification(
           "Erreur lors de la lecture du dossier:",
           err,
-          "red"
+          "red",
         );
       }
     },
@@ -538,7 +543,7 @@ export default {
           } catch (err) {
             console.error(
               `Erreur lors de la lecture du fichier ${entry.name} :`,
-              err
+              err,
             );
           }
         } else if (entry.isDirectory) {
@@ -595,7 +600,7 @@ export default {
         this.notes.push(note);
         this.showNotification(
           this.$t("note_created", { note_name: note.name }),
-          "green"
+          "green",
         );
       } catch (error) {
         console.error("Erreur lors de la lecture du fichier : ", error);
@@ -629,14 +634,21 @@ export default {
     },
     // note
     async createNote() {
-      // let file = await writeTextFile('file.txt', "Hello world", { baseDir: BaseDirectory.AppLocalData });
       let note = new Note(this.generateIncrementedName("Note"));
       this.notes.push(note);
+      this.createFile(note);
       this.showNotification(
         this.$t("note_created", { note_name: note.name }),
-        "green"
+        "green",
       );
       this.setDelayCreationNote();
+    },
+    async createFile(note) {
+      let filename = note.name + ".txt";
+      let content = note.content;
+      let file = await writeTextFile(filename, content, {
+        baseDir: BaseDirectory.Desktop,
+      }); // change to AppLocalData
     },
     setDelayCreationNote() {
       const duration = 500;
@@ -679,7 +691,7 @@ export default {
       this.notes.push(note);
       this.showNotification(
         this.$t("note_duplicated", { note_name: this.selectedNote.name }),
-        "green"
+        "green",
       );
       this.setDelayCreationNote();
     },
@@ -750,7 +762,7 @@ export default {
       if (index > -1) {
         for (let i = 0; i < this.notes.length; i++) {
           this.notes[i].tags = this.notes[i].tags.filter(
-            (t) => t.id !== tag.id
+            (t) => t.id !== tag.id,
           );
         }
 
@@ -770,10 +782,10 @@ export default {
       };
 
       const existingTag = this.tags.find(
-        (t) => t.name.toLocaleString() === word.toLowerCase()
+        (t) => t.name.toLocaleString() === word.toLowerCase(),
       );
       const existingTagNote = this.selectedNote.tags.find(
-        (t) => t.name.toLowerCase() === word.toLowerCase()
+        (t) => t.name.toLowerCase() === word.toLowerCase(),
       );
       if (!pattern.test(word)) {
         return;
@@ -874,12 +886,15 @@ export default {
         jsonParsed.notes.forEach((note) => {
           this.notes.push(note);
         });
+
         jsonParsed.tags.forEach((tag) => {
           this.tags.push(tag);
         });
+
         this.showNotification(this.$t("data_imported"), "green");
       } catch (error) {
         console.error(error);
+        this.showNotification(error, "red");
       }
     },
     syncScroll(source) {
