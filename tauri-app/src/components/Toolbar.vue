@@ -56,8 +56,9 @@
         <li>Drawing</li> -->
       </template>
     </DetailsCompo>
-    <span class="toolbar-btn" @click="openWindow">{{ $t("settings") }}</span>
-    <!-- <span class="toolbar-btn" @click="displayAbout">{{ $t("about") }}</span> -->
+    <!-- settings -->
+    <Settings/>
+    <!-- about -->
     <DetailsCompo :title="$t('about')" btn="toolbar-btn">
       <template v-slot:content>
         <li class="flex align-center gap-4">
@@ -79,16 +80,17 @@
 <script>
 import { Check } from "lucide-vue-next";
 import DetailsCompo from "./DetailsCompo.vue";
+import Settings from "./Settings.vue";
 export default {
   name: "Toolbar",
   components: {
     Check,
     DetailsCompo,
+    Settings
   },
   emits: [
     "action-clicked",
     "display-about",
-    "open-window",
     "toggle-sidebar",
     "toggle-notelist",
   ],
@@ -96,17 +98,9 @@ export default {
     return {
       isVisibleSidebar: true,
       isVisibleNotelist: true,
-      items:[
-        {
-          label:"new"
-        }
-      ]
     };
   },
   methods: {
-    openWindow() {
-      this.$emit("open-window");
-    },
     onSubMenuClick(action) {
       this.$emit("action-clicked", action);
     },

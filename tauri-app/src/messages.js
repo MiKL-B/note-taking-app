@@ -7,6 +7,8 @@ const messages = {
     words: "Words",
     // toolbar
     language: "Language",
+    en:"English",
+    fr:"French",
     theme: "Theme",
     file: "File",
     newnote: "New note",
@@ -123,6 +125,8 @@ const messages = {
     words: "Mots",
     // toolbar
     language: "Langue",
+    en:"Anglais",
+    fr:"Français",
     theme: "Thème",
     file: "Fichier",
     newnote: "Nouvelle note",

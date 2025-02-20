@@ -59,7 +59,7 @@ export default {
   top: 33px;
   width: 200px;
 }
-.details-menu li {
+.details-menu li{
   list-style-type: none;
   padding: 0.2rem 0.5rem;
   margin: 0.2rem;
@@ -69,6 +69,12 @@ export default {
 .details-menu li:hover {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
+}
+.details-menu span{
+  padding: 0.2rem 0.5rem;
+  margin:0.2rem;
+  display: flex;
+  font-weight: 600;
 }
 summary {
   list-style-type: none;

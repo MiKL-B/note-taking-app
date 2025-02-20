@@ -4,6 +4,8 @@
 //   state: () => ({
 //     theme: "light",
 //     language: "en",
+//     font:"Inter",
+//     fontSize:16,
 //   }),
 //   actions: {
 //     setTheme(newTheme) {

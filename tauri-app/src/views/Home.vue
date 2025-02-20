@@ -5,7 +5,6 @@
     <Toolbar
       @action-clicked="handleAction"
       @display-about="displayAbout"
-      @open-window="openWindow"
       @toggle-sidebar="toggleSidebar"
       @toggle-notelist="toggleNoteList"
     />
@@ -108,6 +107,8 @@
           </div>
           <div id="oneView" v-show="!showBoth">
             <div v-show="!isPreviewMode">
+              {{font}}
+              {{fontSize}}
               <textarea
                 :placeholder="$t('enter_text_here')"
                 v-model="selectedNote.content"
@@ -142,6 +143,13 @@
 </template>
 
 <script lang="ts">
+import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
+
+import Note from "../note.ts";
+
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+
 import Titlebar from "../components/Titlebar.vue";
 import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
@@ -150,15 +158,12 @@ import Notebar from "../components/Notebar.vue";
 import Statusbar from "../components/Statusbar.vue";
 import Notification from "../components/Notification.vue";
 import FilterNote from "../components/FilterNote.vue";
-import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
+
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile, readDir } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
-import Note from "../note.ts";
 import { join } from "@tauri-apps/api/path";
+
 const appWindow = getCurrentWindow();
 export default {
   name: "Home",
@@ -200,29 +205,15 @@ export default {
       isVisibleSidebar: true,
       isVisibleNotelist: true,
       tree: null,
-      fontSize: 16,
-      font: "Inter",
+      font: localStorage.getItem("font") || "Inter",
+      fontSize: localStorage.getItem("font-size") || 16,
     };
-  },
-  mounted() {
-    // font
-    let storedFont = localStorage.getItem("font");
-    if (!storedFont) {
-      storedFont = "Inter";
-    }
-    this.font = storedFont;
-    // font size
-    let storedFontSize = localStorage.getItem("font-size");
-    if (!storedFontSize) {
-      storedFontSize = 16 + "px";
-    }
-    this.fontSize = storedFontSize + "px";
   },
 
   computed: {
     dynamicStyle() {
       return {
-        fontSize: this.fontSize,
+        fontSize: this.fontSize + "px",
         fontFamily: this.font,
       };
     },
@@ -906,36 +897,6 @@ export default {
     displayAbout() {
       let msg = `Thoth 0.1.0\r\n${this.$t("developed")}`;
       alert(msg + " Becquer Michaël.");
-    },
-    openWindow() {
-      const webview = new WebviewWindow("settings_window", {
-        url: "./settings-window",
-        decorations: false,
-        title: "Settings",
-        resizable: false,
-        alwaysOnTop: true,
-        center: true,
-        width: 600,
-        height: 533,
-      });
-      webview.once("tauri://created", function () {
-        document.body.style.pointerEvents = "none";
-        document.body.style.userSelect = "none";
-        document.body.style.opacity = "0.5";
-      });
-
-      webview.once("tauri://close-requested", function () {
-        webview.close();
-      });
-      webview.once("tauri://destroyed", function () {
-        document.body.style.pointerEvents = "auto";
-        document.body.style.userSelect = "auto";
-        document.body.style.opacity = "1";
-      });
-
-      webview.once("tauri://error", function (e) {
-        console.error("Erreur lors de la création du webview :", e);
-      });
     },
   },
   beforeDestroy() {
