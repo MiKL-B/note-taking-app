@@ -38,6 +38,7 @@
 - sort does not work
 - color markdown in dark mode
 - filter today sidebar 
+- emits and listen data from settings window
 ---
 
 # Improved 
