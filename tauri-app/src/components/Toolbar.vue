@@ -13,6 +13,9 @@
         <li @click="onSubMenuClick('opennote')">
           {{ $t("opennote") }}
         </li>
+        <li @click="onSubMenuClick('opennotedemo')">
+          {{$t('opennotedemo')}}
+        </li>
         <li @click="onSubMenuClick('openfolder')">
           {{ $t("openfolder") }}
         </li>

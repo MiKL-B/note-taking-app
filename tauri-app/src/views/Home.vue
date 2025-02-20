@@ -205,7 +205,6 @@ export default {
     };
   },
   mounted() {
-    this.openNoteDemo();
     // font
     let storedFont = localStorage.getItem("font");
     if (!storedFont) {
@@ -383,18 +382,11 @@ export default {
       }
       this.selectedNote.content += text + "\r\n";
     },
-    getLocale() {
-      let locale = "fr-FR";
-      if (this.$i18n.locale === "en") {
-        locale = "en-EN";
-      }
-      return locale;
-    },
     getToday() {
-      return new Date().toLocaleString(this.getLocale()).split(" ")[0];
+      return new Date().toLocaleString("fr-FR").split(" ")[0];
     },
     getTimeToday() {
-      return new Date().toLocaleString(this.getLocale()).split(" ")[1];
+      return new Date().toLocaleString("fr-FR").split(" ")[1];
     },
     sortNotes() {
       this.notes.sort((a: Note, b: Note) => {
@@ -451,6 +443,9 @@ export default {
         //   break;
         case "opennote":
           this.openDocument();
+          break;
+        case "opennotedemo":
+          this.openNoteDemo();
           break;
         case "openfolder":
           this.openFolder();
