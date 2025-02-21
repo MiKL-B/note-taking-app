@@ -39,6 +39,7 @@
 - color markdown in dark mode
 - filter today sidebar 
 - emits and listen data from settings window
+- multiple tags notebar list
 ---
 
 # Improved 
@@ -50,7 +51,7 @@
 ---
 
 # To fix
-- multiple tags notebar list
+
 ---
 
 # To improve
