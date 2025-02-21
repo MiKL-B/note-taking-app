@@ -1,15 +1,12 @@
 <template>
   <div id="home-container">
     <Titlebar />
-
-    <Toolbar
-      @action-clicked="handleAction"
-      @display-about="displayAbout"
-      @toggle-sidebar="toggleSidebar"
-      @toggle-notelist="toggleNoteList"
-    />
-    <div class="row">
-      <div id="column-left" class="col-3" v-if="isVisibleSidebar">
+    <Toolbar @action-clicked="handleAction" @selectView="selectView"/>
+    <div v-if="currentView === 'kanban'">
+      kanban
+    </div>
+    <div v-else class="row">
+      <div id="column-left" class="col-3">
         <Sidebar
           :tags="tags"
           :tree="tree"
@@ -20,9 +17,9 @@
           @set-color="setColorTag"
         />
       </div>
-      <div id="column-middle" class="col-3" v-if="isVisibleNotelist">
-        <!-- filternote -->
-        <FilterNote
+      <div id="column-middle" class="col-3">
+        <!-- notefilter -->
+        <NoteFilter
           :canCreateNote="canCreateNote"
           v-model="searchNote"
           @create-note="createNote"
@@ -121,7 +118,7 @@
               v-html="getMarkdownHtml"
             ></div>
           </div>
-          <Statusbar
+          <NoteStatusbar
             :characterCount="getCharacterNoteCount"
             :wordCount="getWordNoteCount"
           />
@@ -151,11 +148,11 @@ import DOMPurify from "dompurify";
 import Titlebar from "../components/Titlebar.vue";
 import Toolbar from "../components/Toolbar.vue";
 import Sidebar from "../components/Sidebar.vue";
+import NoteFilter from "../components/NoteFilter.vue";
 import Notelist from "../components/Notelist.vue";
 import Notebar from "../components/Notebar.vue";
-import Statusbar from "../components/Statusbar.vue";
+import NoteStatusbar from "../components/NoteStatusbar.vue";
 import Notification from "../components/Notification.vue";
-import FilterNote from "../components/FilterNote.vue";
 
 import { open, save } from "@tauri-apps/plugin-dialog";
 import {
@@ -174,11 +171,11 @@ export default {
     Titlebar,
     Toolbar,
     Sidebar,
+    NoteFilter,
     Notelist,
     Notebar,
+    NoteStatusbar,
     Notification,
-    FilterNote,
-    Statusbar,
     Plus,
     Eye,
     EyeOff,
@@ -205,11 +202,10 @@ export default {
       sortedDate: true,
       timerCreateNote: null,
       canCreateNote: true,
-      isVisibleSidebar: true,
-      isVisibleNotelist: true,
       tree: null,
       font: localStorage.getItem("font") || "Inter",
       fontSize: localStorage.getItem("font-size") || 16,
+      currentView:"",
     };
   },
 
@@ -320,6 +316,9 @@ export default {
     },
   },
   methods: {
+    selectView(newView){
+      this.currentView = newView
+    },
     insertItem(item: string) {
       let text = "";
       switch (item) {
@@ -464,12 +463,7 @@ export default {
           break;
       }
     },
-    toggleSidebar() {
-      this.isVisibleSidebar = !this.isVisibleSidebar;
-    },
-    toggleNoteList() {
-      this.isVisibleNotelist = !this.isVisibleNotelist;
-    },
+
     openNoteDemo() {
       const selectedFile = "/Thoth demo.txt";
       const fileName = selectedFile
@@ -906,10 +900,6 @@ export default {
       } else {
         div1.scrollTop = div2.scrollTop;
       }
-    },
-    displayAbout() {
-      let msg = `Thoth 0.1.0\r\n${this.$t("developed")}`;
-      alert(msg + " Becquer Michaël.");
     },
   },
   beforeDestroy() {

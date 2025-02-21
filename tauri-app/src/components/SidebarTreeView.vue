@@ -19,7 +19,7 @@
   </li>
   <ul v-if="isOpen && node.children && node.children.length > 0">
     <li class="tree-children">
-      <TreeItem
+      <SidebarTreeView
         v-for="(child, index) in sortedChildren"
         :key="index"
         :node="child"
@@ -38,7 +38,7 @@ import {
 } from "lucide-vue-next";
 
 export default {
-  name: "TreeItem",
+  name: "SidebarTreeView",
   props: {
     node: {
       type: Object,

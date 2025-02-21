@@ -61,7 +61,7 @@
 import { Check } from "lucide-vue-next";
 import DetailsCompo from "./DetailsCompo.vue";
 export default {
-  name: "Settings",
+  name: "ToolbarSettings",
   components: {
     Check,
     DetailsCompo,

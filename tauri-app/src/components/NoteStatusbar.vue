@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "Statusbar",
+  name: "NoteStatusbar",
   props: ["characterCount","wordCount"],
 };
 </script>

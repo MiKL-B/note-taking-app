@@ -48,7 +48,7 @@ import {
 import DetailsCompo from "./DetailsCompo.vue";
 
 export default {
-  name: "FilterNote",
+  name: "NoteFilter",
   components: {
     Plus,
     ArrowDownAZ,

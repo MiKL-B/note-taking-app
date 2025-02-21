@@ -2,10 +2,6 @@
   <div v-if="showMenu" class="context-menu" :style="menuStyle">
     <ul>
       <slot name="content"></slot>
-      <!-- <li @click="menuAction('Action 1')">Action 1</li>
-    <hr class="separator-x" />
-    <li @click="menuAction('Action 2')">Action 2</li>
-    <li @click="menuAction('Action 3')">Action 3</li> -->
     </ul>
   </div>
 </template>
