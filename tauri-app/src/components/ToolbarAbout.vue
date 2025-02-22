@@ -1,5 +1,5 @@
 <template>
-	<DetailsCompo :title="$t('about')" btn="toolbar-btn">
+	<MenuDropdown :title="$t('about')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li @click="onSubMenuClick('opennotedemo')">
 				{{ $t("opennotedemo") }}
@@ -14,17 +14,17 @@
 				{{ $t("developer") }}
 			</li>
 		</template>
-	</DetailsCompo>
+	</MenuDropdown>
 </template>
 
 <script>
-import DetailsCompo from "./DetailsCompo.vue";
+import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
 	name: "ToolbarAbout",
 		emits:["action-clicked"],
 	components:{
-		DetailsCompo
+		MenuDropdown
 	},
 	methods: {
 		onSubMenuClick(action) {

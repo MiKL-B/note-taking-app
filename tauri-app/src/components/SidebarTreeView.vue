@@ -18,13 +18,21 @@
     </span>
   </li>
   <ul v-if="isOpen && node.children && node.children.length > 0">
-    <li class="tree-children">
+      <li class="tree-children">
       <SidebarTreeView
         v-for="(child, index) in sortedChildren"
         :key="index"
         :node="child"
       />
-    </li>
+    </li> 
+    <!-- <li
+      v-for="(child, index) in sortedChildren"
+      :key="index"
+      class="tree-children"
+      @click="selectNote(child)"
+    >
+      <SidebarTreeView :node="child"/>
+    </li> -->
   </ul>
 </template>
 
@@ -99,9 +107,9 @@ export default {
 .tree-children {
   padding-left: 0.5rem;
   user-select: none;
-  border-left:var(--border);
+  border-left: var(--border);
 }
-.tree-item-ellipsis{
+.tree-item-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

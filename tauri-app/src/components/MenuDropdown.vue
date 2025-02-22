@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "DetailsCompo",
+  name: "MenuDropdown",
   props: ["title", "btn", "icon", "styleIcon"],
 
   data() {

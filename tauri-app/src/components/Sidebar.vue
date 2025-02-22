@@ -13,7 +13,7 @@
       <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
     <!-- folder -->
-    <SidebarTreeView v-if="tree !== null" :node="tree" />
+    <SidebarTreeView v-if="tree !== null" :node="tree"/>
 
     <!-- others -->
     <li
@@ -53,7 +53,7 @@
         v-for="tag in tags"
       >
         <span class="flex align-center gap-4">
-          <DetailsCompo
+          <MenuDropdown
             title=""
             :icon="tagIcon"
             :styleIcon="`color: var(--${tag.color})`"
@@ -68,7 +68,7 @@
                 <span>{{ color }}</span>
               </li>
             </template>
-          </DetailsCompo>
+          </MenuDropdown>
 
           <input
             class="sidebar-input-tag"
@@ -98,7 +98,7 @@ import {
   ChevronUp,
   Folder,
 } from "lucide-vue-next";
-import DetailsCompo from "./DetailsCompo.vue";
+import MenuDropdown from "./MenuDropdown.vue";
 import SidebarTreeView from "./SidebarTreeView.vue";
 export default {
   name: "Sidebar",
@@ -133,7 +133,7 @@ export default {
     ChevronDown,
     ChevronUp,
     Folder,
-    DetailsCompo,
+    MenuDropdown,
     SidebarTreeView,
   },
   data() {

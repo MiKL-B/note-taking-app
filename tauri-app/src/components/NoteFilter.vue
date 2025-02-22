@@ -1,23 +1,22 @@
 <template>
-  <div id="filter-note">
-    
-    <DetailsCompo title="" :icon="filter" btn="app-btn">
+  <div id="note-filter">
+    <MenuDropdown title="" :icon="filter" btn="app-btn">
       <template v-slot:content>
         <li class="flex gap-4 align-center" @click="sortNotesAZ">
           <ArrowDownAZ v-if="sortAZ" class="size-16" />
           <ArrowUpZA v-else class="size-16" />
-          <span>{{ sortAZ ? $t("sortZA") : $t("sortAZ") }}</span>
+          {{ sortAZ ? $t("sortZA") : $t("sortAZ") }}
         </li>
         <li class="flex gap-4 align-center" @click="sortNotesByDate">
           <Calendar class="size-16" />
-          <span>{{ sortDate ? $t("sort_newest") : $t("sort_oldest") }}</span>
+          {{ sortDate ? $t("sort_newest") : $t("sort_oldest") }}
         </li>
         <li class="flex gap-4 align-center" @click="clearFilterSort">
           <FilterX class="size-16" />
-          <span>{{ $t("clear_filter") }}</span>
+          {{ $t("clear_filter") }}
         </li>
       </template>
-    </DetailsCompo>
+    </MenuDropdown>
 
     <input
       type="text"
@@ -45,7 +44,7 @@ import {
   Calendar,
   FilterX,
 } from "lucide-vue-next";
-import DetailsCompo from "./DetailsCompo.vue";
+import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
   name: "NoteFilter",
@@ -56,7 +55,7 @@ export default {
     Filter,
     Calendar,
     FilterX,
-    DetailsCompo,
+    MenuDropdown,
   },
   props: ["modelValue", "canCreateNote"],
   emits: [
@@ -70,7 +69,7 @@ export default {
     return {
       sortAZ: true,
       sortDate: true,
-      filter:Filter
+      filter: Filter,
     };
   },
   methods: {
@@ -96,3 +95,13 @@ export default {
   },
 };
 </script>
+<style>
+#note-filter {
+  border-bottom: var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 42px;
+  padding:0.2rem;
+}
+</style>

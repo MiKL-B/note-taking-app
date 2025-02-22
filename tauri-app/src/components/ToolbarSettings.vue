@@ -1,5 +1,5 @@
 <template>
-  <DetailsCompo :title="$t('settings')" btn="toolbar-btn">
+  <MenuDropdown :title="$t('settings')" btn="toolbar-btn">
     <template v-slot:content>
       <!-- language -->
       <span>{{ $t("language") }}</span>
@@ -54,17 +54,17 @@
         {{ $t("reset_settings") }}
       </li>
     </template>
-  </DetailsCompo>
+  </MenuDropdown>
 </template>
 
 <script>
 import { Check } from "lucide-vue-next";
-import DetailsCompo from "./DetailsCompo.vue";
+import MenuDropdown from "./MenuDropdown.vue";
 export default {
   name: "ToolbarSettings",
   components: {
     Check,
-    DetailsCompo,
+    MenuDropdown,
   },
   data() {
     return {

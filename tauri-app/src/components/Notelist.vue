@@ -43,12 +43,13 @@
         <p class="note-content">
           {{ note.content }}
         </p>
-        <span class="note-date">{{ note.date }}</span>
+        <span class="note-date">{{ note.createdDate }}</span>
   
       </div>
       <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
     </div>
     <!-- context to move -->
+
     <div v-if="showMenu" class="context" :style="menuStyle">
       <ul class="context-menu">
         <li @click="createNote" class="flex align-center gap-4">

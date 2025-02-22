@@ -1,5 +1,5 @@
 <template>
-	<DetailsCompo :title="$t('file')" btn="toolbar-btn">
+	<MenuDropdown :title="$t('file')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li
 				v-for="item in menuItems"
@@ -9,15 +9,15 @@
 				{{ $t(item) }}
 			</li>
 		</template>
-	</DetailsCompo>
+	</MenuDropdown>
 </template>
 <script>
-import DetailsCompo from "./DetailsCompo.vue";
+import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
 	name: "ToolbarFile",
 	components: {
-		DetailsCompo,
+		MenuDropdown,
 	},
 	emits: ["action-clicked"],
 	data() {
@@ -26,6 +26,7 @@ export default {
 				"newnote",
 				"opennote",
 				"openfolder",
+				"save",
 				"saveas",
 				"exportjson",
 				"importjson",

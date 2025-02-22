@@ -1,5 +1,5 @@
 <template>
-	<DetailsCompo :title="$t('view')" btn="toolbar-btn">
+	<MenuDropdown :title="$t('view')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li
 				@click="selectView(view)"
@@ -10,18 +10,18 @@
 				{{ $t(view) }}
 			</li>
 		</template>
-	</DetailsCompo>
+	</MenuDropdown>
 </template>
 
 <script>
 import { Check } from "lucide-vue-next";
-import DetailsCompo from "./DetailsCompo.vue";
+import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
 	name: "ToolbarView",
 	components: {
 		Check,
-		DetailsCompo,
+		MenuDropdown,
 	},
 	emits: ["select-view"],
 	data() {

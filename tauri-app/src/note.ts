@@ -3,11 +3,12 @@ interface Tag {
   color: string;
 }
 
-export default class Note {
+export default class DataNote {
   name: string;
   id:number;
   timestamp:number;
-  date :string;
+  createdDate :string;
+  updatedDate: string;
   status :string;
   color :string;
   content:string;
@@ -19,7 +20,8 @@ export default class Note {
       name: string,
       id: number = Date.now(),
       timestamp: number = Date.now(),
-      date: string = new Date().toLocaleString("fr-FR"),
+      createdDate: string = new Date().toLocaleString("fr-FR"),
+      updatedDate: string = new Date().toLocaleString("fr-FR"),
       status: string = "todo",
       color: string = "red",
       content: string = "",
@@ -31,7 +33,8 @@ export default class Note {
       this.name = name;
       this.id = id;
       this.timestamp = timestamp;
-      this.date = date;
+      this.createdDate = createdDate;
+      this.updatedDate = updatedDate;
       this.status = status;
       this.color = color;
       this.content = content;

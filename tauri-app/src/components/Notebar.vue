@@ -189,8 +189,62 @@ export default {
     },
 
     insertItem() {
-      this.$emit("insert-item", this.insertValue);
+      let text = "";
+      switch (this.insertValue) {
+        case "heading1":
+          text = "# Heading 1";
+          break;
+        case "heading2":
+          text = "## Heading 2";
+          break;
+        case "heading3":
+          text = "### Heading 3";
+          break;
+        case "heading4":
+          text = "#### Heading 4";
+          break;
+        case "heading5":
+          text = "##### Heading 5";
+          break;
+        case "heading6":
+          text = "###### Heading 6";
+          break;
+        case "checkbox":
+          text = "- [ ] Checkbox";
+          break;
+        case "separator":
+          text = "---";
+          break;
+        case "blockquote":
+          text = "> Quote\r\n";
+          break;
+        case "image":
+          text = "![Alt text](https://picsum.photos/200/300 'A title')";
+          break;
+        case "code":
+          text = "```\r\n";
+          text += "code \r\n";
+          text += "```";
+          break;
+        case "table":
+          text = `| Column1 | Column2|
+| ------ | ------ |
+| Row 1| value 2|
+| Row 2|value 2 |\r\n`;
+          break;
+        case "link":
+          text = "[Link name](https://www.markdownguide.org/)";
+          break;
+        case "date":
+          text = this.getToday();
+          break;
+        case "time":
+          text = this.getTimeToday();
+          break;
+      }
+      this.$emit("insert-item", text);
       this.insertValue = "";
+
     },
     toggleSuggestion() {
       this.isVisibleSuggestionList = !this.isVisibleSuggestionList;
