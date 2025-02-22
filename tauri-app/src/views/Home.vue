@@ -94,6 +94,7 @@ import {
   readDir,
   BaseDirectory,
   exists,
+  remove,
 } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join } from "@tauri-apps/api/path";
@@ -144,11 +145,15 @@ export default {
 
   computed: {
     selectedNote() {
+      console.log("BEGIN [COMPUTED] selectedNote()");
+      console.log("END [COMPUTED] selectedNote()");
       const selectedNote = this.notes.find((note: Note) => note.selected);
       return selectedNote ? selectedNote : "";
     },
     // -------------------------------------------------------------------------
     filteredNotes() {
+      console.log("BEGIN [COMPUTED] filteredNotes()");
+      console.log("END [COMPUTED] filteredNotes()");
       switch (this.filter) {
         case "todo":
           return this.notes.filter((note: Note) => note.status === "todo");
@@ -185,6 +190,8 @@ export default {
     },
     // -------------------------------------------------------------------------
     getCountNotes() {
+      console.log("BEGIN [COMPUTED] getCountNotes()");
+      console.log("END [COMPUTED] getCountNotes()");
       return {
         allNotes: this.notes.filter((note: Note) => {
           return note.name
@@ -210,22 +217,32 @@ export default {
   },
   methods: {
     selectView(newView: string) {
+      console.log("BEGIN [METHODS] selectView(newView: string)", newView);
       this.currentView = newView;
+      console.log("END [METHODS] selectView(newView: string)", newView);
     },
     // -------------------------------------------------------------------------
     insertItem(item: string) {
+      console.log("BEGIN [METHODS] insertItem(item: string)", item);
       this.selectedNote.content += item + "\r\n";
+      console.log("END [METHODS] insertItem(item: string)", item);
     },
     // -------------------------------------------------------------------------
     getToday() {
+      console.log("BEGIN [METHODS] getToday()");
+      console.log("END [METHODS] getToday()");
       return new Date().toLocaleString("fr-FR").split(" ")[0];
     },
     // -------------------------------------------------------------------------
     getTimeToday() {
+      console.log("BEGIN [METHODS] getTimeToday()");
+      console.log("END [METHODS] getTimeToday()");
       return new Date().toLocaleString("fr-FR").split(" ")[1];
     },
     // -------------------------------------------------------------------------
     sortNotes() {
+      console.log("BEGIN [METHODS] sortNotes()");
+      console.log("END [METHODS] sortNotes()");
       this.notes.sort((a: Note, b: Note) => {
         if (a.name < b.name) {
           return -1;
@@ -237,6 +254,8 @@ export default {
     },
     // -------------------------------------------------------------------------
     sortNotesDate() {
+      console.log("BEGIN [METHODS] sortNotesDate()");
+      console.log("END [METHODS] sortNotesDate()");
       this.notes.sort((a: Note, b: Note) => {
         if (this.sortedDate) {
           return a.timestamp - b.timestamp;
@@ -247,37 +266,50 @@ export default {
     },
     // -------------------------------------------------------------------------
     toggleSortAZ() {
+      console.log("BEGIN [METHODS] toggleSortAZ()");
       this.sortedAsc = !this.sortedAsc;
       this.sortNotes();
       if (!this.sortedAsc) {
         this.notes.reverse();
       }
+      console.log("END [METHODS] toggleSortAZ()");
     },
     // -------------------------------------------------------------------------
     clearFilterSort() {
+      console.log("BEGIN [METHODS] clearFilterSort()");
       this.sortedAsc = true;
       this.sortedDate = true;
       this.sortNotesDate();
+      console.log("END [METHODS] clearFilterSort()");
     },
     // -------------------------------------------------------------------------
     toggleSortByDate() {
+      console.log("BEGIN [METHODS] toggleSortByDate()");
       this.sortedDate = !this.sortedDate;
       this.sortNotesDate();
+      console.log("END [METHODS] toggleSortByDate()");
     },
     // -------------------------------------------------------------------------
     togglePreviewMode() {
+      console.log("BEGIN [METHODS] togglePreviewMode()");
       this.isPreviewMode = !this.isPreviewMode;
+      console.log("END [METHODS] togglePreviewMode()");
     },
     // -------------------------------------------------------------------------
     toggleShowBothTextareaPreview() {
+      console.log("BEGIN [METHODS] toggleShowBothTextareaPreview()");
       this.showBoth = !this.showBoth;
+      console.log("END [METHODS] toggleShowBothTextareaPreview()");
     },
     // -------------------------------------------------------------------------
     handleFilter(filter: string) {
+      console.log("BEGIN [METHODS] handleFilter(filter: string)", filter);
       this.filter = filter;
+      console.log("END [METHODS] handleFilter(filter: string)", filter);
     },
     // -------------------------------------------------------------------------
     handleAction(action: string) {
+      console.log("BEGIN [METHODS] handleAction(action: string)", action);
       switch (action) {
         case "newnote":
           this.createNote();
@@ -313,9 +345,11 @@ export default {
           alert(`Unknown action: ${action}`);
           break;
       }
+      console.log("END [METHODS] handleAction(action: string)", action);
     },
     // -------------------------------------------------------------------------
     openNoteDemo() {
+      console.log("BEGIN [METHODS] openNoteDemo()");
       const selectedFile = "/Thoth demo.txt";
       const fileName = selectedFile
         .replace(/^.*[\\\/]/, "")
@@ -336,9 +370,11 @@ export default {
         .catch((error) => {
           this.showNotification(error, "red");
         });
+      console.log("END [METHODS] openNoteDemo()");
     },
     // -------------------------------------------------------------------------
     async openFolder() {
+      console.log("BEGIN [METHODS] async openFolder()");
       const path = await open({
         directory: true,
         multiple: false,
@@ -350,10 +386,16 @@ export default {
         this.tree = await this.readContentFolder(path);
       } catch (error) {
         this.showNotification(error, "red");
+        console.log("DEBUG", error);
       }
+      console.log("END [METHODS] async openFolder()");
     },
     // -------------------------------------------------------------------------
     async readContentFolder(path: string) {
+      console.log(
+        "BEGIN [METHODS] async readContentFolder(path: string)",
+        path,
+      );
       let options: object = {
         recursive: true,
       };
@@ -390,10 +432,12 @@ export default {
         }
         tree.children.push(node);
       }
+      console.log("END [METHODS] async readContentFolder(path: string)", path);
       return tree;
     },
     // -------------------------------------------------------------------------
     async openDocument() {
+      console.log("BEGIN [METHODS] async openDocument()");
       const selectedFile = await open({
         multiple: false,
         filters: [{ name: "Fichiers texte", extensions: ["txt", "md"] }],
@@ -416,38 +460,46 @@ export default {
         );
       } catch (error) {
         this.showNotification(error, "red");
+        console.log("DEBUG", error);
       }
+      console.log("END [METHODS] async openDocument()");
     },
     // -------------------------------------------------------------------------
     async saveAsDocument() {
+      console.log("BEGIN [METHODS] async saveAsDocument()");
       if (!this.selectedNote) {
         return;
       }
+      try {
+        const path = await save({
+          filters: [{ name: "Fichiers texte", extensions: ["txt", "md"] }],
+        });
 
-      const path = await save({
-        filters: [{ name: "Fichiers texte", extensions: ["txt", "md"] }],
-      });
-
-      if (path) {
-        const content = this.selectedNote.content;
-        await writeTextFile(path, content);
+        if (path) {
+          const content = this.selectedNote.content;
+          await writeTextFile(path, content);
+        }
+      } catch (error) {
+        this.showNotification(error, "red");
+        console.log("DEBUG", error);
       }
+      console.log("END [METHODS] async saveAsDocument()");
     },
     // -------------------------------------------------------------------------
     generateIncrementedName(baseTitle: string) {
-      console.log("BEGIN generateIncrementedName(baseTitle:string)");
+      console.log("BEGIN [METHODS] generateIncrementedName(baseTitle:string)");
       if (!this.noteCounters[baseTitle]) {
         this.noteCounters[baseTitle] = 1;
       } else {
         this.noteCounters[baseTitle] += 1;
       }
-      console.log("END generateIncrementedName(baseTitle:string)");
+      console.log("END [METHODS] generateIncrementedName(baseTitle:string)");
       return `${baseTitle} ${this.noteCounters[baseTitle]}`;
     },
     // -------------------------------------------------------------------------
 
     createNote() {
-      console.log("BEGIN createNote");
+      console.log("BEGIN [METHODS] METHODS createNote()");
       let name = this.generateIncrementedName("Note");
       let note = new DataNote(name);
       this.notes.push(note);
@@ -457,13 +509,13 @@ export default {
         "green",
       );
       this.setDelayCreationNote();
-      console.log("END createNote");
+      console.log("END [METHODS] METHODS createNote()");
     },
     // -------------------------------------------------------------------------
-    async saveFile(file) {
-      console.log("BEGIN saveFile(file)", file);
-      let filename = file.name + ".txt";
-      let content = file.content;
+    async saveFile(note: Note) {
+      console.log("BEGIN [METHODS] saveFile(note:Note)", note);
+      let filename = note.name + ".txt";
+      let content = note.content;
       const filePath = { baseDir: BaseDirectory.Desktop };
 
       try {
@@ -472,38 +524,46 @@ export default {
         if (!existingFile) {
           await writeTextFile(filename, content, filePath);
           console.log("file created");
-          console.log("END saveFile(file)", file);
+          console.log("END [METHODS] saveFile(note:Note)", note);
           return;
         }
-        file.updatedDate = new Date().toLocaleString("fr-FR");
+        note.updatedDate = new Date().toLocaleString("fr-FR");
         await readTextFile(filename, filePath);
         await writeTextFile(filename, content, filePath);
         console.log("file updated");
-        console.log("END saveFile(file)", file);
+        console.log("END [METHODS] saveFile(note:Note)", note);
       } catch (error) {
         this.showNotification(error, "red");
-        console.log("DEBUG saveFile(file)", error);
+        console.log("DEBUG", error);
       }
     },
     // -------------------------------------------------------------------------
     setDelayCreationNote() {
+      console.log("BEGIN [METHODS] setDelayCreationNote()");
       const duration = 500;
       this.canCreateNote = false;
       this.timerCreateNote = setTimeout(() => {
         this.canCreateNote = true;
       }, duration);
+      console.log("END [METHODS] setDelayCreationNote()");
     },
     // -------------------------------------------------------------------------
     togglePinNote() {
+      console.log("BEGIN [METHODS] togglePinNote()");
       this.selectedNote.pinned = !this.selectedNote.pinned;
+      console.log("BEGIN [METHODS] togglePinNote()");
     },
     // -------------------------------------------------------------------------
     toggleImportantNote() {
+      console.log("BEGIN [METHODS] toggleImportantNote()");
       this.selectedNote.important = !this.selectedNote.important;
+      console.log("BEGIN [METHODS] toggleImportantNote()");
     },
     // -------------------------------------------------------------------------
     duplicateNote() {
+      console.log("BEGIN [METHODS] duplicateNote()");
       if (!this.selectedNote) {
+        console.log("END [METHODS] duplicateNote()");
         return;
       }
       let name = this.selectedNote.name + " - " + this.$t("copy");
@@ -534,9 +594,15 @@ export default {
         "green",
       );
       this.setDelayCreationNote();
+      console.log("END [METHODS] duplicateNote()");
     },
     // -------------------------------------------------------------------------
     showNotification(message: string, color: string) {
+      console.log(
+        "BEGIN [METHODS] showNotification(message: string, color: string)",
+        message,
+        color,
+      );
       this.isVisibleNotification = true;
       this.messageNotification = message;
       this.colorNotification = color;
@@ -544,20 +610,24 @@ export default {
       this.timerNotification = setTimeout(() => {
         this.isVisibleNotification = false;
       }, duration);
+      console.log(
+        "END [METHODS] showNotification(message: string, color: string)",
+        message,
+        color,
+      );
     },
     // -------------------------------------------------------------------------
     selectNote(note: Note) {
+      console.log("BEGIN [METHODS] selectNote(note: Note)", note);
       this.notes.forEach((n: Note) => {
         n.selected = false;
       });
-      // const selectedNote = this.notes.find((n) => n.name === note.name);
-      // if (selectedNote) {
-      //   selectedNote.selected = true;
-      // }
       note.selected = true;
+      console.log("END [METHODS] selectNote(note: Note)", note);
     },
     // -------------------------------------------------------------------------
     async deleteNote(note: Note) {
+      console.log("BEGIN [METHODS] async deleteNote(note: Note)", note);
       let msgConfirm = this.$t("confirm_note_deleted", {
         note_name: note.name,
       });
@@ -567,17 +637,32 @@ export default {
         return;
       }
       const index = this.notes.findIndex((n: Note) => n.id === note.id);
-
-      if (index > -1) {
+      console.log(index);
+      if (index < 0) {
+        console.log("END [METHODS] async deleteNote(note: Note)");
+        return;
+      }
+      let filename = note.name + ".txt";
+      const filePath = { baseDir: BaseDirectory.Desktop };
+      try {
         this.notes.splice(index, 1);
+        await remove(filename, filePath);
         let msgDeleted = this.$t("note_deleted", {
           note_name: note.name,
         });
         this.showNotification(msgDeleted, "green");
+      } catch (error) {
+        this.showNotification(error, "red");
+        console.log("DEBUG", error);
       }
+      console.log("END [METHODS] async deleteNote(note: Note)", note);
     },
     // -------------------------------------------------------------------------
     changeNoteStatus(newStatus: string) {
+      console.log(
+        "BEGIN [METHODS] changeNoteStatus(newStatus: string)",
+        newStatus,
+      );
       this.selectedNote.status = newStatus;
       switch (this.selectedNote.status) {
         case "todo":
@@ -594,9 +679,14 @@ export default {
           break;
       }
       this.selectedNote.color = this.color;
+      console.log(
+        "END [METHODS] changeNoteStatus(newStatus: string)",
+        newStatus,
+      );
     },
     // -------------------------------------------------------------------------
     deleteTag(tag) {
+      console.log("BEGIN [METHODS] deleteTag(tag)", tag);
       const index = this.tags.findIndex((t) => t.id === tag.id);
 
       if (index > -1) {
@@ -610,9 +700,11 @@ export default {
         let msgDeleted = this.$t("tag_deleted", { tag_name: tag.name });
         this.showNotification(msgDeleted, "green");
       }
+      console.log("END [METHODS] deleteTag(tag)", tag);
     },
     // -------------------------------------------------------------------------
     addTag(tag) {
+      console.log("BEGIN [METHODS] addTag(tag)", tag);
       const word = tag.trim();
       const pattern = /^[a-zA-ZÀ-ÿ]+$/;
       let tagtoAdd = {
@@ -638,24 +730,33 @@ export default {
           tag_name: tagtoAdd.name,
         });
         this.showNotification(msgCreated, "green");
+        console.log("END [METHODS] addTag(tag)", tag);
         return;
       }
       tagtoAdd.color = existingTag.color;
       tagtoAdd.id = existingTag.id;
       if (!existingTagNote) {
         this.selectedNote.tags.push(tagtoAdd);
+        console.log("END [METHODS] addTag(tag)", tag);
         return;
       }
+      console.log("END [METHODS] addTag(tag)", tag);
     },
     // -------------------------------------------------------------------------
     deleteTagNote(tag) {
+      console.log("BEGIN [METHODS] deleteTagNote(tag)", tag);
       const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
       if (index > -1) {
         this.selectedNote.tags.splice(index, 1);
       }
+      console.log("END [METHODS] deleteTagNote(tag)", tag);
     },
     // -------------------------------------------------------------------------
     handleUpdateTagName(updatedTag) {
+      console.log(
+        "BEGIN [METHODS] handleUpdateTagName(updatedTag)",
+        updatedTag,
+      );
       this.tags = this.tags.map((tag) => {
         return tag.id === updatedTag.id ? updatedTag : tag;
       });
@@ -666,9 +767,11 @@ export default {
           });
         }
       }
+      console.log("END [METHODS] handleUpdateTagName(updatedTag)", updatedTag);
     },
     // -------------------------------------------------------------------------
     setColorTag(tag, color) {
+      console.log("BEGIN [METHODS] setColorTag(tag, color)", tag, color);
       const index = this.tags.findIndex((t) => t.id === tag.id);
 
       for (let i = 0; i < this.notes.length; i++) {
@@ -679,42 +782,54 @@ export default {
         }
       }
       this.tags[index].color = color;
+      console.log("END [METHODS] setColorTag(tag, color)", tag, color);
     },
     // -------------------------------------------------------------------------
-    exportASPDF() {
-      let name = this.selectedNote.name || "Untitled";
-      const element = document.querySelector(".contentToExport");
-      console.log(element);
-      const opt = {
-        filename: name,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
-      };
+    // exportASPDF() {
+    //   let name = this.selectedNote.name || "Untitled";
+    //   const element = document.querySelector(".contentToExport");
+    //   console.log(element);
+    //   const opt = {
+    //     filename: name,
+    //     image: { type: "jpeg", quality: 0.98 },
+    //     html2canvas: { scale: 2 },
+    //     jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
+    //   };
 
-      html2pdf().from(element).set(opt).save();
-    },
+    //   html2pdf().from(element).set(opt).save();
+    // },
     // -------------------------------------------------------------------------
     async exportJSON() {
+      console.log("BEGIN [METHODS] async exportJSON()");
       let data = {
         notes: this.notes,
         tags: this.tags,
       };
       if (data.notes.length === 0 && data.tags.length === 0) {
         this.showNotification(this.$t("no_data_to_export"), "red");
+        console.log("END [METHODS] async exportJSON()");
         return;
       }
+
       const json = JSON.stringify(data);
-      const path = await save({
-        filters: [{ name: "Fichiers texte", extensions: ["json"] }],
-      });
-      if (path) {
-        await writeTextFile(path, json);
-        this.showNotification(this.$t("data_exported"), "green");
+      try {
+        const path = await save({
+          filters: [{ name: "Fichiers texte", extensions: ["json"] }],
+        });
+        if (path) {
+          await writeTextFile(path, json);
+          this.showNotification(this.$t("data_exported"), "green");
+        }
+      } catch (error) {
+        this.showNotification(error, "red");
+        console.log("DEBUG", error);
       }
+
+      console.log("END [METHODS] async exportJSON()");
     },
     // -------------------------------------------------------------------------
     async importJSON() {
+      console.log("BEGIN [METHODS] async importJSON()");
       const selectedFile = await open({
         multiple: false,
         filters: [{ name: "Fichiers texte", extensions: ["json"] }],
@@ -738,12 +853,16 @@ export default {
         this.showNotification(this.$t("data_imported"), "green");
       } catch (error) {
         this.showNotification(error, "red");
+        console.log("DEBUG",error)
       }
+      console.log("END [METHODS] async importJSON()");
     },
   },
   beforeDestroy() {
+    console.log("BEGIN [BEFOREDESTROY]");
     clearTimeout(this.timerNotification);
     clearTimeout(this.timerCreateNote);
+    console.log("END [BEFOREDESTROY]");
   },
 };
 </script>
