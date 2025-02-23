@@ -2,7 +2,7 @@
   <MenuDropdown :title="$t('settings')" btn="toolbar-btn">
     <template v-slot:content>
       <!-- language -->
-      <span>{{ $t("language") }}</span>
+      <p>{{ $t("language") }}</p>
       <li
         @click="selectLanguage(language)"
         v-for="language in languages"
@@ -13,7 +13,7 @@
       </li>
       <hr class="separator-x" />
       <!-- font -->
-      <span>{{ $t("font") }}</span>
+      <p>{{ $t("font") }}</p>
       <li
         @click="selectFont(font)"
         v-for="font in fonts"
@@ -24,7 +24,7 @@
       </li>
       <hr class="separator-x" />
       <!-- font size -->
-      <span>{{ $t("font_size") }}</span>
+      <p>{{ $t("font_size") }}</p>
       <li
         @click="selectFontSize(fontSize)"
         v-for="fontSize in fontsSize"
@@ -38,7 +38,7 @@
       </li>
       <hr class="separator-x" />
       <!-- theme -->
-      <span>{{ $t("theme") }}</span>
+      <p>{{ $t("theme") }}</p>
       <li
         @click="selectTheme(theme)"
         v-for="theme in themes"

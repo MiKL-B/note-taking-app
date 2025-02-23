@@ -36,7 +36,7 @@ export default {
       default: true,
     },
   },
-
+  emits:["close-app"],
   components: {
     Minus,
     Square,
@@ -50,7 +50,7 @@ export default {
       appWindow.toggleMaximize();
     },
     close() {
-      appWindow.close();
+      this.$emit("close-app")
     },
   },
 };

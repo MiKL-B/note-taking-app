@@ -70,7 +70,11 @@ export default {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
 }
-.details-menu span{
+.details-menu li:hover hr {
+  background: none;
+  cursor: default;
+}
+.details-menu p{
   padding: 0.2rem 0.5rem;
   margin:0.2rem;
   display: flex;

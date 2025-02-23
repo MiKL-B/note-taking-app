@@ -1,6 +1,6 @@
 <template>
   <div id="home-container">
-    <Titlebar />
+    <Titlebar @close-app="closeApplication" />
     <Toolbar @action-clicked="handleAction" @select-view="selectView" />
     <ViewKanban v-if="currentView === 'kanban'" />
 
@@ -142,7 +142,11 @@ export default {
       currentView: "",
     };
   },
-
+  mounted() {
+    console.log("BEGIN [MOUNTED]");
+    window.addEventListener("keydown", this.handleKeyDown);
+    console.log("BEGIN [COMPUTED]");
+  },
   computed: {
     selectedNote() {
       console.log("BEGIN [COMPUTED] selectedNote()");
@@ -339,7 +343,7 @@ export default {
           this.importJSON();
           break;
         case "exit":
-          appWindow.close();
+          this.closeApplication();
           break;
         default:
           alert(`Unknown action: ${action}`);
@@ -504,10 +508,6 @@ export default {
       let note = new DataNote(name);
       this.notes.push(note);
       this.saveFile(note);
-      this.showNotification(
-        this.$t("note_created", { note_name: note.name }),
-        "green",
-      );
       this.setDelayCreationNote();
       console.log("END [METHODS] METHODS createNote()");
     },
@@ -523,6 +523,10 @@ export default {
 
         if (!existingFile) {
           await writeTextFile(filename, content, filePath);
+          this.showNotification(
+            this.$t("note_created", { note_name: note.name }),
+            "green",
+          );
           console.log("file created");
           console.log("END [METHODS] saveFile(note:Note)", note);
           return;
@@ -530,12 +534,56 @@ export default {
         note.updatedDate = new Date().toLocaleString("fr-FR");
         await readTextFile(filename, filePath);
         await writeTextFile(filename, content, filePath);
+        this.showNotification(
+          this.$t("note_saved", { note_name: note.name }),
+          "green",
+        );
         console.log("file updated");
         console.log("END [METHODS] saveFile(note:Note)", note);
       } catch (error) {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
       }
+    },
+    // -------------------------------------------------------------------------
+    handleKeyDown(event) {
+      console.log("BEGIN [METHODS] handleKeyDown(event)", event);
+
+      // New note Ctrl + N
+      if (event.ctrlKey && event.key.toLowerCase() === "n") {
+        event.preventDefault();
+        this.createNote();
+      }
+
+      // Save Ctrl + S
+      if (this.selectedNote) {
+        if (event.ctrlKey && event.key.toLowerCase() === "s") {
+          event.preventDefault();
+          this.saveFile(this.selectedNote);
+        }
+      }
+
+      // Quit Ctrl + Q
+      if (event.ctrlKey && event.key.toLowerCase() === "q") {
+        event.preventDefault();
+        console.log("END [METHODS] handleKeyDown(event)", event);
+        this.closeApplication();
+      }
+
+      console.log("END [METHODS] handleKeyDown(event)", event);
+    },
+    // -------------------------------------------------------------------------
+    async closeApplication() {
+      console.log("BEGIN [METHODS] closeApplication()");
+      let msgConfirm = this.$t("confirm_close_app");
+      const confirmed = await confirm(msgConfirm);
+
+      if (!confirmed) {
+        console.log("END [METHODS] closeApplication()");
+        return;
+      }
+      appWindow.close();
+      console.log("END [METHODS] closeApplication()");
     },
     // -------------------------------------------------------------------------
     setDelayCreationNote() {
@@ -853,13 +901,14 @@ export default {
         this.showNotification(this.$t("data_imported"), "green");
       } catch (error) {
         this.showNotification(error, "red");
-        console.log("DEBUG",error)
+        console.log("DEBUG", error);
       }
       console.log("END [METHODS] async importJSON()");
     },
   },
   beforeDestroy() {
     console.log("BEGIN [BEFOREDESTROY]");
+    window.addEventListener("keydown", this.handleKeyDown);
     clearTimeout(this.timerNotification);
     clearTimeout(this.timerCreateNote);
     console.log("END [BEFOREDESTROY]");

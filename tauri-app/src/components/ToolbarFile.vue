@@ -2,11 +2,15 @@
 	<MenuDropdown :title="$t('file')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li
+				class="flex justify-between"
 				v-for="item in menuItems"
 				:key="item"
-				@click="onSubMenuClick(item)"
+				@click="onSubMenuClick(item.label)"
 			>
-				{{ $t(item) }}
+				<span>
+					{{ $t(item.label) }}
+				</span>
+				<span class="text-dark">{{ item.cmd }}</span>
 			</li>
 		</template>
 	</MenuDropdown>
@@ -23,14 +27,38 @@ export default {
 	data() {
 		return {
 			menuItems: [
-				"newnote",
-				"opennote",
-				"openfolder",
-				"save",
-				"saveas",
-				"exportjson",
-				"importjson",
-				"exit",
+				{
+					label: "newnote",
+					cmd: "Ctrl + N",
+				},
+				{
+					label: "opennote",
+					cmd: "",
+				},
+				{
+					label: "openfolder",
+					cmd: "",
+				},
+				{
+					label: "save",
+					cmd: "Ctrl + S",
+				},
+				{
+					label: "saveas",
+					cmd: "",
+				},
+				{
+					label: "exportjson",
+					cmd: "",
+				},
+				{
+					label: "importjson",
+					cmd: "",
+				},
+				{
+					label: "exit",
+					cmd: "Ctrl + Q",
+				},
 			],
 		};
 	},
@@ -41,3 +69,4 @@ export default {
 	},
 };
 </script>
+<style></style>
