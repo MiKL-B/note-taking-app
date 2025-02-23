@@ -52,8 +52,11 @@
 - remove open note demo mounted and move in file menu 
 ---
 
-# To fix
+# In progress
+- Review the different functions for new, new folder, open ...
+---
 
+# To fix
 ---
 
 # To improve
@@ -65,22 +68,22 @@
 - Manage permissions for treeview
 - Add menu item documentation
 - Improve import notes tags with restrictions 
-
+- When some actions like close application, save the previous note selected
 ---
 
 # To Implement
 
 ## Feature Folder & File
-- Create a vault like obsidian to store notes in the AppLocalData (Thoth notes) (data of the app)
-- Find this path to write and read notes (files)
-- When some actions like close application, save the previous note selected with an alert
-- Format the header of the notes in order to retrieve the status, tags ...
 - Add a sub menu item in "File" to create a vault if not existing one
+- Create a vault like obsidian to store notes in the AppLocalData (Thoth notes) (data of the app)
+- "new folder" (vault) with a confirm and input for the folder name otherwise thoth notes
+
+- Find this path to write and read notes (files)
+- Format the header of the notes in order to retrieve the status, tags ...
 - Allow permissions according to the actions (create dir, create file, read dir, read file)
 - BaseDirectory.AppLocalData with permissions, allow to create in C:\Users\{Username}\AppData\Local\Thoth
 - find the path for MacOs et Linux
-- Review the different functions for new, new folder, open ...
-- "new folder" (vault) with a confirm and input for the folder name otherwise thoth notes
+
 - can create many folders (vault) ?
 - Lock files / folders 
 - Debug with log files
