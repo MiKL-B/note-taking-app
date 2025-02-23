@@ -21,6 +21,7 @@
 - open folders, subfolders as well as files (push as notes for the moment)
 - Create treeview for folders, subfolders as well as files
 - Allow create, save as well as delete files (note = file)
+- Create menu item for kanban, drawing, schedule, distraction free view
 ---
 
 # Fixed
@@ -92,8 +93,7 @@
 - Accessibility (title..)
 
 ## Feature View
-- View kanban, schedule, drawing
-- View sidebar, notelist (distraction-free mode)
+- Create content for the different views 
 
 ## Settings
 - Set settings auto export pdf when saving note
