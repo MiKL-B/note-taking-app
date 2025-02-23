@@ -1,11 +1,11 @@
 <template>
   <div id="home-container">
     <Titlebar @close-app="closeApplication" />
-    <Toolbar @action-clicked="handleAction" @select-view="selectView" />
+    <Toolbar @action-clicked="handleAction" @select-view="selectView" :distractionFree="selectedNote"/>
     <ViewKanban v-if="currentView === 'kanban'" />
 
     <div v-else class="row">
-      <div id="column-left" class="col-3">
+      <div id="column-left" class="col-3" v-if="currentView !== 'distraction_free'">
         <Sidebar
           :tags="tags"
           :tree="tree"
@@ -16,7 +16,7 @@
           @set-color="setColorTag"
         />
       </div>
-      <div id="column-middle" class="col-3">
+      <div id="column-middle" class="col-3" v-if="currentView !== 'distraction_free'">
         <NoteFilter
           :canCreateNote="canCreateNote"
           v-model="searchNote"
@@ -501,7 +501,6 @@ export default {
       return `${baseTitle} ${this.noteCounters[baseTitle]}`;
     },
     // -------------------------------------------------------------------------
-
     createNote() {
       console.log("BEGIN [METHODS] METHODS createNote()");
       let name = this.generateIncrementedName("Note");

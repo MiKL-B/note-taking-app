@@ -1,7 +1,7 @@
 <template>
   <div id="toolbar">
     <ToolbarFile @action-clicked="onSubMenuClick" />
-    <ToolbarView @select-view="selectView"/>
+    <ToolbarView @select-view="selectView" :distractionFree="distractionFree"/>
     <ToolbarSettings />
     <ToolbarAbout @action-clicked="onSubMenuClick" />
   </div>
@@ -20,13 +20,13 @@ export default {
     ToolbarSettings,
     ToolbarAbout,
   },
+  props:["distractionFree"],
   emits: ["action-clicked","select-view"],
   methods: {
     onSubMenuClick(action) {
       this.$emit("action-clicked", action);
     },
-    selectView(newView)
-    {
+    selectView(newView){
       this.$emit("select-view",newView)
     }
   },
