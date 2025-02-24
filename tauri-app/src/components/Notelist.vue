@@ -9,7 +9,7 @@
     }}</span>
 
     <div
-      id="note-container"
+      class="note-container"
       v-for="note in notes"
       :class="note.selected ? 'note-selected' : ''"
       @click.stop="selectNote(note)"
@@ -181,7 +181,7 @@ export default {
 #notelist {
   overflow-y: auto;
 }
-#note-container {
+.note-container {
   display: grid;
   grid-template-columns: 200px auto;
   align-items: center;
@@ -189,19 +189,21 @@ export default {
   position: relative;
   border-bottom: var(--border);
 }
-
-.note-selected {
-  background: var(--bg-note-selected);
+.note-container:hover {
+  background: var(--bg-note-container-hover);
+  cursor: pointer;
+}
+.note-selected,
+.note-selected:hover  {
+  background:var(--bg-note-selected);
+  cursor: pointer;
 }
 
-#note-container:hover .note-trash {
+.note-container:hover .note-trash {
   opacity: 1;
   pointer-events: auto;
 }
-#note-container:hover .icon-grip {
-  opacity: 1;
-  pointer-events: auto;
-}
+
 
 .note-content {
   overflow: hidden;
@@ -235,10 +237,8 @@ export default {
   display: flex;
 }
 
-#note-container:hover {
-  background: var(--bg-note-selected);
-  cursor: pointer;
-}
+
+
 .note-trash {
   opacity: 0;
   transition: opacity 0.3s ease;

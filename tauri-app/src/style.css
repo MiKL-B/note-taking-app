@@ -84,8 +84,8 @@
   /* notelist */
   --bg-notelist: var(--white);
   --text-color-notelist: var(--dark2);
-  --bg-note-selected: #f4f4f5;
-  --bg-drag-placeholder: var(--lightgrey3);
+  --bg-note-container-hover:var(--lightgrey);
+  --bg-note-selected: var(--lightgrey2);
   /* notebar */
   --bg-notebar: var(--white);
   --text-color-notebar: var(--dark2);
@@ -96,7 +96,7 @@
   --bg-color-markdown: var(--lightgrey);
   --text-color-markdown: var(--dark);
   /* statusbar */
-  --text-color-statusbar:var(--dark2);
+  --text-color-statusbar: var(--dark2);
 }
 [data-theme="dark"] {
   /* body */
@@ -105,7 +105,7 @@
   --border: 1px solid var(--dark);
   /* button */
   --text-color-button: var(--lightgrey);
-  --bg-hover-button: #353941;
+  --bg-hover-button: var(--bgdim);
   --text-color-button-disabled: var(--dark);
   /* label */
   --text-color-label: var(--lightgrey);
@@ -122,25 +122,25 @@
   --scrollbar-track-horizontal: var(--dark2);
   --scrollbar-thumb: var(--dark);
   --scrollbar-thumb-horizontal: var(--dark);
-  --scrollbar-hover-thumb: #353941;
+  --scrollbar-hover-thumb: var(--bgdim);
   /* titlebar */
   --bg-titlebar: var(--dark2);
   --text-color-titlebar: var(--lightgrey);
-  --bg-hover-titlebar: #353941;
+  --bg-hover-titlebar: var(--bgdim);
   /* toolbar */
   --bg-toolbar: var(--dark2);
   --text-color-toolbar: var(--lightgrey);
-  --bg-hover-toolbar: #353941;
+  --bg-hover-toolbar: var(--bgdim);
   /* sidebar */
   --bg-sidebar: var(--dark2);
-  --bg-hover-sidebar: #353941;
-  --bg-selected-sidebar: #353941;
+  --bg-hover-sidebar: var(--bgdim);
+  --bg-selected-sidebar: var(--bgdim);
   --text-color-sidebar: var(--lightgrey);
   /* notelist */
   --bg-notelist: var(--dark2);
   --text-color-notelist: var(--lightgrey);
-  --bg-note-selected: #353941;
-  --bg-drag-placeholder: var(--dark);
+  --bg-note-container-hover:var(--bg0);
+  --bg-note-selected: var(--bgdim);
   /* notebar */
   --bg-notebar: var(--dark2);
   --text-color-notebar: var(--lightgrey);
@@ -150,8 +150,8 @@
   /* markdown */
   --bg-color-markdown: var(--dark);
   --text-color-markdown: var(--lightgrey);
-    /* statusbar */
-    --text-color-statusbar:var(--lightgrey);
+  /* statusbar */
+  --text-color-statusbar: var(--lightgrey);
 }
 
 * {
@@ -211,8 +211,8 @@ input[type="color"]:hover {
   cursor: pointer;
   background: var(--lightgrey);
 }
-a{
-  color:var(--blue);
+a {
+  color: var(--blue);
   text-decoration: none;
 }
 textarea {
@@ -246,10 +246,10 @@ button:hover,
   cursor: pointer;
   background: var(--bg-hover-button);
 }
-button.danger{
-  border:1px solid var(--red);
-  color:var(--lightgrey);
-  background:var(--red);
+button.danger {
+  border: 1px solid var(--red);
+  color: var(--lightgrey);
+  background: var(--red);
 }
 button[disabled] {
   color: var(--text-color-button-disabled);
@@ -358,6 +358,6 @@ button[disabled]:hover {
   padding: 0.1rem 0.2rem;
   border-radius: 5px;
 }
-ul{
+ul {
   list-style-type: none;
 }

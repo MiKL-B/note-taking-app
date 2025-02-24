@@ -1,11 +1,19 @@
 <template>
   <div id="home-container">
     <Titlebar @close-app="closeApplication" />
-    <Toolbar @action-clicked="handleAction" @select-view="selectView" :distractionFree="selectedNote"/>
+    <Toolbar
+      @action-clicked="handleAction"
+      @select-view="selectView"
+      :distractionFree="selectedNote"
+    />
     <ViewKanban v-if="currentView === 'kanban'" />
 
     <div v-else class="row">
-      <div id="column-left" class="col-3" v-if="currentView !== 'distraction_free'">
+      <div
+        id="column-left"
+        class="col-3"
+        v-if="currentView !== 'distraction_free'"
+      >
         <Sidebar
           :tags="tags"
           :tree="tree"
@@ -16,7 +24,11 @@
           @set-color="setColorTag"
         />
       </div>
-      <div id="column-middle" class="col-3" v-if="currentView !== 'distraction_free'">
+      <div
+        id="column-middle"
+        class="col-3"
+        v-if="currentView !== 'distraction_free'"
+      >
         <NoteFilter
           :canCreateNote="canCreateNote"
           v-model="searchNote"
@@ -76,6 +88,7 @@
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 
 import DataNote from "../note.ts";
+import getFilePath from "../FileManager.js";
 
 import Titlebar from "../components/Titlebar.vue";
 import Toolbar from "../components/Toolbar.vue";
@@ -95,9 +108,11 @@ import {
   BaseDirectory,
   exists,
   remove,
+  mkdir,
 } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { join } from "@tauri-apps/api/path";
+import { join, desktopDir } from "@tauri-apps/api/path";
+
 
 const appWindow = getCurrentWindow();
 export default {
@@ -145,6 +160,7 @@ export default {
   mounted() {
     console.log("BEGIN [MOUNTED]");
     window.addEventListener("keydown", this.handleKeyDown);
+    this.createFolder();
     console.log("BEGIN [COMPUTED]");
   },
   computed: {
@@ -377,6 +393,24 @@ export default {
       console.log("END [METHODS] openNoteDemo()");
     },
     // -------------------------------------------------------------------------
+    async createFolder() {
+      console.log("BEGIN [METHODS] async createFolder()");
+      let folderName = "vault";
+      const filePath = { baseDir: BaseDirectory.Desktop };
+      try {
+        let existingFolder = await exists(folderName, filePath);
+        if (existingFolder) {
+          return;
+        }
+        await mkdir(folderName, filePath);
+      } catch (error) {
+        this.showNotification(error, "red");
+        console.log("DEBUG", error);
+      }
+
+      console.log("END [METHODS] async createFolder()");
+    },
+    // -------------------------------------------------------------------------
     async openFolder() {
       console.log("BEGIN [METHODS] async openFolder()");
       const path = await open({
@@ -513,32 +547,35 @@ export default {
     // -------------------------------------------------------------------------
     async saveFile(note: Note) {
       console.log("BEGIN [METHODS] saveFile(note:Note)", note);
-      let filename = note.name + ".txt";
-      let content = note.content;
-      const filePath = { baseDir: BaseDirectory.Desktop };
+      let file = {
+        name: note.name + ".txt",
+        content: note.content,
+      };
+
+      const filePath = await getFilePath(file.name);
 
       try {
-        let existingFile = await exists(filename, filePath);
+        let existingFile = await exists(filePath);
 
         if (!existingFile) {
-          await writeTextFile(filename, content, filePath);
+          await writeTextFile(filePath, file.content);
           this.showNotification(
             this.$t("note_created", { note_name: note.name }),
             "green",
           );
           console.log("file created");
           console.log("END [METHODS] saveFile(note:Note)", note);
-          return;
+        } else {
+          note.updatedDate = new Date().toLocaleString("fr-FR");
+          await readTextFile(filePath);
+          await writeTextFile(filePath, file.content);
+          this.showNotification(
+            this.$t("note_saved", { note_name: note.name }),
+            "green",
+          );
+          console.log("file updated");
+          console.log("END [METHODS] saveFile(note:Note)", note);
         }
-        note.updatedDate = new Date().toLocaleString("fr-FR");
-        await readTextFile(filename, filePath);
-        await writeTextFile(filename, content, filePath);
-        this.showNotification(
-          this.$t("note_saved", { note_name: note.name }),
-          "green",
-        );
-        console.log("file updated");
-        console.log("END [METHODS] saveFile(note:Note)", note);
       } catch (error) {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
@@ -653,7 +690,7 @@ export default {
       this.isVisibleNotification = true;
       this.messageNotification = message;
       this.colorNotification = color;
-      const duration = 2000;
+      const duration = 4000;
       this.timerNotification = setTimeout(() => {
         this.isVisibleNotification = false;
       }, duration);
@@ -684,16 +721,19 @@ export default {
         return;
       }
       const index = this.notes.findIndex((n: Note) => n.id === note.id);
-      console.log(index);
+
       if (index < 0) {
         console.log("END [METHODS] async deleteNote(note: Note)");
         return;
       }
-      let filename = note.name + ".txt";
-      const filePath = { baseDir: BaseDirectory.Desktop };
+      let file = {
+        name:note.name + ".txt",
+      }
+      const filePath = await getFilePath(file.name);
+      
       try {
         this.notes.splice(index, 1);
-        await remove(filename, filePath);
+        await remove(filePath);
         let msgDeleted = this.$t("note_deleted", {
           note_name: note.name,
         });

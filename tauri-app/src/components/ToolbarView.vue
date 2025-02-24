@@ -31,13 +31,7 @@ export default {
 	data() {
 		return {
 			currentView: localStorage.getItem("view") || "default",
-			views: [
-				"default",
-				"distraction_free",
-				"kanban",
-				"schedule",
-				"drawing",
-			],
+			views: ["default", "distraction_free"], // kanban,schedule,drawing
 		};
 	},
 	mounted() {
@@ -45,7 +39,7 @@ export default {
 	},
 	methods: {
 		selectView(newView) {
-			if (!this.distractionFree && newView === 'distraction_free') {
+			if (!this.distractionFree && newView === "distraction_free") {
 				return;
 			}
 			this.currentView = newView;
