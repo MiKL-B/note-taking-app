@@ -18,10 +18,14 @@
 - View both text / markdown
 - Notifications (just information)
 - Add context menu
+- Create menu item for kanban, drawing, schedule, distraction free view
+## Folder & File
 - open folders, subfolders as well as files (push as notes for the moment)
 - Create treeview for folders, subfolders as well as files
 - Allow create, save as well as delete files (note = file)
-- Create menu item for kanban, drawing, schedule, distraction free view
+- Find this path to write and read notes (files)
+- Create a folder to store notes in the Destkop 
+
 ---
 
 # Fixed
@@ -69,22 +73,20 @@
 - Add menu item documentation
 - Improve import notes tags with restrictions 
 - When some actions like close application, save the previous note selected
+- Change the Desktop basedir to AppLocalData allow to create in C:\Users\{Username}\AppData\Local\Thoth
+
 ---
 
 # To Implement
 
 ## Feature Folder & File
 - Add a sub menu item in "File" to create a vault if not existing one
-- Create a vault like obsidian to store notes in the AppLocalData (Thoth notes) (data of the app)
 - "new folder" (vault) with a confirm and input for the folder name otherwise thoth notes
-
-- Find this path to write and read notes (files)
+- can create many folders (vault) ?
 - Format the header of the notes in order to retrieve the status, tags ...
 - Allow permissions according to the actions (create dir, create file, read dir, read file)
-- BaseDirectory.AppLocalData with permissions, allow to create in C:\Users\{Username}\AppData\Local\Thoth
 - find the path for MacOs et Linux
 
-- can create many folders (vault) ?
 - Lock files / folders 
 - Debug with log files
 - Export PDF

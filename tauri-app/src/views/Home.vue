@@ -458,7 +458,8 @@ export default {
         if (entry.isFile) {
           try {
             const fileContent = await readTextFile(filePath);
-            let note = new DataNote(entry.name);
+            let noteName = entry.name.substring(0, entry.name.lastIndexOf('.'));
+            let note = new DataNote(noteName);
             note.content = fileContent;
             this.notes.push(note);
           } catch (error) {

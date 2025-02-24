@@ -10,7 +10,9 @@
         <Folder v-else class="text-dark size-16" />
       </div>
       <File v-else class="text-dark size-16" />
-      <span class="tree-item-ellipsis" :title="node.name">{{ node.name }}</span>
+      <span class="tree-item-ellipsis" :title="getNodeName">{{
+        getNodeName
+      }}</span>
     </span>
     <span v-if="node.isDirectory">
       <ChevronDown v-if="!isOpen" class="text-dark size-16" />
@@ -18,13 +20,13 @@
     </span>
   </li>
   <ul v-if="isOpen && node.children && node.children.length > 0">
-      <li class="tree-children">
+    <li class="tree-children">
       <SidebarTreeView
         v-for="(child, index) in sortedChildren"
         :key="index"
         :node="child"
       />
-    </li> 
+    </li>
     <!-- <li
       v-for="(child, index) in sortedChildren"
       :key="index"
@@ -67,6 +69,13 @@ export default {
     };
   },
   computed: {
+    getNodeName() {
+      let nodeName = this.node.name;
+      if (this.node.name.indexOf(".") > 0) {
+        nodeName = this.node.name.substring(0, this.node.name.lastIndexOf("."));
+      }
+      return nodeName;
+    },
     isFolder() {
       return this.node.children && this.node.children.length > 0;
     },
