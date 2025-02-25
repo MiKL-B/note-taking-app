@@ -1,6 +1,7 @@
 <template>
   <div id="toolbar">
     <ToolbarFile @action-clicked="onSubMenuClick" />
+    <!-- <ToolbarEdit @action-clicked="onSubMenuClick"/> -->
     <ToolbarView @select-view="selectView" :distractionFree="distractionFree"/>
     <ToolbarSettings />
     <ToolbarAbout @action-clicked="onSubMenuClick" />
@@ -9,6 +10,7 @@
 
 <script>
 import ToolbarFile from "./ToolbarFile.vue";
+// import ToolbarEdit from "./ToolbarEdit.vue";
 import ToolbarView from "./ToolbarView.vue";
 import ToolbarSettings from "./ToolbarSettings.vue";
 import ToolbarAbout from "./ToolbarAbout.vue";
@@ -16,6 +18,7 @@ export default {
   name: "Toolbar",
   components: {
     ToolbarFile,
+    // ToolbarEdit,
     ToolbarView,
     ToolbarSettings,
     ToolbarAbout,

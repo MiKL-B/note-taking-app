@@ -94,6 +94,7 @@ const messages = {
     tag_deleted: "{tag_name} was deleted!",
     confirm_note_deleted: "Are you sure you want to delete {note_name}?",
     confirm_close_app: "Do you want to save your data and quit?",
+    no_note_selected:"There is no selected note!",
     copy: "Copy",
     // filternote
     sortAZ: "Sort A -> Z",
@@ -219,6 +220,7 @@ const messages = {
     tag_deleted: "{tag_name} a bien été supprimé!",
     confirm_note_deleted: "Etes-vous sûr de vouloir supprimer {note_name}?",
     confirm_close_app: "Voulez-vous sauvegarder vos données et quitter?",
+    no_note_selected:"Aucune note sélectionnée!",
     copy: "Copie",
     // filternote
     sortAZ: "Tri A -> Z",

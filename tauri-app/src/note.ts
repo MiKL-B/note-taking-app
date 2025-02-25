@@ -4,8 +4,8 @@ interface Tag {
 }
 
 export default class DataNote {
-  name: string;
   id:number;
+  name: string;
   timestamp:number;
   createdDate :string;
   updatedDate: string;
@@ -17,8 +17,8 @@ export default class DataNote {
   pinned :boolean;
   important :boolean;
   constructor(
-      name: string,
       id: number = Date.now(),
+      name: string = "Note",
       timestamp: number = Date.now(),
       createdDate: string = new Date().toLocaleString("fr-FR"),
       updatedDate: string = new Date().toLocaleString("fr-FR"),
@@ -28,10 +28,10 @@ export default class DataNote {
       tags: Tag[] = [],
       selected: boolean = false,
       pinned: boolean = false,
-      important: boolean = false
+      important: boolean = false,
   ) {
-      this.name = name;
       this.id = id;
+      this.name = name;
       this.timestamp = timestamp;
       this.createdDate = createdDate;
       this.updatedDate = updatedDate;

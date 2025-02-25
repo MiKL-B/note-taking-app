@@ -1,11 +1,12 @@
 <template>
-	<MenuDropdown :title="$t('file')" btn="toolbar-btn">
+	<MenuDropdown :title="$t('edit')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li
 				class="flex justify-between"
 				v-for="item in menuItems"
 				:key="item"
 				@click="onSubMenuClick(item.label)"
+
 			>
 				<span>
 					{{ $t(item.label) }}
@@ -19,7 +20,7 @@
 import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
-	name: "ToolbarFile",
+	name: "ToolbarEdit",
 	components: {
 		MenuDropdown,
 	},
@@ -28,28 +29,28 @@ export default {
 		return {
 			menuItems: [
 				{
-					label: "newnote",
-					cmd: "Ctrl + N",
+					label: "undo",
+					cmd: "Ctrl + Z",
 				},
 				{
-					label: "duplicate_note",
-					cmd: "",
+					label: "redo",
+					cmd: "Ctrl + Y",
 				},
 				{
-					label: "save",
-					cmd: "Ctrl + S",
+					label: "cut",
+					cmd: "Ctrl + X",
 				},
 				{
-					label: "exportjson",
-					cmd: "",
+					label: "copy",
+					cmd: "Ctrl + C",
 				},
 				{
-					label: "importjson",
-					cmd: "",
+					label: "paste",
+					cmd: "Ctrl + V",
 				},
 				{
-					label: "exit",
-					cmd: "Ctrl + Q",
+					label: "select_all",
+					cmd: "Ctrl + A",
 				},
 			],
 		};

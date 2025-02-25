@@ -66,6 +66,7 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .details-menu li:hover {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
