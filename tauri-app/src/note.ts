@@ -9,32 +9,35 @@ export default class DataNote {
   timestamp:number;
   createdDate :string;
   updatedDate: string;
+  isSaved:number;
   status :string;
   color :string;
   content:string;
   tags: Tag[];
-  selected:boolean;
-  pinned :boolean;
-  important :boolean;
+  selected:number;
+  pinned :number;
+  important :number;
   constructor(
       id: number = Date.now(),
       name: string = "Note",
       timestamp: number = Date.now(),
       createdDate: string = new Date().toLocaleString("fr-FR"),
       updatedDate: string = new Date().toLocaleString("fr-FR"),
+      isSaved:1,
       status: string = "todo",
       color: string = "red",
       content: string = "",
       tags: Tag[] = [],
-      selected: boolean = false,
-      pinned: boolean = false,
-      important: boolean = false,
+      selected: number = 0,
+      pinned: number = 0,
+      important: number = 0,
   ) {
       this.id = id;
       this.name = name;
       this.timestamp = timestamp;
       this.createdDate = createdDate;
       this.updatedDate = updatedDate;
+      this.isSaved = isSaved;
       this.status = status;
       this.color = color;
       this.content = content;

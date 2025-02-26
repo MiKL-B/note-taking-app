@@ -33,6 +33,7 @@
 					@scroll="syncScroll('div1')"
 					spellcheck="false"
 					:style="dynamicStyle"
+					@input="markAsModified"
 				></textarea>
 			</div>
 			<hr class="separator-column" />
@@ -50,6 +51,7 @@
 					v-model="selectedNote.content"
 					spellcheck="false"
 					:style="dynamicStyle"
+					@input="markAsModified"
 				></textarea>
 			</div>
 			<div
@@ -74,7 +76,7 @@ import NoteStatusbar from "./NoteStatusbar.vue";
 export default {
 	name: "Note",
 	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
-	emits: ["delete-tag-note"],
+	emits: ["delete-tag-note","mark-as-modified"],
 	components: {
 		NoteStatusbar,
 		X,
@@ -126,15 +128,17 @@ export default {
 		},
 		getWordNoteCount() {
 			const selectedNote = this.notes.find((note) => note.selected);
-			return selectedNote
-				? selectedNote.content.split(" ").length - 1
-				: "";
+			return selectedNote ? selectedNote.content.split(" ").length - 1 : "";
 		},
 	},
 	methods: {
 		deleteTagNote(tag) {
 			this.$emit("delete-tag-note", tag);
 		},
+		markAsModified() {
+			this.$emit("mark-as-modified")
+		},
+
 		syncScroll(source) {
 			const div1 = this.$refs.div1;
 			const div2 = this.$refs.div2;
@@ -156,47 +160,47 @@ export default {
 	min-width: 50%;
 }
 #column-note-title {
-  display: flex;
-  padding: 0 0.2rem;
-  width: 100%;
+	display: flex;
+	padding: 0 0.2rem;
+	width: 100%;
 }
 #input-note-name {
-  width: 100%;
-  border: none;
-  box-shadow: none;
-  font-size: 20px;
+	width: 100%;
+	border: none;
+	box-shadow: none;
+	font-size: 20px;
 }
 .note-tag-list {
-  flex-wrap: wrap;
-  overflow-y: scroll;
-  max-height: 26px;
-  height: 26px;
-  display: flex;
-  gap: 0.2rem;
-  padding-left: 0.2rem;
+	flex-wrap: wrap;
+	overflow-y: scroll;
+	max-height: 26px;
+	height: 26px;
+	display: flex;
+	gap: 0.2rem;
+	padding-left: 0.2rem;
 }
 #bothColumns {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  height: calc(100vh - 200px);
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	height: calc(100vh - 200px);
 }
 .separator-column {
-  border-left: none;
-  border-right: 1px solid var(--grey);
-  height: 100%;
-  margin: 0 1rem;
+	border-left: none;
+	border-right: 1px solid var(--grey);
+	height: 100%;
+	margin: 0 1rem;
 }
 #oneView {
-  height: calc(100vh - 200px);
+	height: calc(100vh - 200px);
 }
 #oneView div {
-  height: 100%;
+	height: 100%;
 }
 #bothColumns div {
-  height: 100%;
+	height: 100%;
 }
 .delete-tag-btn {
-  cursor: pointer;
-  color: var(--dark2);
+	cursor: pointer;
+	color: var(--dark2);
 }
 </style>

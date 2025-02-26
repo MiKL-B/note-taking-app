@@ -108,7 +108,7 @@ export default {
     FileWarning,
     ChevronDown,
   },
-  props: ["tags", "showBoth", "modelValue", "isPinned", "isImportant"],
+  props: ["tags", "showBoth", "modelValue", "isImportant","isPinned"],
   emits: [
     "add-tag-note",
     "duplicate-note",

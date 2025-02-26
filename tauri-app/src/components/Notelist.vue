@@ -16,6 +16,7 @@
       @contextmenu.prevent="showContextMenu($event, note)"
     >
       <div id="note">
+        <Check v-if="note.isSaved" class="note-saved size-16"/>
         <h4 class="note-title">
           <!-- <Lock class="size-16 text-dark"/> -->
           <span style="color: var(--red)" v-if="note.important">!</span>
@@ -43,8 +44,10 @@
         <p class="note-content">
           {{ note.content }}
         </p>
-        <span class="note-date">{{ note.createdDate }}</span>
-  
+        <div class="note-dates">
+          <span class="note-date">{{ note.createdDate }}</span>
+          <span class="note-date">{{ note.updatedDate }}</span>
+        </div>
       </div>
       <Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
     </div>
@@ -97,10 +100,10 @@
 </template>
 
 <script>
-import { Pin, PinOff, Trash2, Lock, Plus, CopyPlus } from "lucide-vue-next";
+import { Pin, PinOff, Trash2, Lock, Plus, CopyPlus, Check } from "lucide-vue-next";
 export default {
   name: "Notelist",
-  props: ["notes", "isPinned", "selectedNote"],
+  props: ["notes", "selectedNote", "isPinned"],
   emits: [
     "select-note",
     "delete-note",
@@ -115,6 +118,7 @@ export default {
     Lock,
     Plus,
     CopyPlus,
+    Check
   },
   data() {
     return {
@@ -194,8 +198,8 @@ export default {
   cursor: pointer;
 }
 .note-selected,
-.note-selected:hover  {
-  background:var(--bg-note-selected);
+.note-selected:hover {
+  background: var(--bg-note-selected);
   cursor: pointer;
 }
 
@@ -204,14 +208,18 @@ export default {
   pointer-events: auto;
 }
 
-
 .note-content {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--dark);
 }
-
+.note-saved{
+  color:var(--green);
+  position: absolute;
+  right:0.5rem;
+  top:0.5rem;
+}
 .note-title {
   display: flex;
   align-items: center;
@@ -237,8 +245,6 @@ export default {
   display: flex;
 }
 
-
-
 .note-trash {
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -246,9 +252,14 @@ export default {
   color: var(--red);
   margin: auto;
 }
+.note-dates{
+  display: flex;
+  flex-direction: column;
+}
 .note-date {
   color: var(--text-color-notelist);
-  font-size: 14px;
+  font-size: 12px;
+  font-style: italic;
 }
 .note-trash:hover {
   cursor: pointer;

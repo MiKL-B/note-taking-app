@@ -14,6 +14,7 @@ class DatabaseService {
       throw error;
     }
   }
+  // -------------------------------------------------------------------------
   async createTableNote() {
     const db = await this.connectToDatabase();
     let sql = `
@@ -23,16 +24,17 @@ class DatabaseService {
       timestamp TIMESTAMP,
       createdDate DATE,
       updatedDate DATE,
+      isSaved BOOL,
       status TEXT,
       color TEXT,
       content TEXT,
       tags TEXT,
-      selected BOOL,
       pinned BOOL,
       important BOOL);
     `;
     await db.execute(sql);
   }
+  // -------------------------------------------------------------------------
   async initializeDatabase() {
     const db = await this.connectToDatabase();
     // Créer la table 'test' si elle n'existe pas
@@ -41,7 +43,8 @@ class DatabaseService {
     await this.createTableNote();
     // Ajoutez d'autres tables ici si nécessaire
   }
-  async insertData() {
+  // -------------------------------------------------------------------------
+  async createNote() {
     try {
       const db = await this.connectToDatabase();
       const countQuery = "SELECT COUNT(*) AS count FROM Note";
@@ -51,7 +54,7 @@ class DatabaseService {
       const name = `Note ${currentCount + 1}`;
 
       const query = `
-        INSERT INTO Note (name, timestamp,createdDate,updatedDate,status,color,content,tags,selected,pinned,important)
+        INSERT INTO Note (name, timestamp,createdDate,updatedDate,isSaved,status,color,content,tags,pinned,important)
         VALUES
         (?,?,?,?,?,?,?,?,?,?,?);
       `;
@@ -60,31 +63,80 @@ class DatabaseService {
         Date.now(),
         new Date().toLocaleString("fr-FR"),
         new Date().toLocaleString("fr-FR"),
+        1,
         "todo",
         "red",
         "",
         "",
         0,
         0,
-        0
       ]);
-      console.log("inserted");
     } catch (error) {
       console.error("Error inserting data:", error);
       throw error;
     }
   }
-
-  async fetchData() {
+  // -------------------------------------------------------------------------
+  async updateNote(note) {
     try {
       const db = await this.connectToDatabase();
-      const result = await db.select("SELECT * FROM Note");
+      const query = `
+        UPDATE Note SET
+        name = $1,
+        timestamp = $2,
+        updatedDate = $3,
+        isSaved = $4,
+        status = $5,
+        color = $6,
+        content = $7,
+        tags = $8,
+        pinned = $9,
+        important = $10
+        WHERE id = $11;
+      `;
+    
+      let params = [
+        note.name,
+        note.timestamp,
+        new Date().toLocaleString("fr-FR"),
+        note.isSaved,
+        note.status,
+        note.color,
+        note.content,
+        note.tags,
+        note.pinned,
+        note.important,
+        note.id,
+      ];
+      await db.execute(query, params);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // -------------------------------------------------------------------------
+  async deleteNote(note) {
+    try {
+      const db = await this.connectToDatabase();
+      const query = "DELETE FROM Note WHERE id = $1;";
+      await db.execute(query, [note.id]);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // -------------------------------------------------------------------------
+  async getNotes() {
+    try {
+      const db = await this.connectToDatabase();
+      const result = await db.select("SELECT * FROM Note;");
       return result;
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   }
+  // -------------------------------------------------------------------------
   async executeQuery(query, params) {
     try {
       const db = await this.connectToDatabase();
@@ -94,5 +146,6 @@ class DatabaseService {
       throw error;
     }
   }
+  // -------------------------------------------------------------------------
 }
 export default new DatabaseService();

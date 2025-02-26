@@ -6,9 +6,9 @@
       @select-view="selectView"
       :distractionFree="selectedNote"
     />
-  
+
     <ViewKanban v-if="currentView === 'kanban'" />
-  
+
     <div v-else class="row">
       <div
         id="column-left"
@@ -59,8 +59,8 @@
           @duplicate-note="duplicateNote"
           @update-status="changeNoteStatus"
           @toggle-pin-note="togglePinNote"
-          :isPinned="selectedNote.pinned"
           @toggle-important-note="toggleImportantNote"
+          :isPinned="selectedNote.pinned"
           :isImportant="selectedNote.important"
           v-model.modelValue="selectedNote.status"
           @insert-item="insertItem"
@@ -71,6 +71,7 @@
           :selectedNote="selectedNote"
           :notes="notes"
           @delete-tag-note="deleteTagNote"
+          @mark-as-modified="markAsModified"
         />
       </div>
       <div class="column-note img" v-else>
@@ -160,15 +161,15 @@ export default {
       currentView: "",
       noteCount: 0,
       jsonData: {},
-      items:[]
+      items: [],
     };
   },
   async mounted() {
     window.addEventListener("keydown", this.handleKeyDown);
     // await this.createFolder();
     // console.log("notes", this.notes);
-     await DatabaseService.initializeDatabase();
-    this.notes = await DatabaseService.fetchData();
+    await DatabaseService.initializeDatabase();
+    this.notes = await DatabaseService.getNotes();
   },
   computed: {
     selectedNote() {
@@ -357,24 +358,23 @@ export default {
         });
     },
     // -------------------------------------------------------------------------
-    async createFolder() {
-      let folderName = "vault";
-      const desktopPath = await desktopDir();
-      const folderPath = await join(desktopPath, folderName);
-      try {
-        let existingFolder = await exists(folderPath);
+    // async createFolder() {
+    //   let folderName = "vault";
+    //   const desktopPath = await desktopDir();
+    //   const folderPath = await join(desktopPath, folderName);
+    //   try {
+    //     let existingFolder = await exists(folderPath);
 
-        if (!existingFolder) {
-          await mkdir(folderPath);
-        }
+    //     if (!existingFolder) {
+    //       await mkdir(folderPath);
+    //     }
 
-        // await this.readContentFolder(folderPath);
-        await this.readJSONNotes();
-      } catch (error) {
-        this.showNotification(error, "red");
-        console.log("DEBUG", error);
-      }
-    },
+    //     // await this.readContentFolder(folderPath);
+    //   } catch (error) {
+    //     this.showNotification(error, "red");
+    //     console.log("DEBUG", error);
+    //   }
+    // },
     // -------------------------------------------------------------------------
     async readContentFolder(filePath: string) {
       let options: object = {
@@ -483,119 +483,34 @@ export default {
       return id + Date.now();
     },
     // -------------------------------------------------------------------------
-  
-    async createNote() {
+    async markAsModified() {
+      this.selectedNote.isSaved = 0;
+      await DatabaseService.updateNote(this.selectedNote);
+    },
+    // -------------------------------------------------------------------------
 
-      await DatabaseService.insertData(); 
-       this.items = await DatabaseService.fetchData();
+    async createNote() {
+      await DatabaseService.createNote();
+      this.items = await DatabaseService.getNotes();
       let note = new DataNote();
-      this.items.forEach((item)=>{
-        note = {...item}
-      })
-      this.notes.push(note)
-      // console.log(this.items)
-      // this.notes = this.items;
-      // let note = new DataNote();
-      // let uuid = this.uniqueId(10);
-      // note.name = "Note-" + uuid;
-      // note.path = await getFilePath(note.name, "vault");
-      // const filePath = await getFilePath("data.json", "vault");
-      // try {
-      //   const content = await readTextFile(filePath);
-      //   const existingNotes = JSON.parse(content);
-      //   existingNotes.push(note);
-      //   const jsonData = JSON.stringify(existingNotes, null, 4);
-      //   await writeTextFile(filePath, jsonData);
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      // await this.readJSONNotes();
-      // // await this.readJSONNotes();
-      // // this.createFile(note);
-      // // this.updateFile(note);
-      // // this.showNotification(
-      // //   this.$t("note_created", { note_name: note.name }),
-      // //   "green",
-      // // );
-      // this.setDelayCreationNote();
-    },
-    // -------------------------------------------------------------------------
-    async readJSONNotes() {
-      const filePath = await getFilePath("data.json", "vault");
-      try {
-        const content = await readTextFile(filePath);
-        this.notes = JSON.parse(content);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    // -------------------------------------------------------------------------
-    async createFile(file: Note) {
-      let folderName = "vault";
-      const desktopPath = await desktopDir();
-      const folderPath = await join(desktopPath, folderName);
-      const filePath = await join(folderPath, file.name + ".txt");
-      try {
-        await writeTextFile(filePath, file.content);
-        file.folder = folderPath.replace(/\\/g, "/").split("/").pop();
-        file.path = filePath;
-        file.oldPath = filePath;
-      } catch (error) {
-        console.log("DEBUG", error);
-      }
-    },
-    // -------------------------------------------------------------------------
-    async updateFile(file: Note) {
-      let folderName = "vault";
-      const desktopPath = await desktopDir();
-      const folderPath = await join(desktopPath, folderName);
-      const filePath = await join(folderPath, file.name + ".txt");
+      this.items.forEach((item) => {
+        note = { ...item };
+      });
+      this.notes.push(note);
+      this.showNotification(
+        this.$t("note_created", { note_name: note.name }),
+        "green",
+      );
+      this.setDelayCreationNote();
     },
     // -------------------------------------------------------------------------
     async saveFile(note: Note) {
-      let file = { ...note };
-      file.name += ".txt";
-      console.log("saveFile", note);
-      // await this.createFile(note)
-      // let folderName = "vault";
-      // if (isDuplicated) {
-      //   folderName = await join("vault", file.folder);
-      // }
-      let oldPathName = note.oldPath.replace(/\\/g, "/").split("/").pop();
-      let newPathName = file.name.replace(/\\/g, "/").split("/").pop();
-      const oldPathFile = await getFilePath(oldPathName, "vault");
-      const newPathFile = await getFilePath(newPathName, "vault");
-
-      console.log("old", oldPathFile);
-      console.log("new", newPathFile);
-      let newNote = { ...note };
-      newNote.name = note.name;
-      let filePath = oldPathFile;
-      if (oldPathName !== newPathName) {
-        filePath = newPathFile;
-        await this.createFile(newNote);
-        await remove(oldPathFile);
-        note.oldPath = newPathFile;
-      } else {
-        await readTextFile(filePath);
-        await writeTextFile(filePath, file.content);
-      }
-
-      // try {
-      //   let existingFile = await exists(filePath);
-
-      //   note.updatedDate = new Date().toLocaleString("fr-FR");
-      //   await readTextFile(filePath);
-      //   await writeTextFile(filePath, file.content);
-      //   this.showNotification(
-      //     this.$t("note_saved", { note_name: note.name }),
-      //     "green",
-      //   );
-      //   console.log("file updated");
-      // } catch (error) {
-      //   this.showNotification(error, "red");
-      //   console.log("DEBUG", error);
-      // }
+      this.selectedNote.isSaved = 1;
+      await DatabaseService.updateNote(note);
+      this.showNotification(
+        this.$t("note_saved", { note_name: note.name }),
+        "green",
+      );
     },
     // -------------------------------------------------------------------------
     handleKeyDown(event) {
@@ -638,12 +553,14 @@ export default {
       }, duration);
     },
     // -------------------------------------------------------------------------
-    togglePinNote() {
-      this.selectedNote.pinned = !this.selectedNote.pinned;
+    async togglePinNote() {
+      this.selectedNote.pinned ^= 1;
+      await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
-    toggleImportantNote() {
-      this.selectedNote.important = !this.selectedNote.important;
+    async toggleImportantNote() {
+      this.selectedNote.important ^= 1;
+      await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
     duplicateNote() {
@@ -656,7 +573,7 @@ export default {
       let status = this.selectedNote.status;
       let color = this.selectedNote.color;
       let content = this.selectedNote.content;
-      let folder = this.selectedNote.folder;
+      // let folder = this.selectedNote.folder;
       let tags = [];
       this.selectedNote.tags.forEach((tag) => {
         let tagCopy = {
@@ -672,7 +589,7 @@ export default {
       note.color = color;
       note.content = content;
       note.tags = tags;
-      note.folder = folder;
+      // note.folder = folder;
       this.notes.push(note);
 
       this.showNotification(
@@ -716,13 +633,11 @@ export default {
       if (index < 0) {
         return;
       }
-      let file = {
-        name: note.name + ".txt",
-      };
 
       try {
         this.notes.splice(index, 1);
-        await remove(note.path);
+
+        await DatabaseService.deleteNote(note);
         let msgDeleted = this.$t("note_deleted", {
           note_name: note.name,
         });
@@ -733,7 +648,7 @@ export default {
       }
     },
     // -------------------------------------------------------------------------
-    changeNoteStatus(newStatus: string) {
+    async changeNoteStatus(newStatus: string) {
       this.selectedNote.status = newStatus;
       switch (this.selectedNote.status) {
         case "todo":
@@ -750,6 +665,7 @@ export default {
           break;
       }
       this.selectedNote.color = this.color;
+      await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
     deleteTag(tag) {
