@@ -19,12 +19,13 @@
 - Notifications (just information)
 - Add context menu
 - Create menu item for kanban, drawing, schedule, distraction free view
-## Folder & File
+<!-- ## Folder & File
 - open folders, subfolders as well as files (push as notes for the moment)
 - Create treeview for folders, subfolders as well as files
 - Allow create, save as well as delete files (note = file)
 - Find this path to write and read notes (files)
 - Create a folder to store notes in the Destkop 
+- Review the different functions for new, new folder, open ... -->
 
 ---
 
@@ -54,10 +55,11 @@
 - insert: other elements like date, image...
 - Add menu item about info project and link github 
 - remove open note demo mounted and move in file menu 
+- When some actions like close application, alert the user to save data if at least one note is not saved
 ---
 
 # In progress
-- Review the different functions for new, new folder, open ...
+
 ---
 
 # To fix
@@ -69,23 +71,17 @@
 - insert: heading ... at the right place
 - insert: Audio and video
 - Context menu 
-- Manage permissions for treeview
+<!-- - Manage permissions for treeview -->
 - Add menu item documentation
 - Improve import notes tags with restrictions 
-- When some actions like close application, save the previous note selected
-- Change the Desktop basedir to AppLocalData allow to create in C:\Users\{Username}\AppData\Local\Thoth
-
+<!-- - Change the Desktop basedir to AppLocalData allow to create in C:\Users\{Username}\AppData\Local\Thoth -->
 ---
 
 # To Implement
 
 ## Feature Folder & File
-- Add a sub menu item in "File" to create a vault if not existing one
-- "new folder" (vault) with a confirm and input for the folder name otherwise thoth notes
-- can create many folders (vault) ?
-- Format the header of the notes in order to retrieve the status, tags ...
-- Allow permissions according to the actions (create dir, create file, read dir, read file)
-- find the path for MacOs et Linux
+<!-- - Allow permissions according to the actions (create dir, create file, read dir, read file)
+- find the path for MacOs et Linux -->
 
 - Lock files / folders 
 - Debug with log files
