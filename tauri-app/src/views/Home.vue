@@ -165,8 +165,6 @@ export default {
   },
   async mounted() {
     window.addEventListener("keydown", this.handleKeyDown);
-    // await this.createFolder();
-    // console.log("notes", this.notes);
     await DatabaseService.initializeDatabase();
     this.notes = await DatabaseService.getNotes();
   },
@@ -346,6 +344,7 @@ export default {
           this.notes = await DatabaseService.getNotes();
         })
         .catch((error) => {
+          console.log(error);
           this.showNotification(error, "red");
         });
     },
@@ -481,11 +480,10 @@ export default {
       }, duration);
     },
     // -------------------------------------------------------------------------
-    selectNote(note: Note) {
-      this.notes.forEach((n: Note) => {
-        n.selected = false;
-      });
-      note.selected = true;
+    async selectNote(note) {
+      await DatabaseService.unselectNotes();
+      await DatabaseService.selectNote(note);
+      this.notes = await DatabaseService.getNotes();
     },
     // -------------------------------------------------------------------------
     async deleteNote(note) {
@@ -652,14 +650,29 @@ export default {
       try {
         const content = await readTextFile(selectedFile);
         const jsonParsed = JSON.parse(content);
-
+        let items = [];
         jsonParsed.notes.forEach((note) => {
-          this.notes.push(note);
+          items.push(note);
         });
+        for (let i = 0; i < items.length; i++) {
+          await DatabaseService.createNote(
+            items[i].name,
+            items[i].content,
+            items[i].timestamp,
+            items[i].createdDate,
+            items[i].updatedDate,
+            items[i].isSaved,
+            items[i].status_ID,
+            items[i].pinned,
+            items[i].important,
+            items[i].selected,
+          );
+        }
 
-        jsonParsed.tags.forEach((tag) => {
-          this.tags.push(tag);
-        });
+        this.notes = await DatabaseService.getNotes();
+        // jsonParsed.tags.forEach((tag) => {
+        //   this.tags.push(tag);
+        // });
 
         this.showNotification(this.$t("data_imported"), "green");
       } catch (error) {

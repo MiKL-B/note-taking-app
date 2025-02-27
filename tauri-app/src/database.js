@@ -79,12 +79,23 @@ class DatabaseService {
       content TEXT,
       pinned BOOL,
       important BOOL,
+      selected BOOL,
       FOREIGN KEY(status_ID) REFERENCES Status(status_ID));`;
     await db.execute(query);
   }
   // -------------------------------------------------------------------------
-  async createNote(name="", content="") {
-    console.log(name,content)
+  async createNote(
+    name = "",
+    content = "",
+    timestamp = -1,
+    createdDate = "",
+    updatedDate = "",
+    isSaved = 1,
+    status_ID = 1,
+    pinned = 0,
+    important = 0,
+    selected = 0,
+  ) {
     try {
       const db = await this.connectToDatabase();
 
@@ -96,18 +107,19 @@ class DatabaseService {
       }
 
       const query = `
-        INSERT INTO Note (name,timestamp,createdDate,updatedDate,isSaved,status_ID,content,pinned,important)
+        INSERT INTO Note (name,timestamp,createdDate,updatedDate,isSaved,status_ID,content,pinned,important,selected)
         VALUES
-        (?,?,?,?,?,?,?,?,?);`;
+        (?,?,?,?,?,?,?,?,?,?);`;
       let params = [
         name,
-        Date.now(),
-        new Date().toLocaleString("fr-FR"),
-        new Date().toLocaleString("fr-FR"),
-        1,
-        1,
+        timestamp || Date.now(),
+        createdDate || new Date().toLocaleString("fr-FR"),
+        updatedDate || new Date().toLocaleString("fr-FR"),
+        isSaved,
+        status_ID,
         content,
-        0,
+        pinned,
+        important,
         0,
       ];
       await db.execute(query, params);
@@ -121,8 +133,8 @@ class DatabaseService {
     try {
       const db = await this.connectToDatabase();
       const query = `
-        INSERT INTO Note (name, timestamp,createdDate,updatedDate,isSaved,status_ID,content,pinned,important)
-        VALUES (?,?,?,?,?,?,?,?,?);`;
+        INSERT INTO Note (name,timestamp,createdDate,updatedDate,isSaved,status_ID,content,pinned,important,selected)
+        VALUES (?,?,?,?,?,?,?,?,?,?);`;
       let noteName = note.name + " - Copy";
       let params = [
         noteName,
@@ -134,6 +146,7 @@ class DatabaseService {
         note.content,
         note.pinned,
         note.important,
+        0,
       ];
       await db.execute(query, params);
     } catch (error) {
@@ -155,8 +168,9 @@ class DatabaseService {
         status_ID = $5,
         content = $6,
         pinned = $7,
-        important = $8
-        WHERE note_ID = $9;`;
+        important = $8,
+        selected = $9
+        WHERE note_ID = $10;`;
 
       let params = [
         note.name,
@@ -167,6 +181,7 @@ class DatabaseService {
         note.content,
         note.pinned,
         note.important,
+        note.selected,
         note.note_ID,
       ];
       await db.execute(query, params);
@@ -181,6 +196,28 @@ class DatabaseService {
     try {
       const db = await this.connectToDatabase();
       const query = "DELETE FROM Note WHERE note_ID = $1;";
+      let params = [note.note_ID];
+      await db.execute(query, params);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // -------------------------------------------------------------------------
+  async unselectNotes() {
+    try {
+      const db = await this.connectToDatabase();
+      const query = `UPDATE Note SET selected = 0 WHERE selected = 1;`;
+      await db.execute(query);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async selectNote(note) {
+    try {
+      const db = await this.connectToDatabase();
+      const query = `UPDATE Note SET selected = 1 WHERE note_ID = $1;`;
       let params = [note.note_ID];
       await db.execute(query, params);
     } catch (error) {
