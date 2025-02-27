@@ -62,7 +62,7 @@
           @toggle-important-note="toggleImportantNote"
           :isPinned="selectedNote.pinned"
           :isImportant="selectedNote.important"
-          v-model.modelValue="selectedNote.status"
+          v-model.modelValue="selectedNote.status_ID"
           @insert-item="insertItem"
         />
         <Note
@@ -89,7 +89,7 @@
 <script lang="ts">
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 
-import DataNote from "../note.ts";
+// import DataNote from "../note.ts";
 import getFilePath from "../FileManager.js";
 
 import Titlebar from "../components/Titlebar.vue";
@@ -161,7 +161,6 @@ export default {
       currentView: "",
       noteCount: 0,
       jsonData: {},
-      items: [],
     };
   },
   async mounted() {
@@ -171,41 +170,41 @@ export default {
     await DatabaseService.initializeDatabase();
     this.notes = await DatabaseService.getNotes();
   },
+
   computed: {
     selectedNote() {
       const selectedNote = this.notes.find((note: Note) => note.selected);
       return selectedNote ? selectedNote : "";
     },
+
     // -------------------------------------------------------------------------
     filteredNotes() {
       switch (this.filter) {
         case "todo":
-          return this.notes.filter((note: Note) => note.status === "todo");
+          return this.notes.filter((note) => note.status_ID === 1);
         case "inprogress":
-          return this.notes.filter(
-            (note: Note) => note.status === "inprogress",
-          );
+          return this.notes.filter((note) => note.status_ID === 2);
         case "finished":
-          return this.notes.filter((note: Note) => note.status === "finished");
+          return this.notes.filter((note) => note.status_ID === 3);
         case "archived":
-          return this.notes.filter((note: Note) => note.status === "archived");
+          return this.notes.filter((note) => note.status_ID === 4);
         case "":
         case "allnotes":
-          return this.notes.filter((note: Note) => {
+          return this.notes.filter((note) => {
             return note.name
               .toLowerCase()
               .includes(this.searchNote.toLowerCase());
           });
         case "pinned":
-          return this.notes.filter((note: Note) => note.pinned === true);
-        // case "today":
-        //   return this.notes.filter(
-        //     (note) => note.createdDate.split(" ")[0] === this.getToday(),
-        //   );
+          return this.notes.filter((note) => note.pinned === 1);
+        case "today":
+          return this.notes.filter(
+            (note) => note.createdDate.split(" ")[0] === this.getToday(),
+          );
         case "important":
-          return this.notes.filter((note: Note) => note.important === true);
+          return this.notes.filter((note) => note.important === 1);
         default:
-          return this.notes.filter((note: Note) => {
+          return this.notes.filter((note) => {
             return note.tags.some((tag) =>
               tag.name.toLowerCase().includes(this.filter.toLowerCase()),
             );
@@ -215,25 +214,20 @@ export default {
     // -------------------------------------------------------------------------
     getCountNotes() {
       return {
-        allNotes: this.notes.filter((note: Note) => {
+        allNotes: this.notes.filter((note) => {
           return note.name
             .toLowerCase()
             .includes(this.searchNote.toLowerCase());
         }).length,
-        todo: this.notes.filter((note: Note) => note.status === "todo").length,
-        inProgress: this.notes.filter(
-          (note: Note) => note.status === "inprogress",
+        todo: this.notes.filter((note) => note.status_ID === 1).length,
+        inProgress: this.notes.filter((note) => note.status_ID === 2).length,
+        finished: this.notes.filter((note) => note.status_ID === 3).length,
+        archived: this.notes.filter((note) => note.status_ID === 4).length,
+        pinned: this.notes.filter((note) => note.pinned === 1).length,
+        today: this.notes.filter(
+          (note) => note.createdDate.split(" ")[0] === this.getToday(),
         ).length,
-        finished: this.notes.filter((note: Note) => note.status === "finished")
-          .length,
-        archived: this.notes.filter((note: Note) => note.status === "archived")
-          .length,
-        pinned: this.notes.filter((note: Note) => note.pinned === true).length,
-        // today: this.notes.filter(
-        //   (note) => note.createdDate.split(" ")[0] === this.getToday(),
-        // ).length,
-        important: this.notes.filter((note: Note) => note.important === true)
-          .length,
+        important: this.notes.filter((note) => note.important === 1).length,
       };
     },
   },
@@ -335,12 +329,11 @@ export default {
       }
     },
     // -------------------------------------------------------------------------
-    openNoteDemo() {
+    async openNoteDemo() {
       const selectedFile = "/Thoth demo.txt";
       const fileName = selectedFile
         .replace(/^.*[\\\/]/, "")
         .replace(/\.[^/.]+$/, "");
-
       fetch(selectedFile)
         .then((response) => {
           if (!response.ok) {
@@ -348,121 +341,14 @@ export default {
           }
           return response.text();
         })
-        .then((content) => {
-          let note = new DataNote(fileName);
-          note.content = content;
-          this.notes.push(note);
+        .then(async (content) => {
+          await DatabaseService.createNote(fileName, content);
+          this.notes = await DatabaseService.getNotes();
         })
         .catch((error) => {
           this.showNotification(error, "red");
         });
     },
-    // -------------------------------------------------------------------------
-    // async createFolder() {
-    //   let folderName = "vault";
-    //   const desktopPath = await desktopDir();
-    //   const folderPath = await join(desktopPath, folderName);
-    //   try {
-    //     let existingFolder = await exists(folderPath);
-
-    //     if (!existingFolder) {
-    //       await mkdir(folderPath);
-    //     }
-
-    //     // await this.readContentFolder(folderPath);
-    //   } catch (error) {
-    //     this.showNotification(error, "red");
-    //     console.log("DEBUG", error);
-    //   }
-    // },
-    // -------------------------------------------------------------------------
-    async readContentFolder(filePath: string) {
-      let options: object = {
-        recursive: true,
-      };
-
-      let entries = await readDir(filePath, options);
-      let newArr = [];
-      for (const entry of entries) {
-        const pathEntry = await join(filePath, entry.name);
-        if (entry.isFile) {
-          try {
-            const fileContent = await readTextFile(pathEntry);
-            const metadata = await stat(pathEntry);
-
-            let dateMetadata = metadata.mtime.toLocaleString("fr-FR");
-            let birthTime = metadata.birthtime.toLocaleString("fr-FR");
-            let timeStampMetadata = metadata.mtime.getTime();
-            let noteName = entry.name.substring(0, entry.name.lastIndexOf("."));
-            let note = new DataNote();
-            note.name = noteName;
-            note.content = fileContent;
-            note.oldPath = pathEntry;
-            note.path = pathEntry;
-            note.folder = filePath.replace(/\\/g, "/").split("/").pop();
-            note.createdDate = birthTime;
-            note.id = metadata.uid;
-            note.timestamp = timeStampMetadata;
-            this.notes.push(note);
-          } catch (error) {
-            console.log("DEBUG", error);
-            this.showNotification(error, "red");
-          }
-        } else if (entry.isDirectory) {
-          await this.readContentFolder(pathEntry);
-        }
-      }
-    },
-    // -------------------------------------------------------------------------
-
-    // -------------------------------------------------------------------------
-    // async readContentFolder(path: string) {
-    //   console.log(
-    //     "BEGIN [METHODS] async readContentFolder(path: string)",
-    //     path,
-    //   );
-    //   let options: object = {
-    //     recursive: true,
-    //   };
-
-    //   const entries = await readDir(path, options);
-    //   let tree = {
-    //     name: path.replace(/\\/g, "/").split("/").pop() || "root",
-    //     path: path,
-    //     isDirectory: true,
-    //     children: [],
-    //   };
-
-    //   for (const entry of entries) {
-    //     const filePath = await join(path, entry.name);
-    //     let node = {
-    //       name: entry.name,
-    //       path: filePath,
-    //       isDirectory: entry.isDirectory,
-    //       children: [],
-    //     };
-
-    //     if (entry.isFile) {
-    //       try {
-    //         const fileContent = await readTextFile(filePath);
-    //         let noteName = entry.name.substring(0, entry.name.lastIndexOf("."));
-    //         let note = new DataNote(noteName);
-    //         note.content = fileContent;
-    //         this.notes.push(note);
-    //       } catch (error) {
-    //         console.log("DEBUG", error);
-    //         this.showNotification(error, "red");
-    //       }
-    //     } else if (entry.isDirectory) {
-    //       let arr = await this.readContentFolder(filePath);
-    //       node.children = arr.children;
-    //     }
-    //     tree.children.push(node);
-    //   }
-    //   console.log("END [METHODS] async readContentFolder(path: string)", path);
-    //   return tree;
-    // },
-
     // -------------------------------------------------------------------------
     generateIncrementedName(baseTitle: string) {
       if (!this.noteCounters[baseTitle]) {
@@ -485,18 +371,13 @@ export default {
     // -------------------------------------------------------------------------
     async markAsModified() {
       this.selectedNote.isSaved = 0;
-      await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
-
     async createNote() {
       await DatabaseService.createNote();
-      this.items = await DatabaseService.getNotes();
-      let note = new DataNote();
-      this.items.forEach((item) => {
-        note = { ...item };
-      });
-      this.notes.push(note);
+      this.notes = await DatabaseService.getNotes();
+      let note = await DatabaseService.getLastNote();
+
       this.showNotification(
         this.$t("note_created", { note_name: note.name }),
         "green",
@@ -504,7 +385,7 @@ export default {
       this.setDelayCreationNote();
     },
     // -------------------------------------------------------------------------
-    async saveFile(note: Note) {
+    async saveFile(note) {
       this.selectedNote.isSaved = 1;
       await DatabaseService.updateNote(note);
       this.showNotification(
@@ -536,9 +417,19 @@ export default {
     },
     // -------------------------------------------------------------------------
     async closeApplication() {
+      let isNoteUnsaved = false;
+      for (let i = 0; i < this.notes.length; i++) {
+        if (this.notes[i].isSaved === 0) {
+          isNoteUnsaved = true;
+          break;
+        }
+      }
+      if (!isNoteUnsaved) {
+        appWindow.close();
+        return;
+      }
       let msgConfirm = this.$t("confirm_close_app");
       const confirmed = await confirm(msgConfirm);
-
       if (!confirmed) {
         return;
       }
@@ -563,34 +454,13 @@ export default {
       await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
-    duplicateNote() {
+    async duplicateNote() {
       if (!this.selectedNote) {
         this.showNotification(this.$t("no_note_selected"), "red");
         return;
       }
-
-      let name = this.selectedNote.name + " - " + Date.now().toString();
-      let status = this.selectedNote.status;
-      let color = this.selectedNote.color;
-      let content = this.selectedNote.content;
-      // let folder = this.selectedNote.folder;
-      let tags = [];
-      this.selectedNote.tags.forEach((tag) => {
-        let tagCopy = {
-          id: tag.id,
-          name: tag.name,
-          color: tag.color,
-          selected: false,
-        };
-        tags.push(tagCopy);
-      });
-      let note = new DataNote(name);
-      note.status = status;
-      note.color = color;
-      note.content = content;
-      note.tags = tags;
-      // note.folder = folder;
-      this.notes.push(note);
+      await DatabaseService.duplicateNote(this.selectedNote);
+      this.notes = await DatabaseService.getNotes();
 
       this.showNotification(
         this.$t("note_duplicated", {
@@ -616,10 +486,9 @@ export default {
         n.selected = false;
       });
       note.selected = true;
-      console.log("note", note);
     },
     // -------------------------------------------------------------------------
-    async deleteNote(note: Note) {
+    async deleteNote(note) {
       let msgConfirm = this.$t("confirm_note_deleted", {
         note_name: note.name,
       });
@@ -628,16 +497,10 @@ export default {
       if (!confirmed) {
         return;
       }
-      const index = this.notes.findIndex((n: Note) => n.id === note.id);
-
-      if (index < 0) {
-        return;
-      }
 
       try {
-        this.notes.splice(index, 1);
-
         await DatabaseService.deleteNote(note);
+        this.notes = await DatabaseService.getNotes();
         let msgDeleted = this.$t("note_deleted", {
           note_name: note.name,
         });
@@ -648,23 +511,8 @@ export default {
       }
     },
     // -------------------------------------------------------------------------
-    async changeNoteStatus(newStatus: string) {
-      this.selectedNote.status = newStatus;
-      switch (this.selectedNote.status) {
-        case "todo":
-          this.color = "red";
-          break;
-        case "inprogress":
-          this.color = "yellow";
-          break;
-        case "finished":
-          this.color = "green";
-          break;
-        case "archived":
-          this.color = "grey";
-          break;
-      }
-      this.selectedNote.color = this.color;
+    async changeNoteStatus(newStatus) {
+      this.selectedNote.status_ID = parseInt(newStatus);
       await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------

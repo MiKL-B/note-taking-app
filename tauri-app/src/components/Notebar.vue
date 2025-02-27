@@ -7,8 +7,10 @@
       :title="$t('status')"
     >
       <option disabled selected>{{ $t("status") }}</option>
-      <option :value="item" v-for="item in status">{{ $t(item) }}</option>
+      <option :value="item.status_ID" v-for="item in status">{{ $t(item.name) }}</option>
+
     </select>
+
     <!-- add tag -->
 
     <div id="suggestion-container">
@@ -95,6 +97,8 @@ import {
   FileWarning,
   ChevronDown,
 } from "lucide-vue-next";
+import DatabaseService from "../database.js";
+
 export default {
   name: "Notebar",
   components: {
@@ -119,12 +123,15 @@ export default {
     "toggle-important-note",
     "insert-item",
   ],
+  async mounted(){
+    this.status = await DatabaseService.getStatus();
+  },
   data() {
     return {
       isPreviewMode: false,
       isVisibleSuggestionList: false,
       input: "",
-      status: ["todo", "inprogress", "finished", "archived"],
+      status: [],
       insertValue: "",
       insertItems: [
         "heading1",

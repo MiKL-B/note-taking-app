@@ -16,7 +16,7 @@
       @contextmenu.prevent="showContextMenu($event, note)"
     >
       <div id="note">
-        <Check v-if="note.isSaved" class="note-saved size-16"/>
+        <Check v-if="note.isSaved" class="note-saved size-16" />
         <h4 class="note-title">
           <!-- <Lock class="size-16 text-dark"/> -->
           <span style="color: var(--red)" v-if="note.important">!</span>
@@ -24,8 +24,9 @@
           <div
             style="padding: 0 0.3rem"
             class="color-circle"
-            :class="`bg-${note.color}`"
+            :class="`bg-${getStatusColor(note.status_ID)}`"
           ></div>
+
           <span
             id="note-title-name"
             :style="note.selected ? '' : 'color:var(--dark)'"
@@ -57,7 +58,7 @@
       <ul class="context-menu">
         <li @click="createNote" class="flex align-center gap-4">
           <Plus class="text-dark size-16" />
-          {{ $t("create_note") }}
+          {{ $t("newnote") }}
         </li>
         <li
           @click="duplicateNote"
@@ -100,7 +101,15 @@
 </template>
 
 <script>
-import { Pin, PinOff, Trash2, Lock, Plus, CopyPlus, Check } from "lucide-vue-next";
+import {
+  Pin,
+  PinOff,
+  Trash2,
+  Lock,
+  Plus,
+  CopyPlus,
+  Check,
+} from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes", "selectedNote", "isPinned"],
@@ -118,7 +127,7 @@ export default {
     Lock,
     Plus,
     CopyPlus,
-    Check
+    Check,
   },
   data() {
     return {
@@ -130,14 +139,33 @@ export default {
     };
   },
   // TODO
-  mounted() {
+  async mounted() {
     document.addEventListener("click", this.closeMenu);
   },
   beforeDestroy() {
     document.removeEventListener("click", this.closeMenu);
   },
+
   methods: {
-    selectNote(note) {
+    getStatusColor(status_ID) {
+      let color = "";
+      switch (status_ID) {
+        case 1:
+          color = "red";
+          break;
+        case 2:
+          color = "yellow";
+          break;
+        case 3:
+          color = "green";
+          break;
+        case 4:
+          color = "grey";
+          break;
+      }
+      return color;
+    },
+    async selectNote(note) {
       this.$emit("select-note", note);
       this.showMenu = false;
     },
@@ -214,11 +242,11 @@ export default {
   text-overflow: ellipsis;
   color: var(--dark);
 }
-.note-saved{
-  color:var(--green);
+.note-saved {
+  color: var(--green);
   position: absolute;
-  right:0.5rem;
-  top:0.5rem;
+  right: 0.5rem;
+  top: 0.5rem;
 }
 .note-title {
   display: flex;
@@ -252,7 +280,7 @@ export default {
   color: var(--red);
   margin: auto;
 }
-.note-dates{
+.note-dates {
   display: flex;
   flex-direction: column;
 }

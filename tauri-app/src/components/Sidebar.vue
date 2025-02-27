@@ -13,7 +13,7 @@
       <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
     <!-- folder -->
-    <SidebarTreeView v-if="tree !== null" :node="tree"/>
+    <!-- <SidebarTreeView v-if="tree !== null" :node="tree"/> -->
 
     <!-- others -->
     <li
@@ -99,7 +99,7 @@ import {
   Folder,
 } from "lucide-vue-next";
 import MenuDropdown from "./MenuDropdown.vue";
-import SidebarTreeView from "./SidebarTreeView.vue";
+// import SidebarTreeView from "./SidebarTreeView.vue";
 export default {
   name: "Sidebar",
   props: {
@@ -134,7 +134,7 @@ export default {
     ChevronUp,
     Folder,
     MenuDropdown,
-    SidebarTreeView,
+    // SidebarTreeView,
   },
   data() {
     return {

@@ -107,3 +107,134 @@ export default async function getFilePath(fileName, folderName) {
 //     console.log(error);
 //   }
 // },
+// let note = new DataNote();
+// this.items.forEach((item) => {
+//   note = { ...item };
+// });
+
+// let name = this.selectedNote.name + " - " + Date.now().toString();
+// let status = this.selectedNote.status;
+// let color = this.selectedNote.color;
+// let content = this.selectedNote.content;
+// // let folder = this.selectedNote.folder;
+// let tags = [];
+// this.selectedNote.tags.forEach((tag) => {
+//   let tagCopy = {
+//     id: tag.id,
+//     name: tag.name,
+//     color: tag.color,
+//     selected: false,
+//   };
+//   tags.push(tagCopy);
+// });
+// let note = new DataNote(name);
+// note.status = status;
+// note.color = color;
+// note.content = content;
+// note.tags = tags;
+// // note.folder = folder;
+// this.notes.push(note);
+// async createFolder() {
+//   let folderName = "vault";
+//   const desktopPath = await desktopDir();
+//   const folderPath = await join(desktopPath, folderName);
+//   try {
+//     let existingFolder = await exists(folderPath);
+
+//     if (!existingFolder) {
+//       await mkdir(folderPath);
+//     }
+
+//     // await this.readContentFolder(folderPath);
+//   } catch (error) {
+//     this.showNotification(error, "red");
+//     console.log("DEBUG", error);
+//   }
+// },
+
+// async readContentFolder(filePath: string) {
+//    let options: object = {
+//      recursive: true,
+//    };
+
+//    let entries = await readDir(filePath, options);
+//    let newArr = [];
+//    for (const entry of entries) {
+//      const pathEntry = await join(filePath, entry.name);
+//      if (entry.isFile) {
+//        try {
+//          const fileContent = await readTextFile(pathEntry);
+//          const metadata = await stat(pathEntry);
+
+//          let dateMetadata = metadata.mtime.toLocaleString("fr-FR");
+//          let birthTime = metadata.birthtime.toLocaleString("fr-FR");
+//          let timeStampMetadata = metadata.mtime.getTime();
+//          let noteName = entry.name.substring(0, entry.name.lastIndexOf("."));
+//          let note = new DataNote();
+//          note.name = noteName;
+//          note.content = fileContent;
+//          note.oldPath = pathEntry;
+//          note.path = pathEntry;
+//          note.folder = filePath.replace(/\\/g, "/").split("/").pop();
+//          note.createdDate = birthTime;
+//          note.id = metadata.uid;
+//          note.timestamp = timeStampMetadata;
+//          this.notes.push(note);
+//        } catch (error) {
+//          console.log("DEBUG", error);
+//          this.showNotification(error, "red");
+//        }
+//      } else if (entry.isDirectory) {
+//        await this.readContentFolder(pathEntry);
+//      }
+//    }
+//  },
+    // -------------------------------------------------------------------------
+
+    // -------------------------------------------------------------------------
+    // async readContentFolder(path: string) {
+    //   console.log(
+    //     "BEGIN [METHODS] async readContentFolder(path: string)",
+    //     path,
+    //   );
+    //   let options: object = {
+    //     recursive: true,
+    //   };
+
+    //   const entries = await readDir(path, options);
+    //   let tree = {
+    //     name: path.replace(/\\/g, "/").split("/").pop() || "root",
+    //     path: path,
+    //     isDirectory: true,
+    //     children: [],
+    //   };
+
+    //   for (const entry of entries) {
+    //     const filePath = await join(path, entry.name);
+    //     let node = {
+    //       name: entry.name,
+    //       path: filePath,
+    //       isDirectory: entry.isDirectory,
+    //       children: [],
+    //     };
+
+    //     if (entry.isFile) {
+    //       try {
+    //         const fileContent = await readTextFile(filePath);
+    //         let noteName = entry.name.substring(0, entry.name.lastIndexOf("."));
+    //         let note = new DataNote(noteName);
+    //         note.content = fileContent;
+    //         this.notes.push(note);
+    //       } catch (error) {
+    //         console.log("DEBUG", error);
+    //         this.showNotification(error, "red");
+    //       }
+    //     } else if (entry.isDirectory) {
+    //       let arr = await this.readContentFolder(filePath);
+    //       node.children = arr.children;
+    //     }
+    //     tree.children.push(node);
+    //   }
+    //   console.log("END [METHODS] async readContentFolder(path: string)", path);
+    //   return tree;
+    // },

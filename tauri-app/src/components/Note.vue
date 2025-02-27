@@ -4,7 +4,7 @@
 			<div
 				style="margin: auto 0"
 				class="color-circle"
-				:class="`bg-${selectedNote.color}`"
+				:class="`bg-${getStatusColor(selectedNote.status_ID)}`"
 			></div>
 			<input
 				id="input-note-name"
@@ -76,7 +76,7 @@ import NoteStatusbar from "./NoteStatusbar.vue";
 export default {
 	name: "Note",
 	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
-	emits: ["delete-tag-note","mark-as-modified"],
+	emits: ["delete-tag-note", "mark-as-modified"],
 	components: {
 		NoteStatusbar,
 		X,
@@ -128,15 +128,35 @@ export default {
 		},
 		getWordNoteCount() {
 			const selectedNote = this.notes.find((note) => note.selected);
-			return selectedNote ? selectedNote.content.split(" ").length - 1 : "";
+			return selectedNote
+				? selectedNote.content.split(" ").length - 1
+				: "";
 		},
 	},
 	methods: {
+		getStatusColor(status_ID) {
+			let color = "";
+			switch (status_ID) {
+				case 1:
+					color = "red";
+					break;
+				case 2:
+					color = "yellow";
+					break;
+				case 3:
+					color = "green";
+					break;
+				case 4:
+					color = "grey";
+					break;
+			}
+			return color;
+		},
 		deleteTagNote(tag) {
 			this.$emit("delete-tag-note", tag);
 		},
 		markAsModified() {
-			this.$emit("mark-as-modified")
+			this.$emit("mark-as-modified");
 		},
 
 		syncScroll(source) {
