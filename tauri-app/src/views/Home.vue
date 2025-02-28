@@ -72,7 +72,6 @@
           :notes="notes"
           @delete-tag-note="deleteTagNote"
           @mark-as-modified="markAsModified"
-          :tags="tagsNote"
         />
       </div>
       <div class="column-note img" v-else>
@@ -168,8 +167,8 @@ export default {
     window.addEventListener("keydown", this.handleKeyDown);
     await DatabaseService.initializeDatabase();
     this.notes = await DatabaseService.getNotes();
-    this.tags = await DatabaseService.getTags();
-  
+    // this.tags = await DatabaseService.getTags();
+
   },
 
   computed: {

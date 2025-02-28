@@ -73,11 +73,10 @@ import { X } from "lucide-vue-next";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
-import DatabaseService from "../database.js";
 
 export default {
 	name: "Note",
-	props: ["selectedNote", "isPreviewMode", "showBoth", "notes","tags"],
+	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
 	emits: ["delete-tag-note", "mark-as-modified"],
 	components: {
 		NoteStatusbar,
@@ -87,9 +86,10 @@ export default {
 		return {
 			font: localStorage.getItem("font") || "Inter",
 			fontSize: localStorage.getItem("font-size") || 16,
+			tags:[]
 		};
 	},
-
+	
 	computed: {
 	
 		dynamicStyle() {

@@ -34,7 +34,7 @@
       <span class="text-dark">{{ item.count }}</span>
     </li>
     <!-- tags -->
-    <li class="sidebar-item justify-between" @click="toggleTagsMenu">
+ <!--    <li class="sidebar-item justify-between" @click="toggleTagsMenu">
       <span class="flex align-center gap-4">
         <Tags class="size-16 text-dark" />
         <span>Tags</span>
@@ -79,7 +79,7 @@
           <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
         </span>
       </li>
-    </ul>
+    </ul> -->
   </ul>
 </template>
 

@@ -13,7 +13,7 @@
 
     <!-- add tag -->
 
-    <div id="suggestion-container">
+  <!--   <div id="suggestion-container">
       <input
         type="text"
         v-model="input"
@@ -39,7 +39,7 @@
           </span>
         </li>
       </ul>
-    </div>
+    </div> -->
     <!-- insert -->
     <select v-model="insertValue" @change="insertItem" :title="$t('insert')">
       <option disabled selected>{{ $t("insert") }}</option>

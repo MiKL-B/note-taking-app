@@ -37,7 +37,6 @@
 </template>
 <script>
 import { Check, Trash2, Pin } from "lucide-vue-next";
-import DatabaseService from "../database.js";
 export default {
 	name: "NoteElement",
 	props: ["note"],
@@ -52,9 +51,7 @@ export default {
 			tags: [],
 		};
 	},
-	// async mounted() {
-	// 	this.tags = await DatabaseService.getNoteTags(this.note);
-	// },
+
 	methods: {
 		getStatusColor(status_ID) {
 			let color = "";

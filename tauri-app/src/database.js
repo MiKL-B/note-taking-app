@@ -1,8 +1,13 @@
 import Database from "@tauri-apps/plugin-sql";
-import { join, desktopDir } from "@tauri-apps/api/path";
+// import { join, desktopDir } from "@tauri-apps/api/path";
+import { join, appLocalDataDir } from "@tauri-apps/api/path";
+
 const fileName = "database.db";
-const desktopPath = await desktopDir();
-const folderPath = await join(desktopPath, fileName);
+// const desktopPath = await desktopDir();
+// const folderPath = await join(desktopPath, fileName);
+
+const appPath = await appLocalDataDir();
+const folderPath = await join(appPath, fileName);
 
 class DatabaseService {
   constructor() {}
@@ -30,20 +35,20 @@ class DatabaseService {
     await this.createTableStatus();
     await this.createStatus();
     await this.showTables("Status");
-    await this.createTableTags();
-    await this.showTables("Tags");
+    // await this.createTableTags();
+    // await this.showTables("Tags");
     await this.createTableNote();
     await this.showTables("Note");
-    await this.createTableNoteTags();
-    await this.showTables("note_tags");
+    // await this.createTableNoteTags();
+    // await this.showTables("note_tags");
   }
   // -------------------------------------------------------------------------
   async dropTables() {
     const db = await this.connectToDatabase();
 
-    await db.execute("DROP TABLE note_tags");
+    // await db.execute("DROP TABLE note_tags");
     await db.execute("DROP TABLE Note");
-    await db.execute("DROP TABLE Tags");
+    // await db.execute("DROP TABLE Tags");
     await db.execute("DROP TABLE Status");
   }
   // -------------------------------------------------------------------------
@@ -295,119 +300,121 @@ class DatabaseService {
     }
   }
   // -------------------------------------------------------------------------
-  async createTableTags() {
-    try {
-      const db = await this.connectToDatabase();
-      const query = `
-        CREATE TABLE IF NOT EXISTS Tags(
-        tags_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE,
-        color TEXT);`;
-      await db.execute(query);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
+  // async createTableTags() {
+  //   try {
+  //     const db = await this.connectToDatabase();
+  //     const query = `
+  //       CREATE TABLE IF NOT EXISTS Tags(
+  //       tags_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+  //       name TEXT UNIQUE,
+  //       color TEXT);`;
+  //     await db.execute(query);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
   // -------------------------------------------------------------------------
-  async createTag(tagName) {
-    try {
-      const db = await this.connectToDatabase();
-      const query = `
-        INSERT OR IGNORE INTO Tags (name, color)
-        VALUES (?,?);`;
-      let params = [tagName, "blue"];
-      await db.execute(query, params);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
+  // async createTag(tagName) {
+  //   try {
+  //     const db = await this.connectToDatabase();
+  //     const query = `
+  //       INSERT OR IGNORE INTO Tags (name, color)
+  //       VALUES (?,?);`;
+  //     let params = [tagName, "blue"];
+  //     await db.execute(query, params);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
   // -------------------------------------------------------------------------
-  async updateTag(tag) {
-    try {
-      const db = await this.connectToDatabase();
-      const query = `
-        UPDATE Tags SET
-        name = $1,
-        color = $2
-        WHERE tags_ID = $3;`;
-      let params = [tag.name, tag.color, tag.tags_ID];
-      await db.execute(query, params);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
+  // async updateTag(tag) {
+  //   try {
+  //     const db = await this.connectToDatabase();
+  //     const query = `
+  //       UPDATE Tags SET
+  //       name = $1,
+  //       color = $2
+  //       WHERE tags_ID = $3;`;
+  //     let params = [tag.name, tag.color, tag.tags_ID];
+  //     await db.execute(query, params);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
   // -------------------------------------------------------------------------
-  async deleteTag(tag) {
-    try {
-      const db = await this.connectToDatabase();
-      const query = `DELETE FROM Tags WHERE tags_ID = $1;`;
-      let params = [tag.tags_ID];
-      await db.execute(query, params);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
+  // async deleteTag(tag) {
+  //   try {
+  //     const db = await this.connectToDatabase();
+  //     const query = `DELETE FROM Tags WHERE tags_ID = $1;`;
+  //     let params = [tag.tags_ID];
+  //     await db.execute(query, params);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
   // -------------------------------------------------------------------------
-  async getTags() {
-    try {
-      const db = await this.connectToDatabase();
-      const result = await db.select("SELECT * FROM Tags;");
-      console.log("tags",result)
-      return result;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-  }
+  // async getTags() {
+  //   try {
+  //     const db = await this.connectToDatabase();
+  //     const result = await db.select("SELECT * FROM Tags;");
+  //     console.log("tags",result)
+  //     return result;
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     throw error;
+  //   }
+  // }
   // -------------------------------------------------------------------------
-  async createTableNoteTags() {
-    const db = await this.connectToDatabase();
-    const query = `
-      CREATE TABLE IF NOT EXISTS note_tags(
-      note_ID,
-      tags_ID,
-      PRIMARY KEY (note_ID, tags_ID),
-      FOREIGN KEY(note_ID) REFERENCES Note(note_ID) ON DELETE CASCADE,
-      FOREIGN KEY(tags_ID) REFERENCES Tags(tags_ID) ON DELETE CASCADE);`;
-    await db.execute(query);
-  }
+  // async createTableNoteTags() {
+  //   const db = await this.connectToDatabase();
+  //   const query = `
+  //     CREATE TABLE IF NOT EXISTS note_tags(
+  //     note_ID,
+  //     tags_ID,
+  //     PRIMARY KEY (note_ID, tags_ID),
+  //     FOREIGN KEY(note_ID) REFERENCES Note(note_ID) ON DELETE CASCADE,
+  //     FOREIGN KEY(tags_ID) REFERENCES Tags(tags_ID) ON DELETE CASCADE);`;
+  //   await db.execute(query);
+  // }
   // -------------------------------------------------------------------------
-  async createTagNote(note,tag){
-    try{
-      const db = await this.connectToDatabase();
-      const query = `
-      INSERT INTO note_tags (note_ID,tags_ID)
-      VALUES (?,?)
-      ON CONFLICT(note_ID, tags_ID) DO NOTHING;`;
-      let params = [note.note_ID,tag.tags_ID]
-      await db.execute(query,params);
-    }
-    catch(error){
-      console.log(error);
-      throw error;
-    }
-  }
+  // async createTagNote(note,tag){
+  //   try{
+  //     const db = await this.connectToDatabase();
+  //     const query = `
+  //     INSERT INTO note_tags (note_ID,tags_ID)
+  //     VALUES (?,?)
+  //     ON CONFLICT(note_ID, tags_ID) DO NOTHING;`;
+  //     let params = [note.note_ID,tag.tags_ID]
+  //     await db.execute(query,params);
+  //   }
+  //   catch(error){
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // }
   // -------------------------------------------------------------------------
-  async getNoteTags(){
-     try {
-      const db = await this.connectToDatabase();
-      const query = `
-        SELECT N.note_ID, T.name, T.color FROM note_tags as NT
-        INNER JOIN Note as N ON (N.note_ID = NT.note_ID)
-        INNER JOIN Tags as T ON (T.tags_ID = NT.tags_ID);
-      ;`;
+  // async getNoteTags(){
+  //    try {
+  //     const db = await this.connectToDatabase();
+  //     const query = `
+  //       SELECT N.note_ID, T.name, T.color FROM note_tags as NT
+  //       INNER JOIN Note as N ON (N.note_ID = NT.note_ID)
+  //       INNER JOIN Tags as T ON (T.tags_ID = NT.tags_ID);
+  //     ;`;
 
-      const result = await db.select(query);
-      console.log("note_tags",result)
-      return result;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-  }
+  //     const result = await db.select(query);
+  //     console.log("note_tags",result)
+  //     return result;
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     throw error;
+  //   }
+  // }
+  // -------------------------------------------------------------------------
+
 }
 export default new DatabaseService();
