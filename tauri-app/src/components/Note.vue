@@ -16,7 +16,7 @@
 		<div class="note-tag-list">
 			<span
 				class="tag"
-				v-for="tag in selectedNote.tags"
+				v-for="tag in tags"
 				:style="`background: var(--${tag.color})`"
 				>{{ tag.name }}
 				<span class="delete-tag-btn" @click="deleteTagNote(tag)"
@@ -73,9 +73,11 @@ import { X } from "lucide-vue-next";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
+import DatabaseService from "../database.js";
+
 export default {
 	name: "Note",
-	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
+	props: ["selectedNote", "isPreviewMode", "showBoth", "notes","tags"],
 	emits: ["delete-tag-note", "mark-as-modified"],
 	components: {
 		NoteStatusbar,
@@ -87,7 +89,9 @@ export default {
 			fontSize: localStorage.getItem("font-size") || 16,
 		};
 	},
+
 	computed: {
+	
 		dynamicStyle() {
 			return {
 				fontSize: this.fontSize + "px",

@@ -72,6 +72,7 @@
           :notes="notes"
           @delete-tag-note="deleteTagNote"
           @mark-as-modified="markAsModified"
+          :tags="tagsNote"
         />
       </div>
       <div class="column-note img" v-else>
@@ -89,7 +90,6 @@
 <script lang="ts">
 import { Plus, Eye, EyeOff, Tag, X, Columns2, CopyPlus } from "lucide-vue-next";
 
-// import DataNote from "../note.ts";
 import getFilePath from "../FileManager.js";
 
 import Titlebar from "../components/Titlebar.vue";
@@ -161,12 +161,15 @@ export default {
       currentView: "",
       noteCount: 0,
       jsonData: {},
+      tagsNote: [],
     };
   },
   async mounted() {
     window.addEventListener("keydown", this.handleKeyDown);
     await DatabaseService.initializeDatabase();
     this.notes = await DatabaseService.getNotes();
+    this.tags = await DatabaseService.getTags();
+  
   },
 
   computed: {
@@ -203,10 +206,16 @@ export default {
           return this.notes.filter((note) => note.important === 1);
         default:
           return this.notes.filter((note) => {
-            return note.tags.some((tag) =>
-              tag.name.toLowerCase().includes(this.filter.toLowerCase()),
-            );
+            return note.name
+              .toLowerCase()
+              .includes(this.searchNote.toLowerCase());
           });
+        // default:
+        //   return this.notes.filter((note) => {
+        //     return note.tags.some((tag) =>
+        //       tag.name.toLowerCase().includes(this.filter.toLowerCase()),
+        //     );
+        //   });
       }
     },
     // -------------------------------------------------------------------------
@@ -368,11 +377,17 @@ export default {
       return id + Date.now();
     },
     // -------------------------------------------------------------------------
-    async markAsModified() {
+    markAsModified() {
       this.selectedNote.isSaved = 0;
     },
     // -------------------------------------------------------------------------
     async createNote() {
+      const allNotes = await DatabaseService.getNotes();
+
+      if (this.selectedNote.selected) {
+        this.selectedNote.isSaved = 1;
+        await DatabaseService.updateNote(this.selectedNote);
+      }
       await DatabaseService.createNote();
       this.notes = await DatabaseService.getNotes();
       let note = await DatabaseService.getLastNote();
@@ -458,6 +473,12 @@ export default {
         this.showNotification(this.$t("no_note_selected"), "red");
         return;
       }
+      const allNotes = await DatabaseService.getNotes();
+
+      if (this.selectedNote.selected) {
+        this.selectedNote.isSaved = 1;
+        await DatabaseService.updateNote(this.selectedNote);
+      }
       await DatabaseService.duplicateNote(this.selectedNote);
       this.notes = await DatabaseService.getNotes();
 
@@ -481,7 +502,15 @@ export default {
     },
     // -------------------------------------------------------------------------
     async selectNote(note) {
+      const allNotes = await DatabaseService.getNotes();
+
+      if (this.selectedNote.selected) {
+        this.selectedNote.isSaved = 1;
+        await DatabaseService.updateNote(this.selectedNote);
+      }
+
       await DatabaseService.unselectNotes();
+      console.log("selected", this.selectedNote);
       await DatabaseService.selectNote(note);
       this.notes = await DatabaseService.getNotes();
     },
@@ -514,57 +543,115 @@ export default {
       await DatabaseService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
-    deleteTag(tag) {
-      const index = this.tags.findIndex((t) => t.id === tag.id);
+    async deleteTag(tag) {
+      console.log(tag);
 
-      if (index > -1) {
-        for (let i = 0; i < this.notes.length; i++) {
-          this.notes[i].tags = this.notes[i].tags.filter(
-            (t) => t.id !== tag.id,
-          );
-        }
+      await DatabaseService.deleteTag(tag);
+      this.tags = await DatabaseService.getTags();
 
-        this.tags.splice(index, 1);
-        let msgDeleted = this.$t("tag_deleted", { tag_name: tag.name });
-        this.showNotification(msgDeleted, "green");
-      }
+      // this.tags = await DatabaseService.getTags()
+      // const index = this.tags.findIndex((t) => t.id === tag.id);
+
+      // if (index > -1) {
+      //   for (let i = 0; i < this.notes.length; i++) {
+      //     this.notes[i].tags = this.notes[i].tags.filter(
+      //       (t) => t.id !== tag.id,
+      //     );
+      //   }
+
+      //   this.tags.splice(index, 1);
+      //   let msgDeleted = this.$t("tag_deleted", { tag_name: tag.name });
+      //   this.showNotification(msgDeleted, "green");
+      // }
     },
     // -------------------------------------------------------------------------
-    addTag(tag) {
-      const word = tag.trim();
-      const pattern = /^[a-zA-ZÀ-ÿ]+$/;
-      let tagtoAdd = {
-        id: Date.now(),
-        name: word,
-        color: "blue",
-        selected: false,
-      };
+    async addTag(tagName) {
+      // await DatabaseService.createTag(tag);
+      // this.tags = await DatabaseService.getTags();
+      // console.log(tag.tags_ID);
+      // await DatabaseService.createTagNote(this.selectedNote, tag);
+      // await DatabaseService.getNoteTags();
 
-      const existingTag = this.tags.find(
-        (t) => t.name.toLocaleString() === word.toLowerCase(),
-      );
-      const existingTagNote = this.selectedNote.tags.find(
-        (t) => t.name.toLowerCase() === word.toLowerCase(),
-      );
-      if (!pattern.test(word)) {
-        return;
+      try {
+        // Étape 1 : Créer le nouveau tag. Cela renvoie l'ID du tag créé.
+        await DatabaseService.createTag(tagName);
+
+        // Étape 2 : Récupérer le tag que vous venez de créer
+        const tags = await DatabaseService.getTags();
+        this.tags = tags;
+        const newTag = tags.find((tag) => tag.name === tagName); // Assurez-vous que c'est unique.
+
+        if (!newTag) {
+          throw new Error("Tag not found after creation.");
+        }
+
+        // Étape 3 : Associer le tag à la note
+        const tagtoadd = {
+          tags_ID: newTag.tags_ID,
+        };
+
+        const note = {
+          note_ID: this.selectedNote.note_ID,
+        };
+
+        await DatabaseService.createTagNote(this.selectedNote, tagtoadd);
+
+        const tagsTemp = await DatabaseService.getNoteTags();
+        this.tagsNote = tagsTemp.filter(
+          (tag) => tag.note_ID === this.selectedNote.note_ID,
+        );
+
+        // let tagsNote = await DatabaseService.getNoteTags();
+        // console.log("notelist", tags);
+        // console.log("tags note", tagsNote);
+        // for (let i = 0; i < this.notes.length; i++) {
+        //   for (let j = 0; j < tagsNote[i].length; j++) {
+        //     console.log(this.notes[i].note_ID)
+        //     if (this.notes[i].note_ID === tagsNote[j].note_ID) {
+        //       this.tagsNote = tagsNote;
+        //       console.log("notelist", this.tagsNote);
+        //     }
+        //   }
+        // }
+      } catch (error) {
+        console.log(error);
+        throw error;
       }
-      if (!existingTag) {
-        this.tags.push(tagtoAdd);
-        this.selectedNote.tags.push(tagtoAdd);
-        let msgCreated = this.$t("tag_created", {
-          tag_name: tagtoAdd.name,
-        });
-        this.showNotification(msgCreated, "green");
-        return;
-      }
-      tagtoAdd.color = existingTag.color;
-      tagtoAdd.id = existingTag.id;
-      if (!existingTagNote) {
-        this.selectedNote.tags.push(tagtoAdd);
-        return;
-      }
+      // const word = tag.trim();
+      // const pattern = /^[a-zA-ZÀ-ÿ]+$/;
+      // let tagtoAdd = {
+      //   id: Date.now(),
+      //   name: word,
+      //   color: "blue",
+      //   selected: false,
+      // };
+
+      // const existingTag = this.tags.find(
+      //   (t) => t.name.toLocaleString() === word.toLowerCase(),
+      // );
+      // const existingTagNote = this.selectedNote.tags.find(
+      //   (t) => t.name.toLowerCase() === word.toLowerCase(),
+      // );
+      // if (!pattern.test(word)) {
+      //   return;
+      // }
+      // if (!existingTag) {
+      //   this.tags.push(tagtoAdd);
+      //   this.selectedNote.tags.push(tagtoAdd);
+      //   let msgCreated = this.$t("tag_created", {
+      //     tag_name: tagtoAdd.name,
+      //   });
+      //   this.showNotification(msgCreated, "green");
+      //   return;
+      // }
+      // tagtoAdd.color = existingTag.color;
+      // tagtoAdd.id = existingTag.id;
+      // if (!existingTagNote) {
+      //   this.selectedNote.tags.push(tagtoAdd);
+      //   return;
+      // }
     },
+
     // -------------------------------------------------------------------------
     deleteTagNote(tag) {
       const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
