@@ -168,7 +168,6 @@ export default {
     await DatabaseService.initializeDatabase();
     this.notes = await DatabaseService.getNotes();
     // this.tags = await DatabaseService.getTags();
-
   },
 
   computed: {
@@ -199,7 +198,7 @@ export default {
           return this.notes.filter((note) => note.pinned === 1);
         case "today":
           return this.notes.filter(
-            (note) => note.createdDate.split(" ")[0] === this.getToday(),
+            (note) => new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] === this.getToday(),
           );
         case "important":
           return this.notes.filter((note) => note.important === 1);
@@ -231,7 +230,7 @@ export default {
         archived: this.notes.filter((note) => note.status_ID === 4).length,
         pinned: this.notes.filter((note) => note.pinned === 1).length,
         today: this.notes.filter(
-          (note) => note.createdDate.split(" ")[0] === this.getToday(),
+          (note) => new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] === this.getToday(),
         ).length,
         important: this.notes.filter((note) => note.important === 1).length,
       };
@@ -265,13 +264,14 @@ export default {
       });
     },
     // -------------------------------------------------------------------------
-    sortNotesDate() {
-      this.notes.sort((a: Note, b: Note) => {
+    sortNotesDate() {   
+      this.notes.sort((a, b) => {
         if (this.sortedDate) {
           return a.timestamp - b.timestamp;
         } else {
           return b.timestamp - a.timestamp;
         }
+
       });
     },
     // -------------------------------------------------------------------------
@@ -348,6 +348,12 @@ export default {
           return response.text();
         })
         .then(async (content) => {
+          const allNotes = await DatabaseService.getNotes();
+
+          if (this.selectedNote.selected) {
+            this.selectedNote.isSaved = 1;
+            await DatabaseService.updateNote(this.selectedNote);
+          }
           await DatabaseService.createNote(fileName, content);
           this.notes = await DatabaseService.getNotes();
         })
@@ -745,8 +751,6 @@ export default {
             items[i].name,
             items[i].content,
             items[i].timestamp,
-            items[i].createdDate,
-            items[i].updatedDate,
             items[i].isSaved,
             items[i].status_ID,
             items[i].pinned,

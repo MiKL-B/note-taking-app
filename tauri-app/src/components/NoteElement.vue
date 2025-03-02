@@ -29,8 +29,8 @@
 			{{ note.content }}
 		</p>
 		<div class="note-dates">
-			<span class="note-date">{{ note.createdDate }}</span>
-			<span class="note-date">{{ note.updatedDate }}</span>
+			<span class="note-date">{{ timestamp }}</span>
+	
 		</div>
 	</div>
 	<Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
@@ -49,9 +49,12 @@ export default {
 	data() {
 		return {
 			tags: [],
+			timestamp:-1,
 		};
 	},
-
+	mounted(){
+		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR")
+	},
 	methods: {
 		getStatusColor(status_ID) {
 			let color = "";

@@ -1,19 +1,18 @@
 import Database from "@tauri-apps/plugin-sql";
-// import { join, desktopDir } from "@tauri-apps/api/path";
 import { join, appLocalDataDir } from "@tauri-apps/api/path";
 
 const fileName = "database.db";
-// const desktopPath = await desktopDir();
-// const folderPath = await join(desktopPath, fileName);
-
-const appPath = await appLocalDataDir();
-const folderPath = await join(appPath, fileName);
 
 class DatabaseService {
-  constructor() {}
+  constructor() {
+    this.db = null;
+  }
+
   async connectToDatabase() {
     try {
-      return await Database.load("sqlite:" + folderPath);
+      const appPath = await appLocalDataDir();
+      const folderPath = await join(appPath, fileName);
+      this.db = await Database.load("sqlite:" + folderPath);
     } catch (error) {
       console.error("Error connecting to database:", error);
       throw error;
@@ -21,6 +20,7 @@ class DatabaseService {
   }
   // -------------------------------------------------------------------------
   async initializeDatabase() {
+    await this.connectToDatabase();
     await this.createTables();
     await this.getStatus();
     // await this.resetDatabase()
@@ -44,26 +44,25 @@ class DatabaseService {
   }
   // -------------------------------------------------------------------------
   async dropTables() {
-    const db = await this.connectToDatabase();
-
     // await db.execute("DROP TABLE note_tags");
-    await db.execute("DROP TABLE Note");
+    await this.executeQuery("DROP TABLE IF EXISTS Note");
     // await db.execute("DROP TABLE Tags");
-    await db.execute("DROP TABLE Status");
+    await this.executeQuery("DROP TABLE IF EXISTS Status");
   }
   // -------------------------------------------------------------------------
   async showTables(table) {
-    const db = await this.connectToDatabase();
     const query = `
       pragma table_info(${table});`;
-    const rows = await db.select(query);
+    const rows = await this.db.select(query);
     console.log("Table", table, rows);
   }
   // -------------------------------------------------------------------------
   async executeQuery(query, params) {
     try {
-      const db = await this.connectToDatabase();
-      return await db.execute(query, params);
+      if (!this.db){
+        await this.connectToDatabase();
+      }
+      return await this.db.execute(query, params);
     } catch (error) {
       console.error("Error executing query:", error);
       throw error;
@@ -71,14 +70,11 @@ class DatabaseService {
   }
   // -------------------------------------------------------------------------
   async createTableNote() {
-    const db = await this.connectToDatabase();
     const query = `
       CREATE TABLE IF NOT EXISTS Note(
       note_ID INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       timestamp TIMESTAMP,
-      createdDate DATE,
-      updatedDate DATE,
       isSaved BOOL,
       status_ID INTEGER NOT NULL,
       content TEXT,
@@ -86,15 +82,13 @@ class DatabaseService {
       important BOOL,
       selected BOOL,
       FOREIGN KEY(status_ID) REFERENCES Status(status_ID));`;
-    await db.execute(query);
+    await this.executeQuery(query);
   }
   // -------------------------------------------------------------------------
   async createNote(
     name = "",
     content = "",
-    timestamp = -1,
-    createdDate = "",
-    updatedDate = "",
+    timestamp = Date.now(),
     isSaved = 1,
     status_ID = 1,
     pinned = 0,
@@ -102,24 +96,22 @@ class DatabaseService {
     selected = 0,
   ) {
     try {
-      const db = await this.connectToDatabase();
 
       if (name === "") {
         const countQuery = "SELECT COUNT(*) AS count FROM Note";
-        const countResult = await db.select(countQuery);
+        const countResult = await this.db.select(countQuery);
         const currentCount = countResult[0].count;
         name = `Note ${currentCount + 1}`;
       }
 
       const query = `
-        INSERT INTO Note (name,timestamp,createdDate,updatedDate,isSaved,status_ID,content,pinned,important,selected)
+        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected)
         VALUES
-        (?,?,?,?,?,?,?,?,?,?);`;
+        (?,?,?,?,?,?,?,?);`;
+
       let params = [
         name,
-        timestamp || Date.now(),
-        createdDate || new Date().toLocaleString("fr-FR"),
-        updatedDate || new Date().toLocaleString("fr-FR"),
+        timestamp,
         isSaved,
         status_ID,
         content,
@@ -127,7 +119,7 @@ class DatabaseService {
         important,
         0,
       ];
-      await db.execute(query, params);
+      await this.executeQuery(query, params);
     } catch (error) {
       console.error("Error inserting data:", error);
       throw error;
@@ -136,16 +128,13 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async duplicateNote(note) {
     try {
-      const db = await this.connectToDatabase();
       const query = `
-        INSERT INTO Note (name,timestamp,createdDate,updatedDate,isSaved,status_ID,content,pinned,important,selected)
-        VALUES (?,?,?,?,?,?,?,?,?,?);`;
+        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected)
+        VALUES (?,?,?,?,?,?,?,?);`;
       let noteName = note.name + " - Copy";
       let params = [
         noteName,
         Date.now(),
-        new Date().toLocaleString("fr-FR"),
-        new Date().toLocaleString("fr-FR"),
         note.isSaved,
         note.status_ID,
         note.content,
@@ -153,7 +142,7 @@ class DatabaseService {
         note.important,
         0,
       ];
-      await db.execute(query, params);
+      await this.executeQuery(query, params);
     } catch (error) {
       console.log(error);
       throw error;
@@ -163,12 +152,10 @@ class DatabaseService {
   async updateNote(note) {
     console.log("updated note", note);
     try {
-      const db = await this.connectToDatabase();
       const query = `
         UPDATE Note SET
         name = $1,
         timestamp = $2,
-        updatedDate = $3,
         isSaved = $4,
         status_ID = $5,
         content = $6,
@@ -180,7 +167,6 @@ class DatabaseService {
       let params = [
         note.name,
         note.timestamp,
-        new Date().toLocaleString("fr-FR"),
         note.isSaved,
         note.status_ID,
         note.content,
@@ -189,7 +175,7 @@ class DatabaseService {
         note.selected,
         note.note_ID,
       ];
-      await db.execute(query, params);
+      await this.executeQuery(query, params);
     } catch (error) {
       console.log(error);
       throw error;
@@ -199,10 +185,9 @@ class DatabaseService {
   async deleteNote(note) {
     console.log("deleted note", note);
     try {
-      const db = await this.connectToDatabase();
       const query = "DELETE FROM Note WHERE note_ID = $1;";
       let params = [note.note_ID];
-      await db.execute(query, params);
+      await this.executeQuery(query, params);
     } catch (error) {
       console.log(error);
       throw error;
@@ -211,9 +196,8 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async unselectNotes() {
     try {
-      const db = await this.connectToDatabase();
       const query = `UPDATE Note SET selected = 0 WHERE selected = 1;`;
-      await db.execute(query);
+      await this.executeQuery(query);
     } catch (error) {
       console.log(error);
       throw error;
@@ -222,10 +206,9 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async selectNote(note) {
     try {
-      const db = await this.connectToDatabase();
       const query = `UPDATE Note SET selected = 1 WHERE note_ID = $1;`;
       let params = [note.note_ID];
-      await db.execute(query, params);
+      await this.executeQuery(query, params);
     } catch (error) {
       console.log(error);
       throw error;
@@ -234,9 +217,8 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async getNotes() {
     try {
-      const db = await this.connectToDatabase();
       const query = "SELECT * FROM Note;";
-      const result = await db.select(query);
+      const result = await this.db.select(query);
       console.log("notes", result);
       return result;
     } catch (error) {
@@ -247,9 +229,8 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async getLastNote() {
     try {
-      const db = await this.connectToDatabase();
       const query = `SELECT * FROM Note ORDER BY note_ID DESC LIMIT 1;`;
-      const result = await db.select(query);
+      const result = await this.db.select(query);
       return result[0];
     } catch (error) {
       console.log(error);
@@ -258,18 +239,16 @@ class DatabaseService {
   }
   // -------------------------------------------------------------------------
   async createTableStatus() {
-    const db = await this.connectToDatabase();
     let sql = `
       CREATE TABLE IF NOT EXISTS Status(
       status_ID INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT);`;
-    await db.execute(sql);
+    await this.executeQuery(sql);
   }
   // -------------------------------------------------------------------------
   async createStatus() {
     try {
-      const db = await this.connectToDatabase();
-      const [rows] = await db.select("SELECT COUNT(*) AS count FROM Status");
+      const [rows] = await this.db.select("SELECT COUNT(*) AS count FROM Status");
       if (rows.count > 0) {
         return;
       }
@@ -281,7 +260,7 @@ class DatabaseService {
         ("finished"),
         ("archived");
       `;
-      await db.execute(query);
+      await this.executeQuery(query);
     } catch (error) {
       console.log(error);
       throw error;
@@ -290,8 +269,7 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async getStatus() {
     try {
-      const db = await this.connectToDatabase();
-      const result = await db.select("SELECT * FROM Status;");
+      const result = await this.db.select("SELECT * FROM Status;");
       console.log("getStatus", result);
       return result;
     } catch (error) {
@@ -415,6 +393,5 @@ class DatabaseService {
   //   }
   // }
   // -------------------------------------------------------------------------
-
 }
 export default new DatabaseService();
