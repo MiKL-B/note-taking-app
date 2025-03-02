@@ -156,13 +156,13 @@ class DatabaseService {
         UPDATE Note SET
         name = $1,
         timestamp = $2,
-        isSaved = $4,
-        status_ID = $5,
-        content = $6,
-        pinned = $7,
-        important = $8,
-        selected = $9
-        WHERE note_ID = $10;`;
+        isSaved = $3,
+        status_ID = $4,
+        content = $5,
+        pinned = $6,
+        important = $7,
+        selected = $8
+        WHERE note_ID = $9;`;
 
       let params = [
         note.name,
