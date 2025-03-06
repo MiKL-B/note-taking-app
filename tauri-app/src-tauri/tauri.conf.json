@@ -14,7 +14,7 @@
       {
         "title": "Thoth",
         "minHeight": 680,
-        "minWidth": 1060,
+        "minWidth": 800,
         "decorations": false,
         "center":true
       }

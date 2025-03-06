@@ -103,5 +103,6 @@ export default {
   align-items: center;
   height: 42px;
   padding:0.2rem;
+  gap:0.2rem;
 }
 </style>

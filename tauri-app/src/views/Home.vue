@@ -793,6 +793,7 @@ export default {
 }
 #column-middle {
   max-width: 263.5px;
+  width:263.5px;
   display: grid;
   grid-template-rows: 42px calc(100vh - 108px);
   border-right: var(--border);
