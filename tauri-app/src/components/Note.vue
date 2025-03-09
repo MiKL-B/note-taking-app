@@ -24,18 +24,22 @@
 				</span>
 			</span>
 		</div>
+
 		<div id="bothColumns" v-show="showBoth">
 			<div>
 				<textarea
+					@click="getPositionCursor"
+					id="textContent"
 					:placeholder="$t('enter_text_here')"
 					v-model="selectedNote.content"
-					ref="div1"
 					@scroll="syncScroll('div1')"
 					spellcheck="false"
 					:style="dynamicStyle"
 					@input="markAsModified"
+					ref="editor"
 				></textarea>
 			</div>
+
 			<hr class="separator-column" />
 			<div
 				id="markdown-container"
@@ -47,11 +51,14 @@
 		<div id="oneView" v-show="!showBoth">
 			<div v-show="!isPreviewMode">
 				<textarea
+					@click="getPositionCursor"
+					id="textContent"
 					:placeholder="$t('enter_text_here')"
 					v-model="selectedNote.content"
 					spellcheck="false"
 					:style="dynamicStyle"
 					@input="markAsModified"
+					ref="editor"
 				></textarea>
 			</div>
 			<div
@@ -73,11 +80,10 @@ import { X } from "lucide-vue-next";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
-
 export default {
 	name: "Note",
 	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
-	emits: ["delete-tag-note", "mark-as-modified"],
+	emits: ["delete-tag-note", "mark-as-modified", "get-position-cursor"],
 	components: {
 		NoteStatusbar,
 		X,
@@ -86,12 +92,11 @@ export default {
 		return {
 			font: localStorage.getItem("font") || "Inter",
 			fontSize: localStorage.getItem("font-size") || 16,
-			tags:[]
+			tags: [],
 		};
 	},
-	
+
 	computed: {
-	
 		dynamicStyle() {
 			return {
 				fontSize: this.fontSize + "px",
@@ -138,6 +143,10 @@ export default {
 		},
 	},
 	methods: {
+		getPositionCursor(e) {
+			let textContent = document.getElementById("textContent");
+			this.$emit("get-position-cursor", e.target.selectionStart);
+		},
 		getStatusColor(status_ID) {
 			let color = "";
 			switch (status_ID) {
@@ -214,6 +223,7 @@ export default {
 	height: 100%;
 	margin: 0 1rem;
 }
+
 #oneView {
 	height: calc(100vh - 200px);
 }
@@ -226,5 +236,25 @@ export default {
 .delete-tag-btn {
 	cursor: pointer;
 	color: var(--dark2);
+}
+
+.markdown-header {
+	color: var(--blue);
+}
+
+.markdown-list {
+	color: var(--pink);
+}
+
+.markdown-link {
+	color: var(--green);
+}
+
+.markdown-emphasis {
+	color: rgba(221, 160, 221, 0.4); /* Couleur pour l'emphase */
+}
+
+.markdown-strong {
+	color: rgba(255, 160, 122, 0.4); /* Couleur pour le gras */
 }
 </style>

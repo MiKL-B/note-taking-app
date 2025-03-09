@@ -6,10 +6,7 @@
       @select-view="selectView"
       :distractionFree="selectedNote"
     />
-
-    <ViewKanban v-if="currentView === 'kanban'" />
-
-    <div v-else class="row">
+    <div class="row">
       <div
         id="column-left"
         class="col-3"
@@ -72,6 +69,7 @@
           :notes="notes"
           @delete-tag-note="deleteTagNote"
           @mark-as-modified="markAsModified"
+          @get-position-cursor="getCursor"
         />
       </div>
       <div class="column-note img" v-else>
@@ -117,6 +115,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join, desktopDir } from "@tauri-apps/api/path";
 import DatabaseService from "../database.js";
 const appWindow = getCurrentWindow();
+
 export default {
   name: "Home",
   components: {
@@ -161,6 +160,8 @@ export default {
       noteCount: 0,
       jsonData: {},
       tagsNote: [],
+      code: "",
+      currentPosition: 0,
     };
   },
   async mounted() {
@@ -198,7 +199,9 @@ export default {
           return this.notes.filter((note) => note.pinned === 1);
         case "today":
           return this.notes.filter(
-            (note) => new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] === this.getToday(),
+            (note) =>
+              new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] ===
+              this.getToday(),
           );
         case "important":
           return this.notes.filter((note) => note.important === 1);
@@ -230,7 +233,9 @@ export default {
         archived: this.notes.filter((note) => note.status_ID === 4).length,
         pinned: this.notes.filter((note) => note.pinned === 1).length,
         today: this.notes.filter(
-          (note) => new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] === this.getToday(),
+          (note) =>
+            new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] ===
+            this.getToday(),
         ).length,
         important: this.notes.filter((note) => note.important === 1).length,
       };
@@ -241,8 +246,23 @@ export default {
       this.currentView = newView;
     },
     // -------------------------------------------------------------------------
+    getCursor(position) {
+      this.currentPosition = position;
+    },
     insertItem(item: string) {
-      this.selectedNote.content += item + "\r\n";
+      let textarea = document.getElementById("textContent");
+      let cursorPosition = this.currentPosition;
+      if (cursorPosition === 0) {
+        textarea.value += "\r\n";
+        cursorPosition = textarea.value.length;
+      }
+
+      textarea.value =
+        textarea.value.slice(0, cursorPosition) +
+        item +
+        textarea.value.slice(cursorPosition);
+      this.selectedNote.content = textarea.value;
+      this.currentPosition = 0;
     },
     // -------------------------------------------------------------------------
     getToday() {
@@ -264,14 +284,13 @@ export default {
       });
     },
     // -------------------------------------------------------------------------
-    sortNotesDate() {   
+    sortNotesDate() {
       this.notes.sort((a, b) => {
         if (this.sortedDate) {
           return a.timestamp - b.timestamp;
         } else {
           return b.timestamp - a.timestamp;
         }
-
       });
     },
     // -------------------------------------------------------------------------
@@ -793,7 +812,7 @@ export default {
 }
 #column-middle {
   max-width: 263.5px;
-  width:263.5px;
+  width: 263.5px;
   display: grid;
   grid-template-rows: 42px calc(100vh - 108px);
   border-right: var(--border);

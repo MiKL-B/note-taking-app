@@ -243,10 +243,10 @@ export default {
           text = "[Link name](https://www.markdownguide.org/)";
           break;
         case "date":
-          text = this.getToday();
+          text = new Date().toLocaleString("fr-FR").split(" ")[0];
           break;
         case "time":
-          text = this.getTimeToday();
+          text = new Date().toLocaleString("fr-FR").split(" ")[1];
           break;
       }
       this.$emit("insert-item", text);
