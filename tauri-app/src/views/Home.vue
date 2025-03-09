@@ -263,6 +263,7 @@ export default {
         textarea.value.slice(cursorPosition);
       this.selectedNote.content = textarea.value;
       this.currentPosition = 0;
+      this.selectedNote.isSaved = 0;
     },
     // -------------------------------------------------------------------------
     getToday() {
@@ -401,7 +402,8 @@ export default {
       return id + Date.now();
     },
     // -------------------------------------------------------------------------
-    markAsModified() {
+    markAsModified(position) {
+      this.currentPosition = position;
       this.selectedNote.isSaved = 0;
     },
     // -------------------------------------------------------------------------

@@ -168,8 +168,9 @@ export default {
 		deleteTagNote(tag) {
 			this.$emit("delete-tag-note", tag);
 		},
-		markAsModified() {
-			this.$emit("mark-as-modified");
+		markAsModified(e) {
+			let textContent = document.getElementById("textContent");
+			this.$emit("mark-as-modified", e.target.selectionStart);
 		},
 
 		syncScroll(source) {
