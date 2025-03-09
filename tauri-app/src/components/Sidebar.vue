@@ -116,6 +116,7 @@ export default {
         inProgress: 0,
         finished: 0,
         archived: 0,
+        trash:0,
       }),
     },
   },
@@ -198,6 +199,11 @@ export default {
           count: this.counters.archived,
           icon: Archive,
         },
+        {
+          label:"trash",
+          count:this.counters.trash,
+          icon:Trash2,
+        }
       ];
     },
   },

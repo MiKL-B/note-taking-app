@@ -40,6 +40,7 @@
           :selectedNote="selectedNote"
           @select-note="selectNote"
           @delete-note="deleteNote"
+          @restore-note="restoreNote"
           @create-note="createNote"
           @duplicate-note="duplicateNote"
           @toggle-pin-note="togglePinNote"
@@ -188,12 +189,15 @@ export default {
           return this.notes.filter((note) => note.status_ID === 3);
         case "archived":
           return this.notes.filter((note) => note.status_ID === 4);
+        case "trash":
+          return this.notes.filter((note) => note.deleted === 1);
         case "":
         case "allnotes":
           return this.notes.filter((note) => {
-            return note.name
-              .toLowerCase()
-              .includes(this.searchNote.toLowerCase());
+            return (
+              note.name.toLowerCase().includes(this.searchNote.toLowerCase()) &&
+              note.deleted === 0
+            );
           });
         case "pinned":
           return this.notes.filter((note) => note.pinned === 1);
@@ -223,14 +227,16 @@ export default {
     getCountNotes() {
       return {
         allNotes: this.notes.filter((note) => {
-          return note.name
-            .toLowerCase()
-            .includes(this.searchNote.toLowerCase());
+          return (
+            note.name.toLowerCase().includes(this.searchNote.toLowerCase()) &&
+            note.deleted === 0
+          );
         }).length,
         todo: this.notes.filter((note) => note.status_ID === 1).length,
         inProgress: this.notes.filter((note) => note.status_ID === 2).length,
         finished: this.notes.filter((note) => note.status_ID === 3).length,
         archived: this.notes.filter((note) => note.status_ID === 4).length,
+        trash: this.notes.filter((note) => note.deleted === 1).length,
         pinned: this.notes.filter((note) => note.pinned === 1).length,
         today: this.notes.filter(
           (note) =>
@@ -542,6 +548,9 @@ export default {
     },
     // -------------------------------------------------------------------------
     async deleteNote(note) {
+      if (note.deleted === 1) {
+        return;
+      }
       let msgConfirm = this.$t("confirm_note_deleted", {
         note_name: note.name,
       });
@@ -552,12 +561,35 @@ export default {
       }
 
       try {
-        await DatabaseService.deleteNote(note);
+        await DatabaseService.moveToTrash(note);
         this.notes = await DatabaseService.getNotes();
         let msgDeleted = this.$t("note_deleted", {
           note_name: note.name,
         });
         this.showNotification(msgDeleted, "green");
+      } catch (error) {
+        this.showNotification(error, "red");
+        console.log("DEBUG", error);
+      }
+    },
+    // -------------------------------------------------------------------------
+    async restoreNote(note) {
+      let msgConfirm = this.$t("confirm_note_restored", {
+        note_name: note.name,
+      });
+      const confirmed = await confirm(msgConfirm);
+
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        await DatabaseService.restoreNote(note);
+        this.notes = await DatabaseService.getNotes();
+        let msgRestored = this.$t("note_restored", {
+          note_name: note.name,
+        });
+        this.showNotification(msgRestored, "green");
       } catch (error) {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
@@ -777,6 +809,7 @@ export default {
             items[i].pinned,
             items[i].important,
             items[i].selected,
+            items[i].deleted,
           );
         }
 
@@ -810,6 +843,7 @@ export default {
   height: 100%;
 }
 #column-left {
+  min-width: 150px;
   max-width: 200px;
 }
 #column-middle {

@@ -349,6 +349,9 @@ button[disabled]:hover {
 .text-red {
   color: var(--red);
 }
+.text-green {
+  color: var(--green);
+}
 .tag {
   font-size: 12px;
   color: var(--lightgrey);

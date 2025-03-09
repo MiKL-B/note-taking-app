@@ -30,30 +30,37 @@
 		</p>
 		<div class="note-dates">
 			<span class="note-date">{{ timestamp }}</span>
-	
 		</div>
 	</div>
-	<Trash2 width="20" class="note-trash" @click="deleteNote(note)" />
+
+	<Trash2
+		v-if="note.deleted === 0"
+		width="20"
+		class="note-trash"
+		@click="deleteNote(note)"
+	/>
+	<RotateCcw v-else width="20" class="note-restore" @click="restoreNote(note)"/>
 </template>
 <script>
-import { Check, Trash2, Pin } from "lucide-vue-next";
+import { Check, Trash2, Pin, RotateCcw } from "lucide-vue-next";
 export default {
 	name: "NoteElement",
 	props: ["note"],
-	emits: ["delete-note"],
+	emits: ["delete-note","restore-note"],
 	components: {
 		Check,
 		Trash2,
 		Pin,
+		RotateCcw,
 	},
 	data() {
 		return {
 			tags: [],
-			timestamp:-1,
+			timestamp: -1,
 		};
 	},
-	mounted(){
-		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR")
+	mounted() {
+		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR");
 	},
 	methods: {
 		getStatusColor(status_ID) {
@@ -77,6 +84,9 @@ export default {
 		deleteNote(note) {
 			this.$emit("delete-note", note);
 		},
+		restoreNote(note){
+			this.$emit("restore-note",note);
+		}
 	},
 };
 </script>
@@ -111,13 +121,20 @@ export default {
 	flex-wrap: wrap;
 	gap: 0.2rem;
 }
+.note-restore {
+	color: var(--green);
+}
+.note-trash {
+	color: var(--red);
+}
+
 .note-trash {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
-	color: var(--red);
 	margin: auto;
 }
+
 .note-dates {
 	display: flex;
 	flex-direction: column;
@@ -127,7 +144,8 @@ export default {
 	font-size: 12px;
 	font-style: italic;
 }
-.note-trash:hover {
+.note-trash:hover,
+.note-restore:hover {
 	cursor: pointer;
 }
 </style>

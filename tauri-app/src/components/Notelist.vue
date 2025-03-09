@@ -15,7 +15,11 @@
       @click.stop="selectNote(note)"
       @contextmenu.prevent="showContextMenu($event, note)"
     >
-      <NoteElement :note="note" @delete-note="deleteNote" />
+      <NoteElement
+        :note="note"
+        @delete-note="deleteNote"
+        @restore-note="restoreNote"
+      />
     </div>
     <!-- context to move -->
 
@@ -53,12 +57,25 @@
         </li>
         <hr class="separator-x" />
         <li
+          v-if="selectedNote.deleted === 0"
           @click="deleteNoteContext"
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
         >
           <Trash2 class="size-16" :class="selectedNote ? 'text-red' : ''" />
           {{ $t("delete_note") }}
+        </li>
+        <li
+          v-else
+          @click="restoreNoteContext"
+          class="flex align-center gap-4"
+          :class="selectedNote ? '' : 'disabled'"
+        >
+          <RotateCcw
+            class="size-16"
+            :class="selectedNote ? 'text-green' : ''"
+          />
+          {{ $t("restore_note") }}
         </li>
       </ul>
     </div>
@@ -76,6 +93,7 @@ import {
   Plus,
   CopyPlus,
   Check,
+  RotateCcw,
 } from "lucide-vue-next";
 export default {
   name: "Notelist",
@@ -83,6 +101,7 @@ export default {
   emits: [
     "select-note",
     "delete-note",
+    "restore-note",
     "create-note",
     "duplicate-note",
     "toggle-pin-note",
@@ -96,6 +115,7 @@ export default {
     CopyPlus,
     Check,
     NoteElement,
+    RotateCcw,
   },
   data() {
     return {
@@ -138,6 +158,14 @@ export default {
     deleteNoteContext() {
       if (this.selectedNote) {
         this.deleteNote(this.selectedNote);
+      }
+    },
+    restoreNote(note) {
+      this.$emit("restore-note", note);
+    },
+    restoreNoteContext() {
+      if (this.selectedNote) {
+        this.restoreNote(this.selectedNote);
       }
     },
     createNote() {

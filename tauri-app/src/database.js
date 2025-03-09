@@ -59,7 +59,7 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async executeQuery(query, params) {
     try {
-      if (!this.db){
+      if (!this.db) {
         await this.connectToDatabase();
       }
       return await this.db.execute(query, params);
@@ -81,6 +81,7 @@ class DatabaseService {
       pinned BOOL,
       important BOOL,
       selected BOOL,
+      deleted BOOL,
       FOREIGN KEY(status_ID) REFERENCES Status(status_ID));`;
     await this.executeQuery(query);
   }
@@ -94,9 +95,9 @@ class DatabaseService {
     pinned = 0,
     important = 0,
     selected = 0,
+    deleted = 0,
   ) {
     try {
-
       if (name === "") {
         const countQuery = "SELECT COUNT(*) AS count FROM Note";
         const countResult = await this.db.select(countQuery);
@@ -105,9 +106,9 @@ class DatabaseService {
       }
 
       const query = `
-        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected)
+        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
         VALUES
-        (?,?,?,?,?,?,?,?);`;
+        (?,?,?,?,?,?,?,?,?);`;
 
       let params = [
         name,
@@ -118,6 +119,7 @@ class DatabaseService {
         pinned,
         important,
         0,
+        deleted,
       ];
       await this.executeQuery(query, params);
     } catch (error) {
@@ -129,8 +131,8 @@ class DatabaseService {
   async duplicateNote(note) {
     try {
       const query = `
-        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected)
-        VALUES (?,?,?,?,?,?,?,?);`;
+        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
+        VALUES (?,?,?,?,?,?,?,?,?);`;
       let noteName = note.name + " - Copy";
       let params = [
         noteName,
@@ -140,6 +142,7 @@ class DatabaseService {
         note.content,
         note.pinned,
         note.important,
+        0,
         0,
       ];
       await this.executeQuery(query, params);
@@ -161,8 +164,9 @@ class DatabaseService {
         content = $5,
         pinned = $6,
         important = $7,
-        selected = $8
-        WHERE note_ID = $9;`;
+        selected = $8,
+        deleted = $9
+        WHERE note_ID = $10;`;
 
       let params = [
         note.name,
@@ -173,6 +177,7 @@ class DatabaseService {
         note.pinned,
         note.important,
         note.selected,
+        note.deleted,
         note.note_ID,
       ];
       await this.executeQuery(query, params);
@@ -182,10 +187,21 @@ class DatabaseService {
     }
   }
   // -------------------------------------------------------------------------
-  async deleteNote(note) {
-    console.log("deleted note", note);
+  async moveToTrash(note) {
     try {
-      const query = "DELETE FROM Note WHERE note_ID = $1;";
+      // const query = "DELETE FROM Note WHERE note_ID = $1;";
+      const query = "update Note SET deleted = 1 WHERE note_ID = $1;";
+      let params = [note.note_ID];
+      await this.executeQuery(query, params);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  // -------------------------------------------------------------------------
+  async restoreNote(note) {
+    try {
+      const query = "update Note SET deleted = 0 WHERE note_ID = $1;";
       let params = [note.note_ID];
       await this.executeQuery(query, params);
     } catch (error) {
@@ -248,7 +264,9 @@ class DatabaseService {
   // -------------------------------------------------------------------------
   async createStatus() {
     try {
-      const [rows] = await this.db.select("SELECT COUNT(*) AS count FROM Status");
+      const [rows] = await this.db.select(
+        "SELECT COUNT(*) AS count FROM Status",
+      );
       if (rows.count > 0) {
         return;
       }
