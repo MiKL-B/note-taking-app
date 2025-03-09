@@ -1,3 +1,16 @@
+# Features
+- Dark theme
+- Distraction-free mode
+- Split editor
+- Preview markdown
+- Tags
+- Export data to json
+- Import data from json
+- Demo note
+- Embedded database
+
+- Tutorial for learing the app while using it
+
 # Implemented
 - CRUD Notes and tags
 - Search by name
@@ -56,6 +69,7 @@
 - Add menu item about info project and link github 
 - remove open note demo mounted and move in file menu 
 - When some actions like close application, alert the user to save data if at least one note is not saved
+- insert: heading ... at the right place
 ---
 
 # In progress
@@ -68,12 +82,11 @@
 # To improve
 - Improve textarea impossible ? --> change to a contenteditable true ?
 - Improve save functionnality
-- insert: heading ... at the right place
 - insert: Audio and video
 - Context menu 
 <!-- - Manage permissions for treeview -->
 - Add menu item documentation
-- Improve import notes tags with restrictions 
+- Improve import notes tags with restrictions (unique name)
 <!-- - Change the Desktop basedir to AppLocalData allow to create in C:\Users\{Username}\AppData\Local\Thoth -->
 ---
 
