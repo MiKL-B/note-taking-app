@@ -1,9 +1,13 @@
 <template>
 	<div id="note">
-		<Check v-if="note.isSaved" class="note-saved size-16" />
+		<AppIcon iconName="Check" v-if="note.isSaved" class="note-saved size-16"/>
 		<h4 class="note-title">
 			<span style="color: var(--red)" v-if="note.important">!</span>
-			<Pin v-if="note.pinned" class="size-16 text-dark" />
+			<AppIcon
+				iconName="Pin"
+				v-if="note.pinned"
+				class="size-16 text-dark"
+			/>
 			<div
 				style="padding: 0 0.3rem"
 				class="color-circle"
@@ -32,26 +36,29 @@
 			<span class="note-date">{{ timestamp }}</span>
 		</div>
 	</div>
-
-	<Trash2
+	<AppIcon
+		iconName="Trash2"
 		v-if="note.deleted === 0"
 		width="20"
 		class="note-trash"
 		@click="deleteNote(note)"
 	/>
-	<RotateCcw v-else width="20" class="note-restore" @click="restoreNote(note)"/>
+	<AppIcon
+		iconName="RotateCcw"
+		v-else
+		width="20"
+		class="note-restore"
+		@click="restoreNote(note)"
+	/>
 </template>
 <script>
-import { Check, Trash2, Pin, RotateCcw } from "lucide-vue-next";
+import AppIcon from "./AppIcon.vue";
 export default {
 	name: "NoteElement",
 	props: ["note"],
-	emits: ["delete-note","restore-note"],
+	emits: ["delete-note", "restore-note"],
 	components: {
-		Check,
-		Trash2,
-		Pin,
-		RotateCcw,
+		AppIcon,
 	},
 	data() {
 		return {
@@ -84,9 +91,9 @@ export default {
 		deleteNote(note) {
 			this.$emit("delete-note", note);
 		},
-		restoreNote(note){
-			this.$emit("restore-note",note);
-		}
+		restoreNote(note) {
+			this.$emit("restore-note", note);
+		},
 	},
 };
 </script>
@@ -128,7 +135,7 @@ export default {
 	color: var(--red);
 }
 
-.note-trash {
+.note-trash,.note-restore {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;

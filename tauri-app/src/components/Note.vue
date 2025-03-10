@@ -20,7 +20,7 @@
 				:style="`background: var(--${tag.color})`"
 				>{{ tag.name }}
 				<span class="delete-tag-btn" @click="deleteTagNote(tag)"
-					><X class="size-16" />
+					><AppIcon iconName="X" class="size-16" />
 				</span>
 			</span>
 		</div>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { X } from "lucide-vue-next";
+import AppIcon from "./AppIcon.vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
@@ -86,7 +86,7 @@ export default {
 	emits: ["delete-tag-note", "mark-as-modified", "get-position-cursor"],
 	components: {
 		NoteStatusbar,
-		X,
+		AppIcon,
 	},
 	data() {
 		return {

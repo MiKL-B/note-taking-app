@@ -26,7 +26,7 @@
     <div v-if="showMenu" class="context" :style="menuStyle">
       <ul class="context-menu">
         <li @click="createNote" class="flex align-center gap-4">
-          <Plus class="text-dark size-16" />
+          <AppIcon iconName="Plus" class="text-dark size-16" />
           {{ $t("newnote") }}
         </li>
         <li
@@ -34,7 +34,11 @@
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
         >
-          <CopyPlus class="size-16" :class="selectedNote ? 'text-dark' : ''" />
+          <AppIcon
+            iconName="CopyPlus"
+            class="size-16"
+            :class="selectedNote ? 'text-dark' : ''"
+          />
           {{ $t("duplicate_note") }}
         </li>
         <hr class="separator-x" />
@@ -43,12 +47,14 @@
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
         >
-          <PinOff
+          <AppIcon
+            iconName="PinOff"
             v-if="isPinned"
             class="size-16"
             :class="selectedNote ? 'text-dark' : ''"
           />
-          <Pin
+          <AppIcon
+            iconName="Pin"
             v-else
             class="size-16"
             :class="selectedNote ? 'text-dark' : ''"
@@ -62,7 +68,11 @@
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
         >
-          <Trash2 class="size-16" :class="selectedNote ? 'text-red' : ''" />
+          <AppIcon
+            iconName="Trash2"
+            class="size-16"
+            :class="selectedNote ? 'text-red' : ''"
+          />
           {{ $t("delete_note") }}
         </li>
         <li
@@ -71,10 +81,12 @@
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
         >
-          <RotateCcw
+          <AppIcon
+            iconName="RotateCcw"
             class="size-16"
             :class="selectedNote ? 'text-green' : ''"
           />
+
           {{ $t("restore_note") }}
         </li>
       </ul>
@@ -84,17 +96,8 @@
 
 <script>
 import NoteElement from "./NoteElement.vue";
+import AppIcon from "./AppIcon.vue";
 
-import {
-  Pin,
-  PinOff,
-  Trash2,
-  Lock,
-  Plus,
-  CopyPlus,
-  Check,
-  RotateCcw,
-} from "lucide-vue-next";
 export default {
   name: "Notelist",
   props: ["notes", "selectedNote", "isPinned"],
@@ -107,15 +110,8 @@ export default {
     "toggle-pin-note",
   ],
   components: {
-    Pin,
-    PinOff,
-    Trash2,
-    Lock,
-    Plus,
-    CopyPlus,
-    Check,
     NoteElement,
-    RotateCcw,
+    AppIcon,
   },
   data() {
     return {
@@ -226,7 +222,10 @@ export default {
   opacity: 1;
   pointer-events: auto;
 }
-
+.note-container:hover .note-restore {
+  opacity: 1;
+  pointer-events: auto;
+}
 #notelist-nonotes {
   padding: 0.5rem;
   color: var(--grey);

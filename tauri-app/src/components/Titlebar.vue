@@ -3,13 +3,13 @@
     <span>{{ name }}</span>
     <div>
       <span class="titlebar-button" @click="minimize" v-if="minimizable">
-        <Minus class="size-16"/>
+        <AppIcon iconName="Minus" class="size-16"/>
       </span>
       <span class="titlebar-button" @click="maximize" v-if="maximizable">
-        <Square class="size-16"/>
+        <AppIcon iconName="Square" class="size-16"/>
       </span>
       <span class="titlebar-button titlebar-close-button" @click="close">
-        <X class="size-16"/>
+        <AppIcon iconName="X" class="size-16"/>
       </span>
     </div>
   </div>
@@ -17,11 +17,10 @@
 
 <script>
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import AppIcon from "./AppIcon.vue";
 const appWindow = getCurrentWindow();
-import { Minus, Square, X } from "lucide-vue-next";
 export default {
   name: "Titlebar",
-
   props: {
     name: {
       type: String,
@@ -36,12 +35,8 @@ export default {
       default: true,
     },
   },
-  emits:["close-app"],
-  components: {
-    Minus,
-    Square,
-    X,
-  },
+  emits: ["close-app"],
+  components: { AppIcon },
   methods: {
     minimize() {
       appWindow.minimize();
@@ -50,7 +45,7 @@ export default {
       appWindow.toggleMaximize();
     },
     close() {
-      this.$emit("close-app")
+      this.$emit("close-app");
     },
   },
 };

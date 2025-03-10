@@ -7,14 +7,11 @@
       :class="{ filterselected: selectedFilter === 'allnotes' }"
     >
       <span class="flex align-center gap-4 ">
-        <File class="size-16 text-dark" />
+        <AppIcon iconName="File" class="size-16 text-dark"/>
         <span>{{ $t("allnotes") }}</span>
       </span>
       <span class="text-dark">{{ counters.allNotes }}</span>
     </li>
-    <!-- folder -->
-    <!-- <SidebarTreeView v-if="tree !== null" :node="tree"/> -->
-
     <!-- others -->
     <li
       class="sidebar-item justify-between"
@@ -24,11 +21,11 @@
     >
       <span class="flex align-center gap-4">
         <div
-          v-if="item.icon === null"
+          v-if="item.icon === ''"
           class="color-circle"
           :class="`bg-${item.color}`"
         ></div>
-        <component v-else :is="item.icon" class="size-16 text-dark"></component>
+        <AppIcon :iconName="item.icon" class="size-16 text-dark"/>
         <span>{{ $t(item.label) }}</span>
       </span>
       <span class="text-dark">{{ item.count }}</span>
@@ -84,27 +81,12 @@
 </template>
 
 <script>
-import {
-  File,
-  Archive,
-  Tags,
-  Tag,
-  Plus,
-  Trash2,
-  Pin,
-  Calendar,
-  FileWarning,
-  ChevronDown,
-  ChevronUp,
-  Folder,
-} from "lucide-vue-next";
+import AppIcon from './AppIcon.vue';
 import MenuDropdown from "./MenuDropdown.vue";
-// import SidebarTreeView from "./SidebarTreeView.vue";
 export default {
   name: "Sidebar",
   props: {
     tags: Array,
-    tree: Object,
     counters: {
       type: Object,
       default: () => ({
@@ -122,20 +104,8 @@ export default {
   },
   emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
   components: {
-    File,
-    Archive,
-    Tags,
-    Tag,
-    Plus,
-    Trash2,
-    Pin,
-    Calendar,
-    FileWarning,
-    ChevronDown,
-    ChevronUp,
-    Folder,
+    AppIcon,
     MenuDropdown,
-    // SidebarTreeView,
   },
   data() {
     return {
@@ -154,7 +124,6 @@ export default {
         "pink",
       ],
       tagsMenu: false,
-      tagIcon: Tag,
     };
   },
 
@@ -164,45 +133,45 @@ export default {
         {
           label: "pinned",
           count: this.counters.pinned,
-          icon: Pin,
+          icon: "Pin",
         },
         {
           label: "important",
           count: this.counters.important,
-          icon: FileWarning,
+          icon: "FileWarning",
         },
         {
           label: "today",
           count: this.counters.today,
-          icon: Calendar,
+          icon: "Calendar",
         },
         {
           label: "todo",
           count: this.counters.todo,
-          icon: null,
+          icon: "",
           color: "red",
         },
         {
           label: "inprogress",
           count: this.counters.inProgress,
-          icon: null,
+          icon: "",
           color: "yellow",
         },
         {
           label: "finished",
           count: this.counters.finished,
-          icon: null,
+          icon: "",
           color: "green",
         },
         {
           label: "archived",
           count: this.counters.archived,
-          icon: Archive,
+          icon: "Archive",
         },
         {
           label:"trash",
           count:this.counters.trash,
-          icon:Trash2,
+          icon:"Trash2",
         }
       ];
     },

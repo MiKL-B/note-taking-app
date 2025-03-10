@@ -7,13 +7,14 @@
       :title="$t('status')"
     >
       <option disabled selected>{{ $t("status") }}</option>
-      <option :value="item.status_ID" v-for="item in status">{{ $t(item.name) }}</option>
-
+      <option :value="item.status_ID" v-for="item in status">
+        {{ $t(item.name) }}
+      </option>
     </select>
 
     <!-- add tag -->
 
-  <!--   <div id="suggestion-container">
+    <!--   <div id="suggestion-container">
       <input
         type="text"
         v-model="input"
@@ -51,7 +52,8 @@
       @click="toggleImportantNote"
       :title="isPinned ? $t('unimportant_note') : $t('important_note')"
     >
-      <FileWarning
+      <AppIcon
+        iconName="FileWarning"
         class="size-16"
         :style="isImportant ? 'color:var(--red)' : ''"
       />
@@ -61,12 +63,12 @@
       @click="togglePinNote"
       :title="isPinned ? $t('unpin_note') : $t('pin_note')"
     >
-      <PinOff v-if="isPinned" class="size-16" />
-      <Pin v-else class="size-16" />
+      <AppIcon iconName="PinOff" v-if="isPinned" class="size-16" />
+      <AppIcon iconName="Pin" v-else class="size-16" />
     </button>
     <!-- duplicate -->
     <button @click="duplicateNote" :title="$t('duplicate_note')">
-      <CopyPlus class="size-16" />
+      <AppIcon iconName="CopyPlus" class="size-16"/>
     </button>
     <span class="separator-y"></span>
     <!-- preview -->
@@ -75,44 +77,26 @@
       @click="togglePreviewMode"
       :title="$t('toggle_preview')"
     >
-      <EyeOff v-if="isPreviewMode" class="size-16" />
-      <Eye v-else class="size-16" />
+      <AppIcon iconName="EyeOff" v-if="isPreviewMode" class="size-16"/>
+      <AppIcon iconName="Eye" v-else class="size-16"/>
     </button>
     <!-- both view -->
     <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
-      <Columns2 class="size-16" />
+      <AppIcon iconName="Columns2" class="size-16"/>
     </button>
   </div>
 </template>
 
 <script>
-import {
-  Tag,
-  CopyPlus,
-  Columns2,
-  EyeOff,
-  Eye,
-  Pin,
-  PinOff,
-  FileWarning,
-  ChevronDown,
-} from "lucide-vue-next";
+import AppIcon from "./AppIcon.vue";
 import DatabaseService from "../database.js";
 
 export default {
   name: "Notebar",
   components: {
-    Tag,
-    CopyPlus,
-    Columns2,
-    EyeOff,
-    Eye,
-    Pin,
-    PinOff,
-    FileWarning,
-    ChevronDown,
+    AppIcon,
   },
-  props: ["tags", "showBoth", "modelValue", "isImportant","isPinned"],
+  props: ["tags", "showBoth", "modelValue", "isImportant", "isPinned"],
   emits: [
     "add-tag-note",
     "duplicate-note",
@@ -123,7 +107,7 @@ export default {
     "toggle-important-note",
     "insert-item",
   ],
-  async mounted(){
+  async mounted() {
     this.status = await DatabaseService.getStatus();
   },
   data() {
@@ -251,7 +235,6 @@ export default {
       }
       this.$emit("insert-item", text);
       this.insertValue = "";
-
     },
     toggleSuggestion() {
       this.isVisibleSuggestionList = !this.isVisibleSuggestionList;

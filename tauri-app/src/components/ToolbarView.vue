@@ -9,7 +9,11 @@
 					disabled: !distractionFree && view === 'distraction_free',
 				}"
 			>
-				<Check v-if="view === currentView" class="size-16 text-dark" />
+				<AppIcon
+					iconName="Check"
+					v-if="view === currentView"
+					class="size-16 text-dark"
+				/>
 				{{ $t(view) }}
 			</li>
 		</template>
@@ -17,13 +21,13 @@
 </template>
 
 <script>
-import { Check } from "lucide-vue-next";
+import AppIcon from "./AppIcon.vue";
 import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
 	name: "ToolbarView",
 	components: {
-		Check,
+		AppIcon,
 		MenuDropdown,
 	},
 	props: ["distractionFree"],

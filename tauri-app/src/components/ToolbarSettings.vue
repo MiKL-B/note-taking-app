@@ -8,7 +8,11 @@
         v-for="language in languages"
         class="flex align-center gap-4"
       >
-        <Check v-if="language === currentLanguage" class="size-16 text-dark" />
+        <AppIcon
+          iconName="Check"
+          v-if="language === currentLanguage"
+          class="size-16 text-dark"
+        />
         {{ $t(language) }}
       </li>
       <hr class="separator-x" />
@@ -19,7 +23,11 @@
         v-for="font in fonts"
         class="flex align-center gap-4"
       >
-        <Check v-if="font === currentFont" class="size-16 text-dark" />
+        <AppIcon
+          iconName="Check"
+          v-if="font === currentFont"
+          class="size-16 text-dark"
+        />
         {{ font }}
       </li>
       <hr class="separator-x" />
@@ -30,7 +38,8 @@
         v-for="fontSize in fontsSize"
         class="flex align-center gap-4"
       >
-        <Check
+        <AppIcon
+          iconName="Check"
           v-if="fontSize.toString() === currentFontSize.toString()"
           class="size-16 text-dark"
         />
@@ -44,7 +53,11 @@
         v-for="theme in themes"
         class="flex align-center gap-4"
       >
-        <Check v-if="theme === currentTheme" class="size-16 text-dark" />
+        <AppIcon
+          iconName="Check"
+          v-if="theme === currentTheme"
+          class="size-16 text-dark"
+        />
         {{ $t(theme) }}
       </li>
       <hr class="separator-x" />
@@ -58,12 +71,12 @@
 </template>
 
 <script>
-import { Check } from "lucide-vue-next";
+import AppIcon from "./AppIcon.vue";
 import MenuDropdown from "./MenuDropdown.vue";
 export default {
   name: "ToolbarSettings",
   components: {
-    Check,
+    AppIcon,
     MenuDropdown,
   },
   data() {

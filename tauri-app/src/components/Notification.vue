@@ -1,26 +1,28 @@
 <template>
-  <div v-if="showNotification" id="notification" :style="`background:var(--${color})`">
+  <div
+    v-if="showNotification"
+    id="notification"
+    :style="`background:var(--${color})`"
+  >
     <span v-if="color === 'green'">
-      <CircleCheck />
+      <AppIcon iconName="CircleCheck" />
     </span>
     <span v-else-if="color === 'yellow'">
-      <Info />
+      <AppIcon iconName="Info" />
     </span>
     <span v-else-if="color === 'red'">
-      <TriangleAlert />
+      <AppIcon iconName="TriangleAlert" />
     </span>
     {{ message }}
   </div>
 </template>
 
 <script>
-import { CircleCheck, Info, TriangleAlert } from "lucide-vue-next";
+import AppIcon from "./AppIcon.vue";
 export default {
   name: "Notification",
   components: {
-    CircleCheck,
-    Info,
-    TriangleAlert,
+    AppIcon,
   },
   props: {
     showNotification: {
