@@ -108,9 +108,10 @@ import {
 } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join, desktopDir } from "@tauri-apps/api/path";
-import DatabaseService from "./database.js";
+ // import DatabaseService from "./database.js";
 const appWindow = getCurrentWindow();
-
+import initializeDatabase from './database/index';
+import NoteService from './database/NoteService';
 export default {
   name: "App",
   components: {
@@ -151,10 +152,12 @@ export default {
     };
   },
   async mounted() {
-    window.addEventListener("keydown", this.handleKeyDown);
-    await DatabaseService.initializeDatabase();
-    this.notes = await DatabaseService.getNotes();
+    initializeDatabase();
+    this.notes = await NoteService.getNotes();
+    // await DatabaseService.initializeDatabase();
+    // this.notes = await DatabaseService.getNotes();
     // this.tags = await DatabaseService.getTags();
+    window.addEventListener("keydown", this.handleKeyDown);
   },
 
   computed: {
@@ -355,14 +358,14 @@ export default {
           return response.text();
         })
         .then(async (content) => {
-          const allNotes = await DatabaseService.getNotes();
+          const allNotes = await NoteService.getNotes();
 
           if (this.selectedNote.selected) {
             this.selectedNote.isSaved = 1;
-            await DatabaseService.updateNote(this.selectedNote);
+            await NoteService.updateNote(this.selectedNote);
           }
-          await DatabaseService.createNote(fileName, content);
-          this.notes = await DatabaseService.getNotes();
+          await NoteService.createNote(fileName, content);
+          this.notes = await NoteService.getNotes();
         })
         .catch((error) => {
           console.log(error);
@@ -376,15 +379,15 @@ export default {
     },
     // -------------------------------------------------------------------------
     async createNote() {
-      const allNotes = await DatabaseService.getNotes();
+      const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
         this.selectedNote.isSaved = 1;
-        await DatabaseService.updateNote(this.selectedNote);
+        await NoteService.updateNote(this.selectedNote);
       }
-      await DatabaseService.createNote();
-      this.notes = await DatabaseService.getNotes();
-      let note = await DatabaseService.getLastNote();
+      await NoteService.createNote();
+      this.notes = await NoteService.getNotes();
+      let note = await NoteService.getLastNote();
 
       this.showNotification(
         this.$t("note_created", { note_name: note.name }),
@@ -395,7 +398,7 @@ export default {
     // -------------------------------------------------------------------------
     async saveFile(note) {
       this.selectedNote.isSaved = 1;
-      await DatabaseService.updateNote(note);
+      await NoteService.updateNote(note);
       this.showNotification(
         this.$t("note_saved", { note_name: note.name }),
         "green",
@@ -454,12 +457,12 @@ export default {
     // -------------------------------------------------------------------------
     async togglePinNote() {
       this.selectedNote.pinned ^= 1;
-      await DatabaseService.updateNote(this.selectedNote);
+      await NoteService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
     async toggleImportantNote() {
       this.selectedNote.important ^= 1;
-      await DatabaseService.updateNote(this.selectedNote);
+      await NoteService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
     async duplicateNote() {
@@ -467,14 +470,14 @@ export default {
         this.showNotification(this.$t("no_note_selected"), "red");
         return;
       }
-      const allNotes = await DatabaseService.getNotes();
+      const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
         this.selectedNote.isSaved = 1;
-        await DatabaseService.updateNote(this.selectedNote);
+        await NoteService.updateNote(this.selectedNote);
       }
-      await DatabaseService.duplicateNote(this.selectedNote);
-      this.notes = await DatabaseService.getNotes();
+      await NoteService.duplicateNote(this.selectedNote);
+      this.notes = await NoteService.getNotes();
 
       this.showNotification(
         this.$t("note_duplicated", {
@@ -496,17 +499,17 @@ export default {
     },
     // -------------------------------------------------------------------------
     async selectNote(note) {
-      const allNotes = await DatabaseService.getNotes();
+      const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
         this.selectedNote.isSaved = 1;
-        await DatabaseService.updateNote(this.selectedNote);
+        await NoteService.updateNote(this.selectedNote);
       }
 
-      await DatabaseService.unselectNotes();
+      await NoteService.unselectNotes();
       console.log("selected", this.selectedNote);
-      await DatabaseService.selectNote(note);
-      this.notes = await DatabaseService.getNotes();
+      await NoteService.selectNote(note);
+      this.notes = await NoteService.getNotes();
     },
     // -------------------------------------------------------------------------
     async deleteNote(note) {
@@ -523,8 +526,8 @@ export default {
       }
 
       try {
-        await DatabaseService.moveToTrash(note);
-        this.notes = await DatabaseService.getNotes();
+        await NoteService.moveToTrash(note);
+        this.notes = await NoteService.getNotes();
         let msgDeleted = this.$t("note_deleted", {
           note_name: note.name,
         });
@@ -546,8 +549,8 @@ export default {
       }
 
       try {
-        await DatabaseService.restoreNote(note);
-        this.notes = await DatabaseService.getNotes();
+        await NoteService.restoreNote(note);
+        this.notes = await NoteService.getNotes();
         let msgRestored = this.$t("note_restored", {
           note_name: note.name,
         });
@@ -560,7 +563,7 @@ export default {
     // -------------------------------------------------------------------------
     async changeNoteStatus(newStatus) {
       this.selectedNote.status_ID = parseInt(newStatus);
-      await DatabaseService.updateNote(this.selectedNote);
+      await NoteService.updateNote(this.selectedNote);
     },
     // -------------------------------------------------------------------------
     async deleteTag(tag) {
@@ -762,7 +765,7 @@ export default {
           items.push(note);
         });
         for (let i = 0; i < items.length; i++) {
-          await DatabaseService.createNote(
+          await NoteService.createNote(
             items[i].name,
             items[i].content,
             items[i].timestamp,
@@ -775,7 +778,7 @@ export default {
           );
         }
 
-        this.notes = await DatabaseService.getNotes();
+        this.notes = await NoteService.getNotes();
         // jsonParsed.tags.forEach((tag) => {
         //   this.tags.push(tag);
         // });

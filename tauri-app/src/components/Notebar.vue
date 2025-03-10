@@ -89,7 +89,7 @@
 
 <script>
 import AppIcon from "./AppIcon.vue";
-import DatabaseService from "../database.js";
+import StatusService from '../database/StatusService.js';
 
 export default {
   name: "Notebar",
@@ -108,7 +108,7 @@ export default {
     "insert-item",
   ],
   async mounted() {
-    this.status = await DatabaseService.getStatus();
+    this.status = await StatusService.getStatus();
   },
   data() {
     return {
