@@ -108,7 +108,6 @@ import {
 } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join, desktopDir } from "@tauri-apps/api/path";
- // import DatabaseService from "./database.js";
 const appWindow = getCurrentWindow();
 import initializeDatabase from './database/index';
 import NoteService from './database/NoteService';
@@ -154,9 +153,6 @@ export default {
   async mounted() {
     initializeDatabase();
     this.notes = await NoteService.getNotes();
-    // await DatabaseService.initializeDatabase();
-    // this.notes = await DatabaseService.getNotes();
-    // this.tags = await DatabaseService.getTags();
     window.addEventListener("keydown", this.handleKeyDown);
   },
 
@@ -569,8 +565,8 @@ export default {
     async deleteTag(tag) {
       console.log(tag);
 
-      await DatabaseService.deleteTag(tag);
-      this.tags = await DatabaseService.getTags();
+      // await DatabaseService.deleteTag(tag);
+      // this.tags = await DatabaseService.getTags();
 
       // this.tags = await DatabaseService.getTags()
       // const index = this.tags.findIndex((t) => t.id === tag.id);
@@ -597,32 +593,32 @@ export default {
 
       try {
         // Étape 1 : Créer le nouveau tag. Cela renvoie l'ID du tag créé.
-        await DatabaseService.createTag(tagName);
+        // await DatabaseService.createTag(tagName);
 
         // Étape 2 : Récupérer le tag que vous venez de créer
-        const tags = await DatabaseService.getTags();
-        this.tags = tags;
-        const newTag = tags.find((tag) => tag.name === tagName); // Assurez-vous que c'est unique.
+        // const tags = await DatabaseService.getTags();
+        // this.tags = tags;
+        // const newTag = tags.find((tag) => tag.name === tagName); // Assurez-vous que c'est unique.
 
-        if (!newTag) {
-          throw new Error("Tag not found after creation.");
-        }
+        // if (!newTag) {
+        //   throw new Error("Tag not found after creation.");
+        // }
 
         // Étape 3 : Associer le tag à la note
-        const tagtoadd = {
-          tags_ID: newTag.tags_ID,
-        };
+        // const tagtoadd = {
+        //   tags_ID: newTag.tags_ID,
+        // };
 
-        const note = {
-          note_ID: this.selectedNote.note_ID,
-        };
+        // const note = {
+        //   note_ID: this.selectedNote.note_ID,
+        // };
 
-        await DatabaseService.createTagNote(this.selectedNote, tagtoadd);
+        // await DatabaseService.createTagNote(this.selectedNote, tagtoadd);
 
-        const tagsTemp = await DatabaseService.getNoteTags();
-        this.tagsNote = tagsTemp.filter(
-          (tag) => tag.note_ID === this.selectedNote.note_ID,
-        );
+        // const tagsTemp = await DatabaseService.getNoteTags();
+        // this.tagsNote = tagsTemp.filter(
+        //   (tag) => tag.note_ID === this.selectedNote.note_ID,
+        // );
 
         // let tagsNote = await DatabaseService.getNoteTags();
         // console.log("notelist", tags);
