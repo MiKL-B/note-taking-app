@@ -2,7 +2,7 @@ import "./style.css";
 import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import App from "./App.vue";
-import messages from "./messages";
+import messages from "./messages.js";
 
 const app = createApp(App);
 

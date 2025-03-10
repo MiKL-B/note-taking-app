@@ -36,7 +36,7 @@
 					spellcheck="false"
 					:style="dynamicStyle"
 					@input="markAsModified"
-					ref="editor"
+					ref="div1"
 				></textarea>
 			</div>
 

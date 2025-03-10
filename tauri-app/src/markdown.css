@@ -11,7 +11,7 @@
   max-width: 50%;
   border-radius: 5px;
   display: flex;
-  margin:0 auto;
+  margin: 0 auto;
 }
 
 #markdown-container h1,
@@ -22,13 +22,13 @@
 #markdown-container h6 {
   color: var(--text-color-markdown);
   border-bottom: var(--border);
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
 #markdown-container h1 {
   font-size: 40px;
 }
-
 
 #markdown-container p {
   margin-bottom: 0.5rem;
@@ -61,7 +61,7 @@
   width: 100%;
 }
 #markdown-container code {
-  color:var(--text-color-markdown);
+  color: var(--text-color-markdown);
 }
 #markdown-container input[type="checkbox"] {
   height: 100%;
@@ -69,31 +69,31 @@
 #markdown-container blockquote {
   border-left: var(--border);
   margin: 1rem;
-  padding-left:1rem;
-  color:var(--dark);
+  padding-left: 1rem;
+  color: var(--dark);
 }
-#markdown-container a{
-  color:var(--blue);
+#markdown-container a {
+  color: var(--blue);
 }
-#markdown-container a img{
-  margin:0;
+#markdown-container a img {
+  margin: 0;
 }
-#markdown-container table{
-  border:var(--border);
+#markdown-container table {
+  border: var(--border);
   margin-bottom: 1rem;
   text-align: left;
   border-collapse: collapse;
 }
-#markdown-container th{
-  background:var(--bg-color-markdown);
-  padding:0.5rem;
+#markdown-container th {
+  background: var(--bg-color-markdown);
+  padding: 0.5rem;
 }
-#markdown-container td{
-  padding:0.5rem;
-  border:var(--border);
+#markdown-container td {
+  padding: 0.5rem;
+  border: var(--border);
 }
 
-#markdown-container hr{
+#markdown-container hr {
   border-top: none;
   border-left: none;
   border-right: none;
