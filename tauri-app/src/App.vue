@@ -85,6 +85,7 @@
 </template>
 
 <script lang="ts">
+  // component
 import Titlebar from "./components/Titlebar.vue";
 import Toolbar from "./components/Toolbar.vue";
 import Sidebar from "./components/Sidebar.vue";
@@ -94,14 +95,18 @@ import Notebar from "./components/Notebar.vue";
 import Note from "./components/Note.vue";
 import Notification from "./components/Notification.vue";
 
+// service
+import initializeDatabase from "./service/database/index.js";
+import NoteService from "./service/database/NoteService.js";
+import { initLogFile, writeLog } from "./service/log/index.js";
+
+// tauri api
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join, desktopDir } from "@tauri-apps/api/path";
 const appWindow = getCurrentWindow();
-import initializeDatabase from "./database/index";
-import NoteService from "./database/NoteService";
-import { initLogFile, writeLog } from "./service/log/index.js";
+
 export default {
   name: "App",
   components: {

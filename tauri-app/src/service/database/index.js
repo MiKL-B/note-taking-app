@@ -1,6 +1,6 @@
-import DatabaseService from "./DatabaseService";
-import NoteService from "./NoteService";
-import StatusService from "./StatusService";
+import DatabaseService from "./DatabaseService.js";
+import NoteService from "./NoteService.js";
+import StatusService from "./StatusService.js";
 
 const databaseService = new DatabaseService();
 

@@ -89,7 +89,7 @@
 
 <script>
 import AppIcon from "./AppIcon.vue";
-import StatusService from '../database/StatusService.js';
+import StatusService from '../service/database/StatusService.js';
 
 export default {
   name: "Notebar",
