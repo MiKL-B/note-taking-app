@@ -14,15 +14,14 @@
 			/>
 		</div>
 		<div class="note-tag-list">
-			<span v-for="tag in tags">
-				<span
-					v-if="tag.note_ID === selectedNote.note_ID"
-					:style="`background: var(--${tag.color})`"
-					class="tag"
-					>{{ tag.name }}
-					<span class="delete-tag-btn" @click="deleteNoteTag(tag)">
-						<AppIcon iconName="X" class="size-16" />
-					</span>
+			<span
+				v-for="tag in noteTags"
+				:style="`background: var(--${tag.color})`"
+				class="tag"
+			>
+				{{ tag.name }}
+				<span class="delete-tag-btn" @click="deleteNoteTag(tag)">
+					<AppIcon iconName="X" class="size-16" />
 				</span>
 			</span>
 		</div>
@@ -99,6 +98,11 @@ export default {
 	},
 
 	computed: {
+		noteTags() {
+			return this.tags.filter(
+				(tag) => tag.note_ID === this.selectedNote.note_ID,
+			);
+		},
 		dynamicStyle() {
 			return {
 				fontSize: this.fontSize + "px",
@@ -168,7 +172,7 @@ export default {
 			return color;
 		},
 		deleteNoteTag(tag) {
-			this.$emit("delete-note-tag", [this.selectedNote,tag]);
+			this.$emit("delete-note-tag", [this.selectedNote, tag]);
 		},
 		markAsModified(e) {
 			let textContent = document.getElementById("textContent");

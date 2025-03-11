@@ -26,13 +26,12 @@
 			</span>
 		</h4>
 		<div class="notelist-tag">
-			<span v-for="tag in tags">
-				<span
-					v-if="tag.note_ID === note.note_ID"
-					:style="`background: var(--${tag.color})`"
-					class="tag"
-					>{{ tag.name }}</span
-				>
+			<span
+				v-for="tag in noteTags"
+				:style="`background: var(--${tag.color})`"
+				class="tag"
+			>
+				{{ tag.name }}
 			</span>
 		</div>
 		<p class="note-content">
@@ -73,6 +72,11 @@ export default {
 	},
 	async mounted() {
 		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR");
+	},
+	computed: {
+		noteTags() {
+			return this.tags.filter((tag) => tag.note_ID === this.note.note_ID);
+		},
 	},
 	methods: {
 		getStatusColor(status_ID) {

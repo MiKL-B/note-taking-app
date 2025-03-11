@@ -717,29 +717,36 @@ export default {
     },
     // -------------------------------------------------------------------------
     handleUpdateTagName(updatedTag) {
-      this.tags = this.tags.map((tag) => {
-        return tag.id === updatedTag.id ? updatedTag : tag;
-      });
-      for (let i = 0; i < this.notes.length; i++) {
-        for (let j = 0; j < this.notes[i].tags.length; j++) {
-          this.notes[i].tags = this.notes[i].tags.map((tag) => {
-            return tag.id === updatedTag.id ? updatedTag : tag;
-          });
-        }
-      }
+      console.log(updatedTag)
+      // this.tags = this.tags.map((tag) => {
+      //   return tag.id === updatedTag.id ? updatedTag : tag;
+      // });
+      // for (let i = 0; i < this.notes.length; i++) {
+      //   for (let j = 0; j < this.notes[i].tags.length; j++) {
+      //     this.notes[i].tags = this.notes[i].tags.map((tag) => {
+      //       return tag.id === updatedTag.id ? updatedTag : tag;
+      //     });
+      //   }
+      // }
     },
     // -------------------------------------------------------------------------
-    setColorTag(tag, color) {
-      const index = this.tags.findIndex((t) => t.id === tag.id);
+    async setColorTag(tag, color) {
+      console.log(tag,color)
+      tag.color = color;
+      console.log(tag)
+      await TagService.updateTag(tag)
+      this.tags = await TagService.getTags();
+      this.noteTags = await NoteTagService.getNoteTags();
+      // const index = this.tags.findIndex((t) => t.id === tag.id);
 
-      for (let i = 0; i < this.notes.length; i++) {
-        for (let j = 0; j < this.notes[i].tags.length; j++) {
-          if (this.notes[i].tags[j].id === tag.id) {
-            this.notes[i].tags[j].color = color;
-          }
-        }
-      }
-      this.tags[index].color = color;
+      // for (let i = 0; i < this.notes.length; i++) {
+      //   for (let j = 0; j < this.notes[i].tags.length; j++) {
+      //     if (this.notes[i].tags[j].id === tag.id) {
+      //       this.notes[i].tags[j].color = color;
+      //     }
+      //   }
+      // }
+      // this.tags[index].color = color;
     },
     // -------------------------------------------------------------------------
     // exportASPDF() {

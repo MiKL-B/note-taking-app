@@ -38,7 +38,7 @@ class TagService {
 	      name = $1,
 	      color = $2
 	      WHERE tag_ID = $3;`;
-	    let params = [tag.name, tag.color, tag.tags_ID];
+	    let params = [tag.name, tag.color, tag.tag_ID];
 	    await this.dbService.executeQuery(query, params);
 	  } catch (error) {
 	    console.log(error);
