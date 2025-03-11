@@ -887,6 +887,7 @@ export default {
 #home-container {
   height: 100%;
   display: grid;
+  grid-template-columns: 1fr;
   grid-template-rows: 33px 33px 1fr;
 }
 .row {
