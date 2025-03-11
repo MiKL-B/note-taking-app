@@ -1,6 +1,6 @@
 import Database from "@tauri-apps/plugin-sql";
 import { join, appLocalDataDir } from "@tauri-apps/api/path";
-
+ 
 const fileName = "database.db";
 
 export default class DatabaseService {

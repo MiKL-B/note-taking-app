@@ -95,22 +95,13 @@ import Note from "./components/Note.vue";
 import Notification from "./components/Notification.vue";
 
 import { open, save } from "@tauri-apps/plugin-dialog";
-import {
-  readTextFile,
-  writeTextFile,
-  readDir,
-  BaseDirectory,
-  exists,
-  remove,
-  mkdir,
-  stat,
-  readMetaData,
-} from "@tauri-apps/plugin-fs";
+import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { join, desktopDir } from "@tauri-apps/api/path";
 const appWindow = getCurrentWindow();
-import initializeDatabase from './database/index';
-import NoteService from './database/NoteService';
+import initializeDatabase from "./database/index";
+import NoteService from "./database/NoteService";
+import { initLogFile, writeLog } from "./service/log/index.js";
 export default {
   name: "App",
   components: {
@@ -146,7 +137,6 @@ export default {
       noteCount: 0,
       jsonData: {},
       tagsNote: [],
-      code: "",
       currentPosition: 0,
     };
   },
@@ -155,7 +145,6 @@ export default {
     this.notes = await NoteService.getNotes();
     window.addEventListener("keydown", this.handleKeyDown);
   },
-
   computed: {
     selectedNote() {
       const selectedNote = this.notes.find((note: Note) => note.selected);
@@ -233,12 +222,15 @@ export default {
   },
   methods: {
     selectView(newView: string) {
+      writeLog("[BEGIN FUNCTION]: selectView(newView)");
       this.currentView = newView;
+      writeLog("[END FUNCTION]: selectView(newView)");
     },
     // -------------------------------------------------------------------------
     getCursor(position) {
       this.currentPosition = position;
     },
+    // -------------------------------------------------------------------------
     insertItem(item: string) {
       let textarea = document.getElementById("textContent");
       let cursorPosition = this.currentPosition;
@@ -342,6 +334,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     async openNoteDemo() {
+      writeLog("[BEGIN FUNCTION]: openNoteDemo()");
       const selectedFile = "/Thoth demo.txt";
       const fileName = selectedFile
         .replace(/^.*[\\\/]/, "")
@@ -351,6 +344,7 @@ export default {
           if (!response.ok) {
             throw new Error("Erreur lors de la récupération du fichier");
           }
+          writeLog("[END FUNCTION]: openNoteDemo()");
           return response.text();
         })
         .then(async (content) => {
@@ -367,6 +361,7 @@ export default {
           console.log(error);
           this.showNotification(error, "red");
         });
+      writeLog("[END FUNCTION]: openNoteDemo()");
     },
     // -------------------------------------------------------------------------
     markAsModified(position) {
@@ -375,6 +370,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     async createNote() {
+      writeLog("[BEGIN FUNCTION]: createNote");
       const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
@@ -390,15 +386,18 @@ export default {
         "green",
       );
       this.setDelayCreationNote();
+      writeLog("[END FUNCTION]: createNote");
     },
     // -------------------------------------------------------------------------
     async saveFile(note) {
+      writeLog("[BEGIN FUNCTION]: saveFile(note)");
       this.selectedNote.isSaved = 1;
       await NoteService.updateNote(note);
       this.showNotification(
         this.$t("note_saved", { note_name: note.name }),
         "green",
       );
+      writeLog("[END FUNCTION]: saveFile(note)");
     },
     // -------------------------------------------------------------------------
     handleKeyDown(event) {
@@ -424,6 +423,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     async closeApplication() {
+      writeLog("[BEGIN FUNCTION]: closeApplication()");
       let isNoteUnsaved = false;
       for (let i = 0; i < this.notes.length; i++) {
         if (this.notes[i].isSaved === 0) {
@@ -432,14 +432,17 @@ export default {
         }
       }
       if (!isNoteUnsaved) {
+        writeLog("[END FUNCTION]: closeApplication()");
         appWindow.close();
         return;
       }
       let msgConfirm = this.$t("confirm_close_app");
       const confirmed = await confirm(msgConfirm);
       if (!confirmed) {
+        writeLog("[END FUNCTION]: closeApplication()");
         return;
       }
+      writeLog("[END FUNCTION]: closeApplication()");
       appWindow.close();
     },
     // -------------------------------------------------------------------------
@@ -452,18 +455,24 @@ export default {
     },
     // -------------------------------------------------------------------------
     async togglePinNote() {
+      writeLog("[BEGIN FUNCTION]: togglePinNote()");
       this.selectedNote.pinned ^= 1;
       await NoteService.updateNote(this.selectedNote);
+      writeLog("[END FUNCTION]: togglePinNote()");
     },
     // -------------------------------------------------------------------------
     async toggleImportantNote() {
+      writeLog("[BEGIN FUNCTION]: toggleImportantNote()");
       this.selectedNote.important ^= 1;
       await NoteService.updateNote(this.selectedNote);
+      writeLog("[END FUNCTION]: toggleImportantNote()");
     },
     // -------------------------------------------------------------------------
     async duplicateNote() {
+      writeLog("[BEGIN FUNCTION]: duplicateNote()");
       if (!this.selectedNote) {
         this.showNotification(this.$t("no_note_selected"), "red");
+        writeLog("[END FUNCTION]: duplicateNote()");
         return;
       }
       const allNotes = await NoteService.getNotes();
@@ -482,6 +491,7 @@ export default {
         "green",
       );
       this.setDelayCreationNote();
+      writeLog("[END FUNCTION]: duplicateNote()");
     },
     // -------------------------------------------------------------------------
     showNotification(message: string, color: string) {
@@ -495,6 +505,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     async selectNote(note) {
+      writeLog("[BEGIN FUNCTION]: selectNote(note)");
       const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
@@ -506,10 +517,13 @@ export default {
       console.log("selected", this.selectedNote);
       await NoteService.selectNote(note);
       this.notes = await NoteService.getNotes();
+      writeLog("[END FUNCTION]: selectNote(note)");
     },
     // -------------------------------------------------------------------------
     async deleteNote(note) {
+      writeLog("[BEGIN FUNCTION]: deleteNote(note)");
       if (note.deleted === 1) {
+        writeLog("[END FUNCTION]: deleteNote(note)");
         return;
       }
       let msgConfirm = this.$t("confirm_note_deleted", {
@@ -518,6 +532,7 @@ export default {
       const confirmed = await confirm(msgConfirm);
 
       if (!confirmed) {
+        writeLog("[END FUNCTION]: deleteNote(note)");
         return;
       }
 
@@ -532,15 +547,18 @@ export default {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
       }
+      writeLog("[END FUNCTION]: deleteNote(note)");
     },
     // -------------------------------------------------------------------------
     async restoreNote(note) {
+      writeLog("[BEGIN FUNCTION]: restoreNote(note)");
       let msgConfirm = this.$t("confirm_note_restored", {
         note_name: note.name,
       });
       const confirmed = await confirm(msgConfirm);
 
       if (!confirmed) {
+        writeLog("[END FUNCTION]: restoreNote(note)");
         return;
       }
 
@@ -555,11 +573,17 @@ export default {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
       }
+      writeLog("[END FUNCTION]: restoreNote(note)");
     },
     // -------------------------------------------------------------------------
     async changeNoteStatus(newStatus) {
+      writeLog(
+        this.logFilePath,
+        "[BEGIN FUNCTION]: changeNoteStatus(newStatus)",
+      );
       this.selectedNote.status_ID = parseInt(newStatus);
       await NoteService.updateNote(this.selectedNote);
+      writeLog("[END FUNCTION]: changeNoteStatus(newStatus)");
     },
     // -------------------------------------------------------------------------
     async deleteTag(tag) {
@@ -594,32 +618,25 @@ export default {
       try {
         // Étape 1 : Créer le nouveau tag. Cela renvoie l'ID du tag créé.
         // await DatabaseService.createTag(tagName);
-
         // Étape 2 : Récupérer le tag que vous venez de créer
         // const tags = await DatabaseService.getTags();
         // this.tags = tags;
         // const newTag = tags.find((tag) => tag.name === tagName); // Assurez-vous que c'est unique.
-
         // if (!newTag) {
         //   throw new Error("Tag not found after creation.");
         // }
-
         // Étape 3 : Associer le tag à la note
         // const tagtoadd = {
         //   tags_ID: newTag.tags_ID,
         // };
-
         // const note = {
         //   note_ID: this.selectedNote.note_ID,
         // };
-
         // await DatabaseService.createTagNote(this.selectedNote, tagtoadd);
-
         // const tagsTemp = await DatabaseService.getNoteTags();
         // this.tagsNote = tagsTemp.filter(
         //   (tag) => tag.note_ID === this.selectedNote.note_ID,
         // );
-
         // let tagsNote = await DatabaseService.getNoteTags();
         // console.log("notelist", tags);
         // console.log("tags note", tagsNote);
@@ -720,12 +737,14 @@ export default {
     // },
     // -------------------------------------------------------------------------
     async exportJSON() {
+      writeLog("[BEGIN FUNCTION]: exportJSON()");
       let data = {
         notes: this.notes,
         tags: this.tags,
       };
       if (data.notes.length === 0 && data.tags.length === 0) {
         this.showNotification(this.$t("no_data_to_export"), "red");
+        writeLog("[END FUNCTION]: exportJSON()");
         return;
       }
 
@@ -742,14 +761,17 @@ export default {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
       }
+      writeLog("[END FUNCTION]: exportJSON()");
     },
     // -------------------------------------------------------------------------
     async importJSON() {
+      writeLog("[BEGIN FUNCTION]: importJSON()");
       const selectedFile = await open({
         multiple: false,
         filters: [{ name: "Fichiers texte", extensions: ["json"] }],
       });
       if (!selectedFile) {
+        writeLog("[END FUNCTION]: importJSON()");
         return;
       }
 
@@ -784,6 +806,7 @@ export default {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
       }
+      writeLog("[END FUNCTION]: importJSON()");
     },
   },
   beforeDestroy() {
