@@ -40,6 +40,7 @@
           @select-note="selectNote"
           @delete-note="deleteNote"
           @restore-note="restoreNote"
+          @delete-note-permanent="deleteNotePermanent"
           @create-note="createNote"
           @duplicate-note="duplicateNote"
           @toggle-pin-note="togglePinNote"
@@ -143,7 +144,6 @@ export default {
       jsonData: {},
       tagsNote: [],
       currentPosition: 0,
-
     };
   },
   async mounted() {
@@ -161,13 +161,21 @@ export default {
     filteredNotes() {
       switch (this.filter) {
         case "todo":
-          return this.notes.filter((note) => note.status_ID === 1);
+          return this.notes.filter(
+            (note) => note.status_ID === 1 && note.deleted === 0,
+          );
         case "inprogress":
-          return this.notes.filter((note) => note.status_ID === 2);
+          return this.notes.filter(
+            (note) => note.status_ID === 2 && note.deleted === 0,
+          );
         case "finished":
-          return this.notes.filter((note) => note.status_ID === 3);
+          return this.notes.filter(
+            (note) => note.status_ID === 3 && note.deleted === 0,
+          );
         case "archived":
-          return this.notes.filter((note) => note.status_ID === 4);
+          return this.notes.filter(
+            (note) => note.status_ID === 4 && note.deleted === 0,
+          );
         case "trash":
           return this.notes.filter((note) => note.deleted === 1);
         case "":
@@ -179,15 +187,19 @@ export default {
             );
           });
         case "pinned":
-          return this.notes.filter((note) => note.pinned === 1);
+          return this.notes.filter(
+            (note) => note.pinned === 1 && note.deleted === 0,
+          );
         case "today":
           return this.notes.filter(
             (note) =>
               new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] ===
-              this.getToday(),
+                this.getToday() && note.deleted === 0,
           );
         case "important":
-          return this.notes.filter((note) => note.important === 1);
+          return this.notes.filter(
+            (note) => note.important === 1 && note.deleted === 0,
+          );
         default:
           return this.notes.filter((note) => {
             return note.name
@@ -211,18 +223,30 @@ export default {
             note.deleted === 0
           );
         }).length,
-        todo: this.notes.filter((note) => note.status_ID === 1).length,
-        inProgress: this.notes.filter((note) => note.status_ID === 2).length,
-        finished: this.notes.filter((note) => note.status_ID === 3).length,
-        archived: this.notes.filter((note) => note.status_ID === 4).length,
+        todo: this.notes.filter(
+          (note) => note.status_ID === 1 && note.deleted === 0,
+        ).length,
+        inProgress: this.notes.filter(
+          (note) => note.status_ID === 2 && note.deleted === 0,
+        ).length,
+        finished: this.notes.filter(
+          (note) => note.status_ID === 3 && note.deleted === 0,
+        ).length,
+        archived: this.notes.filter(
+          (note) => note.status_ID === 4 && note.deleted === 0,
+        ).length,
         trash: this.notes.filter((note) => note.deleted === 1).length,
-        pinned: this.notes.filter((note) => note.pinned === 1).length,
+        pinned: this.notes.filter(
+          (note) => note.pinned === 1 && note.deleted === 0,
+        ).length,
         today: this.notes.filter(
           (note) =>
             new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] ===
-            this.getToday(),
+              this.getToday() && note.deleted === 0,
         ).length,
-        important: this.notes.filter((note) => note.important === 1).length,
+        important: this.notes.filter(
+          (note) => note.important === 1 && note.deleted === 0,
+        ).length,
       };
     },
   },
@@ -488,6 +512,11 @@ export default {
         writeLog("[END FUNCTION]: duplicateNote()");
         return;
       }
+      if (this.selectedNote.deleted === 1) {
+        this.showNotification(this.$t("no_duplicate_deleted"), "red");
+        writeLog("[END FUNCTION]: duplicateNote()");
+        return;
+      }
       const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
@@ -587,6 +616,31 @@ export default {
         console.log("DEBUG", error);
       }
       writeLog("[END FUNCTION]: restoreNote(note)");
+    },
+    // -------------------------------------------------------------------------
+    async deleteNotePermanent(note) {
+      writeLog("[BEGIN FUNCTION]: deleteNotePermanent(note)");
+      let msgConfirm = this.$t("confirm_note_deleted_permanent", {
+        note_name: note.name,
+      });
+      const confirmed = await confirm(msgConfirm);
+
+      if (!confirmed) {
+        writeLog("[END FUNCTION]: deleteNotePermanent(note)");
+        return;
+      }
+      try {
+        await NoteService.deleteNotePermanent(note);
+        this.notes = await NoteService.getNotes();
+        let msgDeleted = this.$t("note_deleted_permanent", {
+          note_name: note.name,
+        });
+        this.showNotification(msgDeleted, "green");
+      } catch (error) {
+        this.showNotification(error, "red");
+        console.log("DEBUG", error);
+      }
+      writeLog("[END FUNCTION]: deleteNotePermanent(note)");
     },
     // -------------------------------------------------------------------------
     async changeNoteStatus(newStatus) {

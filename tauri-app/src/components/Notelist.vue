@@ -30,6 +30,7 @@
           {{ $t("newnote") }}
         </li>
         <li
+          v-if="selectedNote.deleted === 0"
           @click="duplicateNote"
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
@@ -43,6 +44,7 @@
         </li>
         <hr class="separator-x" />
         <li
+          v-if="selectedNote.deleted === 0"
           @click="togglePinNote"
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"
@@ -89,6 +91,20 @@
 
           {{ $t("restore_note") }}
         </li>
+        <!-- delete permanent context -->
+        <li
+          v-if="selectedNote.deleted === 1"
+          @click="deleteNotePermanentContext"
+          class="flex align-center gap-4"
+          :class="selectedNote ? '' : 'disabled'"
+        >
+          <AppIcon
+            iconName="Trash2"
+            class="size-16"
+            :class="selectedNote ? 'text-red' : ''"
+          />
+          {{ $t("delete_note_permanent") }}
+        </li>
       </ul>
     </div>
   </div>
@@ -105,6 +121,7 @@ export default {
     "select-note",
     "delete-note",
     "restore-note",
+    "delete-note-permanent",
     "create-note",
     "duplicate-note",
     "toggle-pin-note",
@@ -162,6 +179,14 @@ export default {
     restoreNoteContext() {
       if (this.selectedNote) {
         this.restoreNote(this.selectedNote);
+      }
+    },
+    deleteNotePermanent(note) {
+      this.$emit("delete-note-permanent", note);
+    },
+    deleteNotePermanentContext() {
+      if (this.selectedNote) {
+        this.deleteNotePermanent(this.selectedNote);
       }
     },
     createNote() {

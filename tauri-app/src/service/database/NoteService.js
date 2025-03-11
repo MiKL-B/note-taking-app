@@ -146,6 +146,17 @@ class NoteService {
 		}
 	}
 	// -------------------------------------------------------------------------
+	async deleteNotePermanent(note) {
+		try {
+			const query = "DELETE FROM Note WHERE note_ID = $1;";
+			let params = [note.note_ID];
+			await this.dbService.executeQuery(query, params);
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+	}
+	// -------------------------------------------------------------------------
 	async unselectNotes() {
 		try {
 			const query = `UPDATE Note SET selected = 0 WHERE selected = 1;`;
