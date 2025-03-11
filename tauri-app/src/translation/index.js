@@ -4,3 +4,4 @@ export default {
   en: english,
   fr: french
 };
+

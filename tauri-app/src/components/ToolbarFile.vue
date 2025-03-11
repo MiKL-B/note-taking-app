@@ -33,7 +33,7 @@ export default {
 				},
 				{
 					label: "duplicate_note",
-					cmd: "",
+					cmd: "Ctrl + D",
 				},
 				{
 					label: "save",

@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts">
-  // component
+// component
 import Titlebar from "./components/Titlebar.vue";
 import Toolbar from "./components/Toolbar.vue";
 import Sidebar from "./components/Sidebar.vue";
@@ -143,6 +143,7 @@ export default {
       jsonData: {},
       tagsNote: [],
       currentPosition: 0,
+
     };
   },
   async mounted() {
@@ -406,10 +407,17 @@ export default {
     },
     // -------------------------------------------------------------------------
     handleKeyDown(event) {
+      // for mac event.metaKey
       // New note Ctrl + N
       if (event.ctrlKey && event.key.toLowerCase() === "n") {
         event.preventDefault();
         this.createNote();
+      }
+
+      // New note Ctrl + D
+      if (event.ctrlKey && event.key.toLowerCase() === "d") {
+        event.preventDefault();
+        this.duplicateNote();
       }
 
       // Save Ctrl + S
