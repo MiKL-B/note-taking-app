@@ -43,12 +43,12 @@ export default class DatabaseService {
 		}
 	}
 	// -------------------------------------------------------------------------
-	// async dropTables() {
-	// 	// await db.execute("DROP TABLE note_tags");
-	// 	await this.executeQuery("DROP TABLE IF EXISTS Note");
-	// 	// await db.execute("DROP TABLE Tags");
-	// 	await this.executeQuery("DROP TABLE IF EXISTS Status");
-	// }
+	async dropTables() {
+		await this.executeQuery("DROP TABLE IF EXISTS note_tag");
+		await this.executeQuery("DROP TABLE IF EXISTS Note");
+		await this.executeQuery("DROP TABLE IF EXISTS Tag");
+		await this.executeQuery("DROP TABLE IF EXISTS Status");
+	}
 	// -------------------------------------------------------------------------
  // async showTables(table) {
 //   const query = `

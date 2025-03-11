@@ -17,6 +17,7 @@
     >
       <NoteElement
         :note="note"
+        :tags="tags"
         @delete-note="deleteNote"
         @restore-note="restoreNote"
       />
@@ -116,7 +117,7 @@ import AppIcon from "./AppIcon.vue";
 
 export default {
   name: "Notelist",
-  props: ["notes", "selectedNote", "isPinned"],
+  props: ["notes", "selectedNote", "isPinned","tags"],
   emits: [
     "select-note",
     "delete-note",

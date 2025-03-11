@@ -38,7 +38,7 @@ class StatusService {
 	async getStatus() {
 		try {
 			const result = await this.dbService.selectQuery("SELECT * FROM Status;");
-			console.log("getStatus", result);
+			console.log("getStatus()", result);
 			return result;
 		} catch (error) {
 			console.error("Error fetching data:", error);

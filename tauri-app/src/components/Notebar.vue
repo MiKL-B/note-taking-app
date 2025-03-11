@@ -13,8 +13,7 @@
     </select>
 
     <!-- add tag -->
-
-    <!--   <div id="suggestion-container">
+    <div id="suggestion-container">
       <input
         type="text"
         v-model="input"
@@ -23,24 +22,32 @@
         pattern="[a-zA-ZÀ-ÿ]+"
         style="max-width: 120px; user-select: none"
       />
-      <ChevronDown
+      <AppIcon
+        iconName="ChevronDown"
         @click="toggleSuggestion"
         class="suggestion-chevron size-16"
       />
 
-      <ul id="suggestion-list" v-if="isVisibleSuggestionList && tags.length > 0">
+      <ul
+        id="suggestion-list"
+        v-if="isVisibleSuggestionList && tags.length > 0"
+      >
         <li
           class="flex align-center gap-4"
           v-for="tag in tags"
           @click="selectSuggestion(tag)"
         >
-          <Tag :style="`color: var(--${tag.color}) `" class="size-16" />
+          <AppIcon
+            iconName="Tag"
+            :style="`color: var(--${tag.color}) `"
+            class="size-16"
+          />
           <span>
             {{ tag.name }}
           </span>
         </li>
       </ul>
-    </div> -->
+    </div>
     <!-- insert -->
     <select v-model="insertValue" @change="insertItem" :title="$t('insert')">
       <option disabled selected>{{ $t("insert") }}</option>
@@ -68,7 +75,7 @@
     </button>
     <!-- duplicate -->
     <button @click="duplicateNote" :title="$t('duplicate_note')">
-      <AppIcon iconName="CopyPlus" class="size-16"/>
+      <AppIcon iconName="CopyPlus" class="size-16" />
     </button>
     <span class="separator-y"></span>
     <!-- preview -->
@@ -77,19 +84,19 @@
       @click="togglePreviewMode"
       :title="$t('toggle_preview')"
     >
-      <AppIcon iconName="EyeOff" v-if="isPreviewMode" class="size-16"/>
-      <AppIcon iconName="Eye" v-else class="size-16"/>
+      <AppIcon iconName="EyeOff" v-if="isPreviewMode" class="size-16" />
+      <AppIcon iconName="Eye" v-else class="size-16" />
     </button>
     <!-- both view -->
     <button @click="toggleShowBothTextareaPreview" :title="$t('side_by_side')">
-      <AppIcon iconName="Columns2" class="size-16"/>
+      <AppIcon iconName="Columns2" class="size-16" />
     </button>
   </div>
 </template>
 
 <script>
 import AppIcon from "./AppIcon.vue";
-import StatusService from '../service/database/StatusService.js';
+import StatusService from "../service/database/StatusService.js";
 
 export default {
   name: "Notebar",

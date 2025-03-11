@@ -36,6 +36,7 @@
         />
         <Notelist
           :notes="filteredNotes"
+          :tags="noteTags"
           :selectedNote="selectedNote"
           @select-note="selectNote"
           @delete-note="deleteNote"
@@ -68,13 +69,14 @@
           :showBoth="showBoth"
           :selectedNote="selectedNote"
           :notes="notes"
-          @delete-tag-note="deleteTagNote"
+          :tags="noteTags"
+          @delete-note-tag="deleteNoteTag"
           @mark-as-modified="markAsModified"
           @get-position-cursor="getCursor"
         />
       </div>
-      <div class="column-note img" v-else>
-        <img src="/image-no-notes.png" />
+      <div id="column-img" v-else>
+        <img class="img" src="/image-no-notes.png" />
       </div>
     </div>
   </div>
@@ -99,6 +101,8 @@ import Notification from "./components/Notification.vue";
 // service
 import initializeDatabase from "./service/database/index.js";
 import NoteService from "./service/database/NoteService.js";
+import TagService from "./service/database/TagService.js";
+import NoteTagService from "./service/database/NoteTagService.js";
 import { initLogFile, writeLog } from "./service/log/index.js";
 
 // tauri api
@@ -125,7 +129,6 @@ export default {
       isPreviewMode: false,
       showBoth: false,
       notes: [],
-      tempNotes: [],
       color: "",
       searchNote: "",
       tags: [],
@@ -142,13 +145,17 @@ export default {
       currentView: "",
       noteCount: 0,
       jsonData: {},
-      tagsNote: [],
+      noteTags: [],
       currentPosition: 0,
+      tagsNoteTemp: [],
     };
   },
   async mounted() {
     initializeDatabase();
     this.notes = await NoteService.getNotes();
+    this.tags = await TagService.getTags();
+
+    this.noteTags = await NoteTagService.getNoteTags();
     window.addEventListener("keydown", this.handleKeyDown);
   },
   computed: {
@@ -156,7 +163,6 @@ export default {
       const selectedNote = this.notes.find((note: Note) => note.selected);
       return selectedNote ? selectedNote : "";
     },
-
     // -------------------------------------------------------------------------
     filteredNotes() {
       switch (this.filter) {
@@ -401,8 +407,6 @@ export default {
     // -------------------------------------------------------------------------
     async createNote() {
       writeLog("[BEGIN FUNCTION]: createNote");
-      const allNotes = await NoteService.getNotes();
-
       if (this.selectedNote.selected) {
         this.selectedNote.isSaved = 1;
         await NoteService.updateNote(this.selectedNote);
@@ -558,7 +562,10 @@ export default {
       await NoteService.unselectNotes();
       console.log("selected", this.selectedNote);
       await NoteService.selectNote(note);
+
       this.notes = await NoteService.getNotes();
+
+      this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: selectNote(note)");
     },
     // -------------------------------------------------------------------------
@@ -653,114 +660,60 @@ export default {
       writeLog("[END FUNCTION]: changeNoteStatus(newStatus)");
     },
     // -------------------------------------------------------------------------
-    async deleteTag(tag) {
-      console.log(tag);
-
-      // await DatabaseService.deleteTag(tag);
-      // this.tags = await DatabaseService.getTags();
-
-      // this.tags = await DatabaseService.getTags()
-      // const index = this.tags.findIndex((t) => t.id === tag.id);
-
-      // if (index > -1) {
-      //   for (let i = 0; i < this.notes.length; i++) {
-      //     this.notes[i].tags = this.notes[i].tags.filter(
-      //       (t) => t.id !== tag.id,
-      //     );
-      //   }
-
-      //   this.tags.splice(index, 1);
-      //   let msgDeleted = this.$t("tag_deleted", { tag_name: tag.name });
-      //   this.showNotification(msgDeleted, "green");
-      // }
-    },
-    // -------------------------------------------------------------------------
     async addTag(tagName) {
-      // await DatabaseService.createTag(tag);
-      // this.tags = await DatabaseService.getTags();
-      // console.log(tag.tags_ID);
-      // await DatabaseService.createTagNote(this.selectedNote, tag);
-      // await DatabaseService.getNoteTags();
+      writeLog("[BEGIN FUNCTION]: addTag(tagName)");
 
       try {
         // Étape 1 : Créer le nouveau tag. Cela renvoie l'ID du tag créé.
-        // await DatabaseService.createTag(tagName);
+        await TagService.createTag(tagName);
+
         // Étape 2 : Récupérer le tag que vous venez de créer
-        // const tags = await DatabaseService.getTags();
-        // this.tags = tags;
-        // const newTag = tags.find((tag) => tag.name === tagName); // Assurez-vous que c'est unique.
-        // if (!newTag) {
-        //   throw new Error("Tag not found after creation.");
-        // }
+        const tags = await TagService.getTags();
+        this.tags = tags;
+
+        const newTag = tags.find((tag) => tag.name === tagName);
+
+        if (!newTag) {
+          throw new Error("Tag not found after creation.");
+        }
+
         // Étape 3 : Associer le tag à la note
-        // const tagtoadd = {
-        //   tags_ID: newTag.tags_ID,
-        // };
-        // const note = {
-        //   note_ID: this.selectedNote.note_ID,
-        // };
-        // await DatabaseService.createTagNote(this.selectedNote, tagtoadd);
-        // const tagsTemp = await DatabaseService.getNoteTags();
-        // this.tagsNote = tagsTemp.filter(
-        //   (tag) => tag.note_ID === this.selectedNote.note_ID,
-        // );
-        // let tagsNote = await DatabaseService.getNoteTags();
-        // console.log("notelist", tags);
-        // console.log("tags note", tagsNote);
-        // for (let i = 0; i < this.notes.length; i++) {
-        //   for (let j = 0; j < tagsNote[i].length; j++) {
-        //     console.log(this.notes[i].note_ID)
-        //     if (this.notes[i].note_ID === tagsNote[j].note_ID) {
-        //       this.tagsNote = tagsNote;
-        //       console.log("notelist", this.tagsNote);
-        //     }
-        //   }
-        // }
+        const tag = {
+          tag_ID: newTag.tag_ID,
+        };
+        const note = {
+          note_ID: this.selectedNote.note_ID,
+        };
+        await NoteTagService.createNoteTag(note, tag);
+        this.noteTags = await NoteTagService.getNoteTags(note);
+        this.notes = await NoteService.getNotes();
       } catch (error) {
         console.log(error);
         throw error;
       }
-      // const word = tag.trim();
-      // const pattern = /^[a-zA-ZÀ-ÿ]+$/;
-      // let tagtoAdd = {
-      //   id: Date.now(),
-      //   name: word,
-      //   color: "blue",
-      //   selected: false,
-      // };
-
-      // const existingTag = this.tags.find(
-      //   (t) => t.name.toLocaleString() === word.toLowerCase(),
-      // );
-      // const existingTagNote = this.selectedNote.tags.find(
-      //   (t) => t.name.toLowerCase() === word.toLowerCase(),
-      // );
-      // if (!pattern.test(word)) {
-      //   return;
-      // }
-      // if (!existingTag) {
-      //   this.tags.push(tagtoAdd);
-      //   this.selectedNote.tags.push(tagtoAdd);
-      //   let msgCreated = this.$t("tag_created", {
-      //     tag_name: tagtoAdd.name,
-      //   });
-      //   this.showNotification(msgCreated, "green");
-      //   return;
-      // }
-      // tagtoAdd.color = existingTag.color;
-      // tagtoAdd.id = existingTag.id;
-      // if (!existingTagNote) {
-      //   this.selectedNote.tags.push(tagtoAdd);
-      //   return;
-      // }
+      writeLog("[END FUNCTION]: addTag(tagName)");
+    },
+    // -------------------------------------------------------------------------
+    async deleteTag(tag) {
+      writeLog("[BEGIN FUNCTION]: deleteTag(tag)");
+      for (let i = 0; i < this.notes.length; i++){
+        let note = this.notes[i]
+        await NoteTagService.deleteNoteTag(note,tag);
+      }
+      await TagService.deleteTag(tag);
+      this.tags = await TagService.getTags();
+      this.noteTags = await NoteTagService.getNoteTags();
+      writeLog("[END FUNCTION]: deleteTag(tag)");
     },
 
     // -------------------------------------------------------------------------
-    deleteTagNote(tag) {
-      const index = this.selectedNote.tags.findIndex((t) => t.id === tag.id);
-      if (index > -1) {
-        this.selectedNote.tags.splice(index, 1);
-      }
+    async deleteNoteTag(data) {
+      writeLog("[BEGIN FUNCTION]: deleteNoteTag(tag)");
+      let note = data[0]
+      let tag = data[1]
+      await NoteTagService.deleteNoteTag(note,tag);
+      this.noteTags = await NoteTagService.getNoteTags();
+      writeLog("[END FUNCTION]: deleteNoteTag(tag)");
     },
     // -------------------------------------------------------------------------
     handleUpdateTagName(updatedTag) {
@@ -886,9 +839,6 @@ export default {
 <style>
 #home-container {
   height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 33px 33px 1fr;
 }
 .row {
   display: flex;
@@ -896,7 +846,7 @@ export default {
 }
 #column-left {
   min-width: 150px;
-  max-width: 200px;
+  max-width: 150px;
 }
 #column-middle {
   max-width: 263.5px;
@@ -913,7 +863,20 @@ export default {
   display: grid;
   grid-template-rows: 42px calc(100vh - 108px);
 }
+#column-img {
+  flex-grow: 1;
+  height: calc(100% - 66px);
+  position: relative;
+}
 
+.img {
+  user-select: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+}
 .col-3 {
   width: 25%;
 }
@@ -930,14 +893,6 @@ export default {
 }
 .align-center {
   align-items: center;
-}
-.img {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-  user-select: none;
 }
 
 .app-btn.disabled,

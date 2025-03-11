@@ -5,7 +5,8 @@ class NoteService {
 		this.dbService = new DatabaseService();
 	}
 	async createTableNote() {
-		const query = `
+		try {
+			const query = `
       CREATE TABLE IF NOT EXISTS Note(
       note_ID INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
@@ -18,7 +19,11 @@ class NoteService {
       selected BOOL,
       deleted BOOL,
       FOREIGN KEY(status_ID) REFERENCES Status(status_ID));`;
-		await this.dbService.executeQuery(query);
+			await this.dbService.executeQuery(query);
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
 	}
 	// -------------------------------------------------------------------------
 	async createNote(
@@ -182,7 +187,7 @@ class NoteService {
 		try {
 			const query = "SELECT * FROM Note;";
 			const result = await this.dbService.selectQuery(query);
-			console.log("notes", result);
+			console.table("getNotes()", result);
 			return result;
 		} catch (error) {
 			console.error("Error fetching data:", error);

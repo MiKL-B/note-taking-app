@@ -1,6 +1,10 @@
 <template>
 	<div id="note">
-		<AppIcon iconName="Check" v-if="note.isSaved" class="note-saved size-16"/>
+		<AppIcon
+			iconName="Check"
+			v-if="note.isSaved"
+			class="note-saved size-16"
+		/>
 		<h4 class="note-title">
 			<span style="color: var(--red)" v-if="note.important">!</span>
 			<AppIcon
@@ -22,12 +26,14 @@
 			</span>
 		</h4>
 		<div class="notelist-tag">
-			<span
-				class="tag"
-				v-for="tag in tags"
-				:style="`background: var(--${tag.color})`"
-				>{{ tag.name }}</span
-			>
+			<span v-for="tag in tags">
+				<span
+					v-if="tag.note_ID === note.note_ID"
+					:style="`background: var(--${tag.color})`"
+					class="tag"
+					>{{ tag.name }}</span
+				>
+			</span>
 		</div>
 		<p class="note-content">
 			{{ note.content }}
@@ -55,18 +61,17 @@
 import AppIcon from "./AppIcon.vue";
 export default {
 	name: "NoteElement",
-	props: ["note"],
+	props: ["note", "tags"],
 	emits: ["delete-note", "restore-note"],
 	components: {
 		AppIcon,
 	},
 	data() {
 		return {
-			tags: [],
 			timestamp: -1,
 		};
 	},
-	mounted() {
+	async mounted() {
 		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR");
 	},
 	methods: {
@@ -135,7 +140,8 @@ export default {
 	color: var(--red);
 }
 
-.note-trash,.note-restore {
+.note-trash,
+.note-restore {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;

@@ -14,13 +14,15 @@
 			/>
 		</div>
 		<div class="note-tag-list">
-			<span
-				class="tag"
-				v-for="tag in tags"
-				:style="`background: var(--${tag.color})`"
-				>{{ tag.name }}
-				<span class="delete-tag-btn" @click="deleteTagNote(tag)"
-					><AppIcon iconName="X" class="size-16" />
+			<span v-for="tag in tags">
+				<span
+					v-if="tag.note_ID === selectedNote.note_ID"
+					:style="`background: var(--${tag.color})`"
+					class="tag"
+					>{{ tag.name }}
+					<span class="delete-tag-btn" @click="deleteNoteTag(tag)">
+						<AppIcon iconName="X" class="size-16" />
+					</span>
 				</span>
 			</span>
 		</div>
@@ -80,10 +82,11 @@ import AppIcon from "./AppIcon.vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
+
 export default {
 	name: "Note",
-	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
-	emits: ["delete-tag-note", "mark-as-modified", "get-position-cursor"],
+	props: ["selectedNote", "isPreviewMode", "showBoth", "notes", "tags"],
+	emits: ["delete-note-tag", "mark-as-modified", "get-position-cursor"],
 	components: {
 		NoteStatusbar,
 		AppIcon,
@@ -92,7 +95,6 @@ export default {
 		return {
 			font: localStorage.getItem("font") || "Inter",
 			fontSize: localStorage.getItem("font-size") || 16,
-			tags: [],
 		};
 	},
 
@@ -165,8 +167,8 @@ export default {
 			}
 			return color;
 		},
-		deleteTagNote(tag) {
-			this.$emit("delete-tag-note", tag);
+		deleteNoteTag(tag) {
+			this.$emit("delete-note-tag", [this.selectedNote,tag]);
 		},
 		markAsModified(e) {
 			let textContent = document.getElementById("textContent");

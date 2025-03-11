@@ -6,8 +6,8 @@
       @click="selectFilter('allnotes')"
       :class="{ filterselected: selectedFilter === 'allnotes' }"
     >
-      <span class="flex align-center gap-4 ">
-        <AppIcon iconName="File" class="size-16 text-dark"/>
+      <span class="flex align-center gap-4">
+        <AppIcon iconName="File" class="size-16 text-dark" />
         <span>{{ $t("allnotes") }}</span>
       </span>
       <span class="text-dark">{{ counters.allNotes }}</span>
@@ -25,20 +25,24 @@
           class="color-circle"
           :class="`bg-${item.color}`"
         ></div>
-        <AppIcon :iconName="item.icon" class="size-16 text-dark"/>
+        <AppIcon :iconName="item.icon" class="size-16 text-dark" />
         <span>{{ $t(item.label) }}</span>
       </span>
       <span class="text-dark">{{ item.count }}</span>
     </li>
     <!-- tags -->
- <!--    <li class="sidebar-item justify-between" @click="toggleTagsMenu">
+    <li class="sidebar-item justify-between" @click="toggleTagsMenu">
       <span class="flex align-center gap-4">
-        <Tags class="size-16 text-dark" />
+        <AppIcon iconName="Tags" class="size-16 text-dark" />
         <span>Tags</span>
       </span>
       <span>
-        <ChevronDown v-if="!tagsMenu" class="text-dark size-16" />
-        <ChevronUp v-else class="text-dark size-16" />
+        <AppIcon
+          iconName="ChevronDown"
+          v-if="!tagsMenu"
+          class="text-dark size-16"
+        />
+        <AppIcon iconName="ChevronUp" v-else class="text-dark size-16" />
       </span>
     </li>
     <ul v-if="tagsMenu">
@@ -73,16 +77,23 @@
             v-model="tag.name"
             @input="updateTagName(tag)"
           />
-          <Trash2 width="20" class="tag-trash" @click="deleteTag(tag)" />
+          <AppIcon
+            iconName="Trash2"
+            width="20"
+            class="tag-trash"
+            @click="deleteTag(tag)"
+          />
         </span>
       </li>
-    </ul> -->
+    </ul>
   </ul>
 </template>
 
 <script>
-import AppIcon from './AppIcon.vue';
+import AppIcon from "./AppIcon.vue";
 import MenuDropdown from "./MenuDropdown.vue";
+import {Tag} from "lucide-vue-next";
+
 export default {
   name: "Sidebar",
   props: {
@@ -98,7 +109,7 @@ export default {
         inProgress: 0,
         finished: 0,
         archived: 0,
-        trash:0,
+        trash: 0,
       }),
     },
   },
@@ -106,6 +117,7 @@ export default {
   components: {
     AppIcon,
     MenuDropdown,
+    Tag
   },
   data() {
     return {
@@ -124,6 +136,7 @@ export default {
         "pink",
       ],
       tagsMenu: false,
+      tagIcon:Tag
     };
   },
 
@@ -169,10 +182,10 @@ export default {
           icon: "Archive",
         },
         {
-          label:"trash",
-          count:this.counters.trash,
-          icon:"Trash2",
-        }
+          label: "trash",
+          count: this.counters.trash,
+          icon: "Trash2",
+        },
       ];
     },
   },
@@ -204,7 +217,6 @@ export default {
   background: var(--bg-sidebar);
   color: var(--text-color-sidebar);
   border-right: var(--border);
-
 }
 
 .sidebar-item {
