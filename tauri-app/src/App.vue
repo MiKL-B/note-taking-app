@@ -337,10 +337,13 @@ export default {
     },
     // -------------------------------------------------------------------------
     handleFilter(filter: string) {
+      writeLog(`[BEGIN FUNCTION]: handleFilter(filter: ${filter})`);
       this.filter = filter;
+      writeLog(`[END FUNCTION]: handleFilter(filter: ${filter})`);
     },
     // -------------------------------------------------------------------------
     handleAction(action: string) {
+      writeLog(`[BEGIN FUNCTION]: handleAction(action: ${action})`);
       switch (action) {
         case "newnote":
           this.createNote();
@@ -367,6 +370,7 @@ export default {
           alert(`Unknown action: ${action}`);
           break;
       }
+      writeLog(`[END FUNCTION]: handleAction(action: ${action})`);
     },
     // -------------------------------------------------------------------------
     async openNoteDemo() {
@@ -401,8 +405,10 @@ export default {
     },
     // -------------------------------------------------------------------------
     markAsModified(position) {
+      writeLog("[BEGIN FUNCTION]: markAsModified(position)");
       this.currentPosition = position;
       this.selectedNote.isSaved = 0;
+      writeLog("[END FUNCTION]: markAsModified(position)");
     },
     // -------------------------------------------------------------------------
     async createNote() {
@@ -435,6 +441,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     handleKeyDown(event) {
+      writeLog("[BEGIN FUNCTION]: handleKeyDown(event)");
       // for mac event.metaKey
       // New note Ctrl + N
       if (event.ctrlKey && event.key.toLowerCase() === "n") {
@@ -461,6 +468,7 @@ export default {
         event.preventDefault();
         this.closeApplication();
       }
+      writeLog("[END FUNCTION]: handleKeyDown(event)");
     },
     // -------------------------------------------------------------------------
     async closeApplication() {
@@ -696,9 +704,9 @@ export default {
     // -------------------------------------------------------------------------
     async deleteTag(tag) {
       writeLog("[BEGIN FUNCTION]: deleteTag(tag)");
-      for (let i = 0; i < this.notes.length; i++){
-        let note = this.notes[i]
-        await NoteTagService.deleteNoteTag(note,tag);
+      for (let i = 0; i < this.notes.length; i++) {
+        let note = this.notes[i];
+        await NoteTagService.deleteNoteTag(note, tag);
       }
       await TagService.deleteTag(tag);
       this.tags = await TagService.getTags();
@@ -709,44 +717,28 @@ export default {
     // -------------------------------------------------------------------------
     async deleteNoteTag(data) {
       writeLog("[BEGIN FUNCTION]: deleteNoteTag(tag)");
-      let note = data[0]
-      let tag = data[1]
-      await NoteTagService.deleteNoteTag(note,tag);
+      let note = data[0];
+      let tag = data[1];
+      await NoteTagService.deleteNoteTag(note, tag);
       this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: deleteNoteTag(tag)");
     },
     // -------------------------------------------------------------------------
-    handleUpdateTagName(updatedTag) {
-      console.log(updatedTag)
-      // this.tags = this.tags.map((tag) => {
-      //   return tag.id === updatedTag.id ? updatedTag : tag;
-      // });
-      // for (let i = 0; i < this.notes.length; i++) {
-      //   for (let j = 0; j < this.notes[i].tags.length; j++) {
-      //     this.notes[i].tags = this.notes[i].tags.map((tag) => {
-      //       return tag.id === updatedTag.id ? updatedTag : tag;
-      //     });
-      //   }
-      // }
+    async handleUpdateTagName(updatedTag) {
+      writeLog("[BEGIN FUNCTION]: handleUpdateTagName(updatedTag)");
+      await TagService.updateTag(updatedTag)
+      this.tags = await TagService.getTags();
+      this.noteTags = await NoteTagService.getNoteTags();
+      writeLog("[END FUNCTION]: handleUpdateTagName(updatedTag)");
     },
     // -------------------------------------------------------------------------
     async setColorTag(tag, color) {
-      console.log(tag,color)
+      writeLog("[BEGIN FUNCTION]: setColorTag(tag, color)");
       tag.color = color;
-      console.log(tag)
-      await TagService.updateTag(tag)
+      await TagService.updateTag(tag);
       this.tags = await TagService.getTags();
       this.noteTags = await NoteTagService.getNoteTags();
-      // const index = this.tags.findIndex((t) => t.id === tag.id);
-
-      // for (let i = 0; i < this.notes.length; i++) {
-      //   for (let j = 0; j < this.notes[i].tags.length; j++) {
-      //     if (this.notes[i].tags[j].id === tag.id) {
-      //       this.notes[i].tags[j].color = color;
-      //     }
-      //   }
-      // }
-      // this.tags[index].color = color;
+      writeLog("[END FUNCTION]: setColorTag(tag, color)");
     },
     // -------------------------------------------------------------------------
     // exportASPDF() {
@@ -765,75 +757,140 @@ export default {
     // -------------------------------------------------------------------------
     async exportJSON() {
       writeLog("[BEGIN FUNCTION]: exportJSON()");
-      let data = {
-        notes: this.notes,
-        tags: this.tags,
-      };
-      if (data.notes.length === 0 && data.tags.length === 0) {
-        this.showNotification(this.$t("no_data_to_export"), "red");
-        writeLog("[END FUNCTION]: exportJSON()");
-        return;
-      }
 
-      const json = JSON.stringify(data);
-      try {
-        const path = await save({
-          filters: [{ name: "Fichiers texte", extensions: ["json"] }],
-        });
-        if (path) {
-          await writeTextFile(path, json);
-          this.showNotification(this.$t("data_exported"), "green");
-        }
-      } catch (error) {
-        this.showNotification(error, "red");
-        console.log("DEBUG", error);
-      }
+      // let data = {
+      //   notes: this.notes,
+      //   tags: this.noteTags,
+      // };
+      // let temp = [];
+
+      // for (let i = 0; i < this.notes.length; i++) {
+      //   let obj = {
+      //     name: this.notes[i].name,
+      //     content: this.notes[i].content,
+      //     timestamp: this.notes[i].timestamp,
+      //     isSaved: this.notes[i].isSaved,
+      //     status_ID: this.notes[i].status_ID,
+      //     pinned: this.notes[i].pinned,
+      //     important: this.notes[i].important,
+      //     selected: this.notes[i].selected,
+      //     deleted: this.notes[i].deleted,
+      //     tags: [],
+      //   };
+      //   for (let j = 0; j < this.noteTags.length; j++) {
+      //     if (this.notes[i].note_ID === this.noteTags[j].note_ID) {
+      //       let tag = {
+      //         name: this.noteTags[j].name,
+      //         color: this.noteTags[j].color,
+      //       };
+      //       obj.tags.push(tag);
+      //     }
+      //   }
+      //   temp.push(obj);
+      // }
+
+      // console.log(temp);
+      // if (data.notes.length === 0 && data.tags.length === 0) {
+      //   this.showNotification(this.$t("no_data_to_export"), "red");
+      //   writeLog("[END FUNCTION]: exportJSON()");
+      //   return;
+      // }
+
+      // const json = JSON.stringify(temp);
+      // try {
+      //   const path = await save({
+      //     filters: [{ name: "Fichiers texte", extensions: ["json"] }],
+      //   });
+      //   if (path) {
+      //     await writeTextFile(path, json);
+      //     this.showNotification(this.$t("data_exported"), "green");
+      //   }
+      // } catch (error) {
+      //   this.showNotification(error, "red");
+      //   console.log("DEBUG", error);
+      // }
       writeLog("[END FUNCTION]: exportJSON()");
     },
     // -------------------------------------------------------------------------
     async importJSON() {
       writeLog("[BEGIN FUNCTION]: importJSON()");
-      const selectedFile = await open({
-        multiple: false,
-        filters: [{ name: "Fichiers texte", extensions: ["json"] }],
-      });
-      if (!selectedFile) {
-        writeLog("[END FUNCTION]: importJSON()");
-        return;
-      }
+      // const selectedFile = await open({
+      //   multiple: false,
+      //   filters: [{ name: "Fichiers texte", extensions: ["json"] }],
+      // });
+      // if (!selectedFile) {
+      //   writeLog("[END FUNCTION]: importJSON()");
+      //   return;
+      // }
 
-      try {
-        const content = await readTextFile(selectedFile);
-        const jsonParsed = JSON.parse(content);
-        let items = [];
-        jsonParsed.notes.forEach((note) => {
-          items.push(note);
-        });
-        for (let i = 0; i < items.length; i++) {
-          await NoteService.createNote(
-            items[i].name,
-            items[i].content,
-            items[i].timestamp,
-            items[i].isSaved,
-            items[i].status_ID,
-            items[i].pinned,
-            items[i].important,
-            items[i].selected,
-            items[i].deleted,
-          );
-        }
+     // try {
+        // const content = await readTextFile(selectedFile);
+        // const noteItems = JSON.parse(content);
 
-        this.notes = await NoteService.getNotes();
+        // for (let i = 0; i < noteItems.length; i++) {
+        //   let note = {
+        //     name: noteItems[i].name,
+        //     content: noteItems[i].content,
+        //     timestamp: noteItems[i].timestamp,
+        //     isSaved: noteItems[i].isSaved,
+        //     status_ID: noteItems[i].status_ID,
+        //     pinned: noteItems[i].pinned,
+        //     important: noteItems[i].important,
+        //     selected: 0,
+        //     deleted: noteItems[i].deleted,
+        //   };
+        //   const createdNote = await NoteService.createNote(
+        //     note.name,
+        //     note.content,
+        //     note.timestamp,
+        //     note.isSaved,
+        //     note.status_ID,
+        //     note.pinned,
+        //     note.important,
+        //     note.selected,
+        //     note.deleted,
+        //   );
+         // const noteID = createdNote.note_ID;
+         // console.log(noteID)
+          // for (let j = 0; j < noteItems[i].tags.length; j++) {
+          //   let tag = {
+          //     name: noteItems[i].tags[j].name,
+          //     color: noteItems[i].tags[j].color,
+          //   };
+          //   const createdTag = await TagService.createTag(tag.name, tag.color);
+
+          //   const tagID = createdTag.tag_ID;
+          //   await NoteTagService.createNoteTag(noteID, tagID);
+          // }
+      //  }
+
+     //   this.notes = await NoteService.getNotes();
+
+        // let tagItems = [];
         // jsonParsed.tags.forEach((tag) => {
-        //   this.tags.push(tag);
+        //   tagItems.push(tag);
         // });
+        // for (let i = 0; i < tagItems.length; i++) {
+        //   await TagService.createTag(tagItems[i].name, tagItems[i].color);
+        // }
+      //  this.tags = await TagService.getTags();
 
-        this.showNotification(this.$t("data_imported"), "green");
-      } catch (error) {
-        this.showNotification(error, "red");
-        console.log("DEBUG", error);
-      }
-      writeLog("[END FUNCTION]: importJSON()");
+        // for (let i = 0; i < this.notes.length; i++) {
+        //   for (let j = 0; j < this.tags.length; j++) {
+        //     if (this.notes[i].note_ID === this.tags[j].note_ID) {
+        //       await NoteTagService.createNoteTag(this.notes[i], this.tags[j]);
+        //     }
+        //   }
+        // }
+
+      //  this.noteTags = await NoteTagService.getNoteTags();
+
+        // this.showNotification(this.$t("data_imported"), "green");
+      // } catch (error) {
+      //   this.showNotification(error, "red");
+      //   console.log("DEBUG", error);
+      // }
+       writeLog("[END FUNCTION]: importJSON()");
     },
   },
   beforeDestroy() {
