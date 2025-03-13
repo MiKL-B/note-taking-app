@@ -12,6 +12,14 @@ class StatusService {
 		await this.dbService.executeQuery(sql);
 	}
 	// -------------------------------------------------------------------------
+	async dropTableStatus() {
+		try {
+			await this.dbService.executeQuery("DROP TABLE IF EXISTS Status;");
+		} catch (error) {
+			throw error;
+		}
+	}
+	// -------------------------------------------------------------------------
 	async createStatus() {
 		try {
 			const [rows] = await this.dbService.selectQuery(
@@ -30,18 +38,17 @@ class StatusService {
       `;
 			await this.dbService.executeQuery(query);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
 	// -------------------------------------------------------------------------
 	async getStatus() {
 		try {
-			const result = await this.dbService.selectQuery("SELECT * FROM Status;");
-			console.log("getStatus()", result);
+			const result = await this.dbService.selectQuery(
+				"SELECT * FROM Status;",
+			);
 			return result;
 		} catch (error) {
-			console.error("Error fetching data:", error);
 			throw error;
 		}
 	}

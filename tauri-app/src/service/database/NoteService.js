@@ -1,5 +1,4 @@
 import DatabaseService from "./DatabaseService.js";
-
 class NoteService {
 	constructor() {
 		this.dbService = new DatabaseService();
@@ -19,6 +18,9 @@ class NoteService {
       selected BOOL,
       deleted BOOL,
       FOREIGN KEY(status_ID) REFERENCES Status(status_ID));`;
+
+      // data TEXT, [{name:"tagname",color:"tagcolor"}]
+
 			await this.dbService.executeQuery(query);
 		} catch (error) {
 			console.log(error);
@@ -26,17 +28,35 @@ class NoteService {
 		}
 	}
 	// -------------------------------------------------------------------------
-	async createNote(
-		name = "",
-		content = "",
-		timestamp = Date.now(),
-		isSaved = 1,
-		status_ID = 1,
-		pinned = 0,
-		important = 0,
-		selected = 0,
-		deleted = 0,
-	) {
+	async dropTableNote() {
+		try {
+			await this.dbService.executeQuery("DROP TABLE IF EXISTS Note;");
+		} catch (error) {
+			throw error;
+		}
+	}
+	// -------------------------------------------------------------------------
+	async createNote(data) {
+		let name = "";
+		let content = "";
+		let timestamp = Date.now();
+		let isSaved = 1;
+		let status_ID = 1;
+		let pinned = 0;
+		let important = 0;
+		let selected = 0;
+		let deleted = 0;
+		if (data !== undefined) {
+			name = data.name;
+			content = data.content;
+			timestamp = data.timestamp;
+			isSaved = data.isSaved;
+			status_ID = data.status_ID;
+			pinned = data.pinned;
+			important = data.important;
+			deleted = data.deleted;
+		}
+
 		try {
 			if (name === "") {
 				const countQuery = "SELECT COUNT(*) AS count FROM Note";
@@ -47,9 +67,9 @@ class NoteService {
 			}
 
 			const query = `
-        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
-        VALUES
-        (?,?,?,?,?,?,?,?,?);`;
+		INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
+		VALUES
+		(?,?,?,?,?,?,?,?,?);`;
 
 			let params = [
 				name,
@@ -59,12 +79,11 @@ class NoteService {
 				content,
 				pinned,
 				important,
-				0,
+				selected,
 				deleted,
 			];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.error("Error inserting data:", error);
 			throw error;
 		}
 	}
@@ -75,6 +94,8 @@ class NoteService {
         INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
         VALUES (?,?,?,?,?,?,?,?,?);`;
 			let noteName = note.name + " - Copy";
+			let selected = 0;
+			let deleted = 0;
 			let params = [
 				noteName,
 				Date.now(),
@@ -83,18 +104,16 @@ class NoteService {
 				note.content,
 				note.pinned,
 				note.important,
-				0,
-				0,
+				selected,
+				deleted,
 			];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
 	// -------------------------------------------------------------------------
 	async updateNote(note) {
-		console.log("updated note", note);
 		try {
 			const query = `
         UPDATE Note SET
@@ -123,19 +142,16 @@ class NoteService {
 			];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
 	// -------------------------------------------------------------------------
 	async moveToTrash(note) {
 		try {
-			// const query = "DELETE FROM Note WHERE note_ID = $1;";
 			const query = "update Note SET deleted = 1 WHERE note_ID = $1;";
 			let params = [note.note_ID];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
@@ -146,7 +162,6 @@ class NoteService {
 			let params = [note.note_ID];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
@@ -157,7 +172,6 @@ class NoteService {
 			let params = [note.note_ID];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
@@ -167,7 +181,6 @@ class NoteService {
 			const query = `UPDATE Note SET selected = 0 WHERE selected = 1;`;
 			await this.dbService.executeQuery(query);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
@@ -178,7 +191,6 @@ class NoteService {
 			let params = [note.note_ID];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}
@@ -187,10 +199,8 @@ class NoteService {
 		try {
 			const query = "SELECT * FROM Note;";
 			const result = await this.dbService.selectQuery(query);
-			console.table("getNotes()", result);
 			return result;
 		} catch (error) {
-			console.error("Error fetching data:", error);
 			throw error;
 		}
 	}
@@ -201,7 +211,6 @@ class NoteService {
 			const result = await this.dbService.selectQuery(query);
 			return result[0];
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	}

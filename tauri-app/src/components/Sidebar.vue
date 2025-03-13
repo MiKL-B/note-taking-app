@@ -48,11 +48,12 @@
     <ul v-if="tagsMenu">
       <li
         id="sidebar-tag"
-        @click="selectFilter(tag.name)"
+  
         :class="{ filterselected: selectedFilter === tag.name }"
         class="sidebar-sub-item"
         v-for="tag in tags"
       >
+      <!--       @click="selectFilter(tag.name)" -->
         <span class="flex align-center gap-4">
           <MenuDropdown
             title=""
