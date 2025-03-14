@@ -1,44 +1,27 @@
 <template>
-  <div id="note-filter">
-    <MenuDropdown title="" :icon="filter" btn="app-btn">
-      <template v-slot:content>
-        <li class="flex gap-4 align-center" @click="sortNotesAZ">
-          <AppIcon iconName="ArrowDownAZ" v-if="sortAZ" class="size-16" />
-          <AppIcon iconName="ArrowUpZA" v-else class="size-16" />
-          {{ sortAZ ? $t("sortZA") : $t("sortAZ") }}
-        </li>
-        <li class="flex gap-4 align-center" @click="sortNotesByDate">
-          <AppIcon iconName="Calendar" class="size-16" />
-          {{ sortDate ? $t("sort_newest") : $t("sort_oldest") }}
-        </li>
-        <li class="flex gap-4 align-center" @click="clearFilterSort">
-          <AppIcon iconName="FilterX" class="size-16" />
-          {{ $t("clear_filter") }}
-        </li>
-      </template>
-    </MenuDropdown>
-
-    <input
-      type="text"
-      :value="modelValue"
-      :placeholder="$t('filter_note_by_name')"
-      @input="updateSearchNote($event.target.value)"
-      style="width: 160px"
-    />
-    <button
-      :disabled="!canCreateNote"
-      @click="createNote"
-      :title="$t('create_note')"
-    >
-      <AppIcon iconName="Plus" class="size-16" />
-    </button>
-  </div>
+  <MenuDropdown title="" :icon="filter" btn="app-btn">
+    <template v-slot:content>
+      <li class="flex gap-4 align-center" @click="sortNotesAZ">
+        <AppIcon iconName="ArrowDownAZ" v-if="sortAZ" class="size-16" />
+        <AppIcon iconName="ArrowUpZA" v-else class="size-16" />
+        {{ sortAZ ? $t("sortZA") : $t("sortAZ") }}
+      </li>
+      <li class="flex gap-4 align-center" @click="sortNotesByDate">
+        <AppIcon iconName="Calendar" class="size-16" />
+        {{ sortDate ? $t("sort_newest") : $t("sort_oldest") }}
+      </li>
+      <li class="flex gap-4 align-center" @click="clearFilterSort">
+        <AppIcon iconName="FilterX" class="size-16" />
+        {{ $t("clear_filter") }}
+      </li>
+    </template>
+  </MenuDropdown>
 </template>
 
 <script>
 import MenuDropdown from "./MenuDropdown.vue";
 import AppIcon from "./AppIcon.vue";
-import {Filter} from "lucide-vue-next";
+import { Filter } from "lucide-vue-next";
 export default {
   name: "NoteFilter",
   components: {
@@ -46,10 +29,8 @@ export default {
     AppIcon,
     Filter,
   },
-  props: ["modelValue", "canCreateNote"],
+
   emits: [
-    "update:modelValue",
-    "create-note",
     "sort-notes-AZ",
     "sort-notes-date",
     "sort-notes-clear",
@@ -62,9 +43,6 @@ export default {
     };
   },
   methods: {
-    createNote() {
-      this.$emit("create-note");
-    },
     sortNotesAZ() {
       this.sortAZ = !this.sortAZ;
       this.$emit("sort-notes-AZ");
@@ -78,20 +56,6 @@ export default {
       this.sortDate = true;
       this.$emit("sort-notes-clear");
     },
-    updateSearchNote(value) {
-      this.$emit("update:modelValue", value);
-    },
   },
 };
 </script>
-<style>
-#note-filter {
-  border-bottom: var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 42px;
-  padding: 0.2rem;
-  gap: 0.2rem;
-}
-</style>

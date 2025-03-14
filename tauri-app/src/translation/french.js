@@ -106,6 +106,8 @@ export default {
   no_duplicate_deleted:
     "Vous ne pouvez pas dupliquer une note de la corbeille!",
   note_already_exist: "La note existe déjà!",
+  tag_already_exist:"Le tag existe déjà!",
+  tag_added_to_note:"Le tag {tag_name} a bien été ajouté à la note!",
   // filternote
   sortAZ: "Tri A -> Z",
   sortZA: "Tri Z -> A",

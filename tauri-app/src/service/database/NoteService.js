@@ -17,10 +17,8 @@ class NoteService {
       important BOOL,
       selected BOOL,
       deleted BOOL,
+	  tags TEXT,
       FOREIGN KEY(status_ID) REFERENCES Status(status_ID));`;
-
-      // data TEXT, [{name:"tagname",color:"tagcolor"}]
-
 			await this.dbService.executeQuery(query);
 		} catch (error) {
 			console.log(error);
@@ -46,6 +44,7 @@ class NoteService {
 		let important = 0;
 		let selected = 0;
 		let deleted = 0;
+		let tags = "";
 		if (data !== undefined) {
 			name = data.name;
 			content = data.content;
@@ -55,6 +54,7 @@ class NoteService {
 			pinned = data.pinned;
 			important = data.important;
 			deleted = data.deleted;
+			tags = data.tags;
 		}
 
 		try {
@@ -67,9 +67,9 @@ class NoteService {
 			}
 
 			const query = `
-		INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
+		INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted,tags)
 		VALUES
-		(?,?,?,?,?,?,?,?,?);`;
+		(?,?,?,?,?,?,?,?,?,?);`;
 
 			let params = [
 				name,
@@ -81,6 +81,7 @@ class NoteService {
 				important,
 				selected,
 				deleted,
+				tags,
 			];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
@@ -91,8 +92,8 @@ class NoteService {
 	async duplicateNote(note) {
 		try {
 			const query = `
-        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted)
-        VALUES (?,?,?,?,?,?,?,?,?);`;
+        INSERT INTO Note (name,timestamp,isSaved,status_ID,content,pinned,important,selected,deleted,tags)
+        VALUES (?,?,?,?,?,?,?,?,?,?);`;
 			let noteName = note.name + " - Copy";
 			let selected = 0;
 			let deleted = 0;
@@ -106,6 +107,7 @@ class NoteService {
 				note.important,
 				selected,
 				deleted,
+				tags,
 			];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
@@ -125,8 +127,9 @@ class NoteService {
         pinned = $6,
         important = $7,
         selected = $8,
-        deleted = $9
-        WHERE note_ID = $10;`;
+        deleted = $9,
+		tags = $10
+        WHERE note_ID = $11;`;
 
 			let params = [
 				note.name,
@@ -138,6 +141,7 @@ class NoteService {
 				note.important,
 				note.selected,
 				note.deleted,
+				note.tags,
 				note.note_ID,
 			];
 			await this.dbService.executeQuery(query, params);
@@ -199,6 +203,7 @@ class NoteService {
 		try {
 			const query = "SELECT * FROM Note;";
 			const result = await this.dbService.selectQuery(query);
+			console.log(result)
 			return result;
 		} catch (error) {
 			throw error;

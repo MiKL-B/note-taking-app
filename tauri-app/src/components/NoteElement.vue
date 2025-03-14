@@ -60,7 +60,7 @@
 import AppIcon from "./AppIcon.vue";
 export default {
 	name: "NoteElement",
-	props: ["note", "tags"],
+	props: ["note"],
 	emits: ["delete-note", "restore-note"],
 	components: {
 		AppIcon,
@@ -73,10 +73,11 @@ export default {
 	async mounted() {
 		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR");
 	},
-	computed: {
-		noteTags() {
-			return this.tags.filter((tag) => tag.note_ID === this.note.note_ID);
-		},
+	computed:{
+		noteTags(){
+			if (this.note.tags === "") return [];
+			return JSON.parse(this.note.tags)
+		}
 	},
 	methods: {
 		getStatusColor(status_ID) {

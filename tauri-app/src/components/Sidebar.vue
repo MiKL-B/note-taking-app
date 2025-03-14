@@ -1,18 +1,5 @@
 <template>
   <ul id="sidebar">
-    <!-- notes -->
-    <li
-      class="sidebar-item justify-between"
-      @click="selectFilter('allnotes')"
-      :class="{ filterselected: selectedFilter === 'allnotes' }"
-    >
-      <span class="flex align-center gap-4">
-        <AppIcon iconName="File" class="size-16 text-dark" />
-        <span>{{ $t("allnotes") }}</span>
-      </span>
-      <span class="text-dark">{{ counters.allNotes }}</span>
-    </li>
-    <!-- others -->
     <li
       class="sidebar-item justify-between"
       @click="selectFilter(item.label)"
@@ -144,6 +131,11 @@ export default {
   computed: {
     computedItems() {
       return [
+        {
+          label: "allnotes",
+          count: this.counters.allNotes,
+          icon: "File",
+        },
         {
           label: "pinned",
           count: this.counters.pinned,

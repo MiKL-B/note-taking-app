@@ -104,6 +104,8 @@ export default {
   confirm_note_restored: "Are you sure you want to restore {note_name}?",
   no_duplicate_deleted: "You can't duplicate a note from the trash!",
   note_already_exist: "The note already exists!",
+  tag_already_exist:"The tag already exists!",
+  tag_added_to_note:"The tag {tag_name} added to note!",
   // filternote
   sortAZ: "Sort A -> Z",
   sortZA: "Sort Z -> A",

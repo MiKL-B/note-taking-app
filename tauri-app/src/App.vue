@@ -1,90 +1,40 @@
 <template>
   <div id="home-container">
     <Titlebar @close-app="closeApplication" />
-    <Toolbar
-      @action-clicked="handleAction"
-      @select-view="selectView"
-      :distractionFree="selectedNote"
-    />
+    <Toolbar @action-clicked="handleAction" @select-view="selectView" :distractionFree="selectedNote" />
     <div class="row">
-      <div
-        id="column-left"
-        class="col-3"
-        v-if="currentView !== 'distraction_free'"
-      >
-        <Sidebar
-          :tags="tags"
-          :counters="getCountNotes"
-          @delete-tag="deleteTag"
-          @update-tag-name="handleUpdateTagName"
-          @select-filter="handleFilter"
-          @set-color="setColorTag"
-        />
+      <div id="column-left" class="col-3" v-if="currentView !== 'distraction_free'">
+        <Sidebar :tags="tags" :counters="getCountNotes" @delete-tag="deleteTag" @update-tag-name="handleUpdateTagName"
+          @select-filter="handleFilter" @set-color="setColorTag" />
       </div>
-      <div
-        id="column-middle"
-        class="col-3"
-        v-if="currentView !== 'distraction_free'"
-      >
-        <NoteFilter
-          :canCreateNote="canCreateNote"
-          v-model="searchNote"
-          @create-note="createNote"
-          @sort-notes-AZ="toggleSortAZ"
-          @sort-notes-date="toggleSortByDate"
-          @sort-notes-clear="clearFilterSort"
-        />
-        <Notelist
-          :notes="filteredNotes"
-          :tags="noteTags"
-          :selectedNote="selectedNote"
-          @select-note="selectNote"
-          @delete-note="deleteNote"
-          @restore-note="restoreNote"
-          @delete-note-permanent="deleteNotePermanent"
-          @create-note="createNote"
-          @duplicate-note="duplicateNote"
-          @toggle-pin-note="togglePinNote"
-          :isPinned="selectedNote.pinned"
-        />
+      <div id="column-middle" class="col-3" v-if="currentView !== 'distraction_free'">
+        <div id="column-middle-header">
+          <NoteFilter @sort-notes-AZ="toggleSortAZ" @sort-notes-date="toggleSortByDate"
+            @sort-notes-clear="clearFilterSort" />
+          <NoteSearch :modelValue="searchNote" @update:modelValue="$event => (searchNote = $event)" />
+          <NoteCreator :canCreateNote="canCreateNote" @create-note="createNote" />
+        </div>
+
+        <Notelist :notes="filteredNotes" :selectedNote="selectedNote" @select-note="selectNote"
+          @delete-note="deleteNote" @restore-note="restoreNote" @delete-note-permanent="deleteNotePermanent"
+          @create-note="createNote" @duplicate-note="duplicateNote" @toggle-pin-note="togglePinNote"
+          :isPinned="selectedNote.pinned" />
       </div>
       <div id="column-right" class="col-6" v-if="selectedNote">
-        <Notebar
-          :tags="tags"
-          :showBoth="showBoth"
-          @add-tag-note="addTag"
-          @toggle-preview-mode="togglePreviewMode"
-          @toggle-showboth="toggleShowBothTextareaPreview"
-          @duplicate-note="duplicateNote"
-          @update-status="changeNoteStatus"
-          @toggle-pin-note="togglePinNote"
-          @toggle-important-note="toggleImportantNote"
-          :isPinned="selectedNote.pinned"
-          :isImportant="selectedNote.important"
-          v-model.modelValue="selectedNote.status_ID"
-          @insert-item="insertItem"
-        />
-        <Note
-          :isPreviewMode="isPreviewMode"
-          :showBoth="showBoth"
-          :selectedNote="selectedNote"
-          :notes="notes"
-          :tags="noteTags"
-          @delete-note-tag="deleteNoteTag"
-          @mark-as-modified="markAsModified"
-          @get-position-cursor="getCursor"
-        />
+        <Notebar :tags="tags" :showBoth="showBoth" @add-tag-note="addTag" @toggle-preview-mode="togglePreviewMode"
+          @toggle-showboth="toggleShowBothTextareaPreview" @duplicate-note="duplicateNote"
+          @update-status="changeNoteStatus" @toggle-pin-note="togglePinNote"
+          @toggle-important-note="toggleImportantNote" :isPinned="selectedNote.pinned"
+          :isImportant="selectedNote.important" v-model.modelValue="selectedNote.status_ID" @insert-item="insertItem" />
+        <Note :isPreviewMode="isPreviewMode" :showBoth="showBoth" :selectedNote="selectedNote" :notes="notes"
+          @delete-note-tag="deleteNoteTag" @mark-as-modified="markAsModified" @get-position-cursor="getCursor" />
       </div>
       <div id="column-img" v-else>
         <img class="img" src="/image-no-notes.png" />
       </div>
     </div>
   </div>
-  <Notification
-    :message="messageNotification"
-    :color="colorNotification"
-    :showNotification="isVisibleNotification"
-  />
+  <Notification :message="messageNotification" :color="colorNotification" :showNotification="isVisibleNotification" />
 </template>
 
 <script lang="ts">
@@ -93,6 +43,8 @@ import Titlebar from "./components/Titlebar.vue";
 import Toolbar from "./components/Toolbar.vue";
 import Sidebar from "./components/Sidebar.vue";
 import NoteFilter from "./components/NoteFilter.vue";
+import NoteCreator from "./components/NoteCreator.vue";
+import NoteSearch from "./components/NoteSearch.vue";
 import Notelist from "./components/Notelist.vue";
 import Notebar from "./components/Notebar.vue";
 import Note from "./components/Note.vue";
@@ -102,14 +54,15 @@ import Notification from "./components/Notification.vue";
 import initializeDatabase from "./service/database/index.js";
 import NoteService from "./service/database/NoteService.js";
 import TagService from "./service/database/TagService.js";
-import NoteTagService from "./service/database/NoteTagService.js";
 import { writeLog } from "./service/log/index.js";
+
+// utils
+import { sortArrayByName } from "./utils/sort.js";
 
 // tauri api
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { join, desktopDir } from "@tauri-apps/api/path";
 const appWindow = getCurrentWindow();
 
 export default {
@@ -119,6 +72,8 @@ export default {
     Toolbar,
     Sidebar,
     NoteFilter,
+    NoteCreator,
+    NoteSearch,
     Notelist,
     Notebar,
     Note,
@@ -154,7 +109,6 @@ export default {
     initializeDatabase();
     this.notes = await NoteService.getNotes();
     this.tags = await TagService.getTags();
-    this.noteTags = await NoteTagService.getNoteTags();
     window.addEventListener("keydown", this.handleKeyDown);
   },
   computed: {
@@ -192,7 +146,7 @@ export default {
           return this.notes.filter(
             (note) =>
               new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] ===
-                this.getToday() && note.deleted === 0,
+              this.getToday() && note.deleted === 0,
           );
         case "important":
           return this.notes.filter(
@@ -237,7 +191,7 @@ export default {
         today: this.notes.filter(
           (note) =>
             new Date(note.timestamp).toLocaleString("fr-FR").split(" ")[0] ===
-              this.getToday() && note.deleted === 0,
+            this.getToday() && note.deleted === 0,
         ).length,
         important: this.notes.filter(
           (note) => note.important === 1 && note.deleted === 0,
@@ -277,18 +231,7 @@ export default {
       return new Date().toLocaleString("fr-FR").split(" ")[0];
     },
     // -------------------------------------------------------------------------
-    sortNotes() {
-      this.notes.sort((a: Note, b: Note) => {
-        if (a.name < b.name) {
-          return -1;
-        } else if (b.name < a.name) {
-          return 1;
-        }
-        return 0;
-      });
-    },
-    // -------------------------------------------------------------------------
-    sortNotesDate() {
+    sortNotesByTimestamp() {
       this.notes.sort((a, b) => {
         if (this.sortedDate) {
           return a.timestamp - b.timestamp;
@@ -300,7 +243,7 @@ export default {
     // -------------------------------------------------------------------------
     toggleSortAZ() {
       this.sortedAsc = !this.sortedAsc;
-      this.sortNotes();
+      sortArrayByName(this.notes);
       if (!this.sortedAsc) {
         this.notes.reverse();
       }
@@ -309,12 +252,12 @@ export default {
     clearFilterSort() {
       this.sortedAsc = true;
       this.sortedDate = true;
-      this.sortNotesDate();
+      this.sortNotesByTimestamp();
     },
     // -------------------------------------------------------------------------
     toggleSortByDate() {
       this.sortedDate = !this.sortedDate;
-      this.sortNotesDate();
+      this.sortNotesByTimestamp();
     },
     // -------------------------------------------------------------------------
     togglePreviewMode() {
@@ -533,7 +476,6 @@ export default {
         writeLog("[END FUNCTION]: duplicateNote()");
         return;
       }
-      const allNotes = await NoteService.getNotes();
 
       if (this.selectedNote.selected) {
         this.selectedNote.isSaved = 1;
@@ -564,8 +506,6 @@ export default {
     // -------------------------------------------------------------------------
     async selectNote(note) {
       writeLog("[BEGIN FUNCTION]: selectNote(note)");
-      const allNotes = await NoteService.getNotes();
-
       if (this.selectedNote.selected) {
         this.selectedNote.isSaved = 1;
         await NoteService.updateNote(this.selectedNote);
@@ -577,7 +517,6 @@ export default {
 
       this.notes = await NoteService.getNotes();
 
-      this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: selectNote(note)");
     },
     // -------------------------------------------------------------------------
@@ -663,10 +602,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     async changeNoteStatus(newStatus) {
-      writeLog(
-        this.logFilePath,
-        "[BEGIN FUNCTION]: changeNoteStatus(newStatus)",
-      );
+      writeLog("[BEGIN FUNCTION]: changeNoteStatus(newStatus)");
       this.selectedNote.status_ID = parseInt(newStatus);
       await NoteService.updateNote(this.selectedNote);
       writeLog("[END FUNCTION]: changeNoteStatus(newStatus)");
@@ -676,29 +612,33 @@ export default {
       writeLog("[BEGIN FUNCTION]: addTag(tagName)");
 
       try {
-        // Étape 1 : Créer le nouveau tag. Cela renvoie l'ID du tag créé.
-        await TagService.createTag(tagName);
-        this.tags = await TagService.getTags();
-        // Étape 2 : Récupérer le tag que vous venez de créer
-        const tags = await TagService.getTags();
-        this.tags = tags;
-
-        const newTag = tags.find((tag) => tag.name === tagName);
-
-        if (!newTag) {
-          throw new Error("Tag not found after creation.");
+        // add tag in tags
+        const tagExistInTags = this.tags.find((tag) => tag.name === tagName);
+        if (!tagExistInTags) {
+          await TagService.createTag(tagName);
+          this.tags = await TagService.getTags();
+          this.showNotification(this.$t("tag_created", {
+            tag_name: tagName,
+          }), "green")
         }
 
-        // Étape 3 : Associer le tag à la note
-        const tag = {
-          tag_ID: newTag.tag_ID,
-        };
-        const note = {
-          note_ID: this.selectedNote.note_ID,
-        };
+        // add tag to selected note
+        const newTag = this.tags.find((tag) => tag.name === tagName);
 
-        await NoteTagService.createNoteTag(note, tag);
-        this.noteTags = await NoteTagService.getNoteTags(note);
+        if (!this.selectedNote.tags || this.selectedNote.tags === "") {
+          this.selectedNote.tags = JSON.stringify([]);
+        }
+
+        let existingTags = JSON.parse(this.selectedNote.tags);
+        let existingTag = existingTags.find((tag) => tag.name === newTag.name)
+        if (!existingTag) {
+          existingTags.push(newTag);
+          this.showNotification(this.$t("tag_added_to_note", {
+            tag_name: tagName,
+          }), "green")
+        }
+        this.selectedNote.tags = JSON.stringify(existingTags);
+        await NoteService.updateNote(this.selectedNote)
         this.notes = await NoteService.getNotes();
       } catch (error) {
         console.log(error);
@@ -709,23 +649,14 @@ export default {
     // -------------------------------------------------------------------------
     async deleteTag(tag) {
       writeLog("[BEGIN FUNCTION]: deleteTag(tag)");
-      for (let i = 0; i < this.notes.length; i++) {
-        let note = this.notes[i];
-        await NoteTagService.deleteNoteTag(note, tag);
-      }
       await TagService.deleteTag(tag);
       this.tags = await TagService.getTags();
-      this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: deleteTag(tag)");
     },
 
     // -------------------------------------------------------------------------
     async deleteNoteTag(data) {
       writeLog("[BEGIN FUNCTION]: deleteNoteTag(tag)");
-      let note = data[0];
-      let tag = data[1];
-      await NoteTagService.deleteNoteTag(note, tag);
-      this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: deleteNoteTag(tag)");
     },
     // -------------------------------------------------------------------------
@@ -733,7 +664,6 @@ export default {
       writeLog("[BEGIN FUNCTION]: handleUpdateTagName(updatedTag)");
       await TagService.updateTag(updatedTag);
       this.tags = await TagService.getTags();
-      this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: handleUpdateTagName(updatedTag)");
     },
     // -------------------------------------------------------------------------
@@ -742,7 +672,6 @@ export default {
       tag.color = color;
       await TagService.updateTag(tag);
       this.tags = await TagService.getTags();
-      this.noteTags = await NoteTagService.getNoteTags();
       writeLog("[END FUNCTION]: setColorTag(tag, color)");
     },
     // -------------------------------------------------------------------------
@@ -765,7 +694,6 @@ export default {
 
       let data = {
         notes: this.notes,
-        note_tag: this.noteTags,
         tags: this.tags,
       };
       console.log("export", data);
@@ -806,6 +734,7 @@ export default {
       }
       writeLog("[END FUNCTION]: importJSON()");
     },
+    // -------------------------------------------------------------------------
   },
   beforeDestroy() {
     window.addEventListener("keydown", this.handleKeyDown);
@@ -818,14 +747,17 @@ export default {
 #home-container {
   height: 100%;
 }
+
 .row {
   display: flex;
   height: 100%;
 }
+
 #column-left {
   min-width: 150px;
   max-width: 150px;
 }
+
 #column-middle {
   max-width: 263.5px;
   width: 263.5px;
@@ -836,11 +768,27 @@ export default {
   color: var(--text-color-notelist);
 }
 
+#column-middle-header {
+  border-bottom: var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 42px;
+  padding: 0.2rem;
+  gap: 0.2rem;
+  width: 100%;
+}
+
+#column-middle-header input {
+  width: 160px;
+}
+
 #column-right {
   flex-grow: 1;
   display: grid;
   grid-template-rows: 42px calc(100vh - 108px);
 }
+
 #column-img {
   flex-grow: 1;
   height: calc(100% - 66px);
@@ -855,6 +803,7 @@ export default {
   transform: translate(-50%, -50%);
   max-width: 100%;
 }
+
 .col-3 {
   width: 25%;
 }
@@ -866,9 +815,11 @@ export default {
 .flex {
   display: flex;
 }
+
 .gap-4 {
   gap: 0.2rem;
 }
+
 .align-center {
   align-items: center;
 }

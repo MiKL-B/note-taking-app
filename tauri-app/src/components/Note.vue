@@ -84,7 +84,7 @@ import NoteStatusbar from "./NoteStatusbar.vue";
 
 export default {
 	name: "Note",
-	props: ["selectedNote", "isPreviewMode", "showBoth", "notes", "tags"],
+	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
 	emits: ["delete-note-tag", "mark-as-modified", "get-position-cursor"],
 	components: {
 		NoteStatusbar,
@@ -98,10 +98,9 @@ export default {
 	},
 
 	computed: {
-		noteTags() {
-			return this.tags.filter(
-				(tag) => tag.note_ID === this.selectedNote.note_ID,
-			);
+		noteTags(){
+			if (this.selectedNote.tags === "") return [];
+			return JSON.parse(this.selectedNote.tags)
 		},
 		dynamicStyle() {
 			return {
@@ -150,7 +149,6 @@ export default {
 	},
 	methods: {
 		getPositionCursor(e) {
-			let textContent = document.getElementById("textContent");
 			this.$emit("get-position-cursor", e.target.selectionStart);
 		},
 		getStatusColor(status_ID) {
@@ -175,7 +173,6 @@ export default {
 			this.$emit("delete-note-tag", [this.selectedNote, tag]);
 		},
 		markAsModified(e) {
-			let textContent = document.getElementById("textContent");
 			this.$emit("mark-as-modified", e.target.selectionStart);
 		},
 

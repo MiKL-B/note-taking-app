@@ -17,7 +17,6 @@
     >
       <NoteElement
         :note="note"
-        :tags="tags"
         @delete-note="deleteNote"
         @restore-note="restoreNote"
       />
@@ -117,7 +116,7 @@ import AppIcon from "./AppIcon.vue";
 
 export default {
   name: "Notelist",
-  props: ["notes", "selectedNote", "isPinned","tags"],
+  props: ["notes", "selectedNote", "isPinned"],
   emits: [
     "select-note",
     "delete-note",
@@ -149,19 +148,6 @@ export default {
   },
 
   methods: {
-    // let tagsNote = await DatabaseService.getNoteTags();
-    // console.log("notelist", tags);
-    // console.log("tags note", tagsNote);
-    // for (let i = 0; i < this.notes.length; i++) {
-    //   for (let j = 0; j < tagsNote[i].length; j++) {
-    //     console.log(this.notes[i].note_ID)
-    //     if (this.notes[i].note_ID === tagsNote[j].note_ID) {
-    //       this.tagsNote = tagsNote;
-    //       console.log("notelist", this.tagsNote);
-    //     }
-    //   }
-    // }
-
     selectNote(note) {
       this.$emit("select-note", note);
       this.showMenu = false;
