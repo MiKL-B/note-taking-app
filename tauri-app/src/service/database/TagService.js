@@ -28,12 +28,12 @@ class TagService {
 		}
 	}
 	// -------------------------------------------------------------------------
-	async createTag(name) {
+	async createTag(name,color="blue") {
 		try {
 			const query = `
 	      INSERT OR IGNORE INTO Tag (name, color)
 	      VALUES (?,?);`;
-			let params = [name, "blue"];
+			let params = [name, color];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
 			throw error;

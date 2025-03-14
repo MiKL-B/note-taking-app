@@ -684,9 +684,9 @@ export default {
     // -------------------------------------------------------------------------
     async handleUpdateTagName(updatedTag) {
       writeLog("[BEGIN FUNCTION]: handleUpdateTagName(updatedTag)");
-      for (let i = 0; i < this.notes.length; i++){
+      for (let i = 0; i < this.notes.length; i++) {
         let noteTags = JSON.parse(this.notes[i].tags)
-        for (let j = 0; j < noteTags.length; j++){
+        for (let j = 0; j < noteTags.length; j++) {
           noteTags[j].name = updatedTag.name
         }
         this.notes[i].tags = JSON.stringify(noteTags);
@@ -700,10 +700,10 @@ export default {
     // -------------------------------------------------------------------------
     async setColorTag(tag, color) {
       writeLog("[BEGIN FUNCTION]: setColorTag(tag, color)");
-      for (let i = 0; i < this.notes.length; i++){
+      for (let i = 0; i < this.notes.length; i++) {
         let noteTags = JSON.parse(this.notes[i].tags)
-        for (let j = 0; j < noteTags.length; j++){
-          if (noteTags[j].name === tag.name){
+        for (let j = 0; j < noteTags.length; j++) {
+          if (noteTags[j].name === tag.name) {
             noteTags[j].color = color;
           }
         }
@@ -738,7 +738,6 @@ export default {
         notes: this.notes,
         tags: this.tags,
       };
-      console.log("export", data);
       const json = JSON.stringify(data);
       try {
         const path = await save({
@@ -770,6 +769,17 @@ export default {
         const content = await readTextFile(selectedFile);
         const data = JSON.parse(content);
         console.log("import", data);
+        for (let i = 0; i < data.tags.length; i++) {
+          let name = data.tags[i].name;
+          let color = data.tags[i].color;
+          await TagService.createTag(name, color)
+        }
+        this.tags = await TagService.getTags();
+
+        for (let i = 0; i < data.notes.length; i++) {
+          await NoteService.createNote(data.notes[i])
+        }
+        this.notes = await NoteService.getNotes();
       } catch (error) {
         this.showNotification(error, "red");
         console.log("DEBUG", error);
