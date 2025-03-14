@@ -170,7 +170,7 @@ export default {
 			return color;
 		},
 		deleteNoteTag(tag) {
-			this.$emit("delete-note-tag", [this.selectedNote, tag]);
+			this.$emit("delete-note-tag", tag);
 		},
 		markAsModified(e) {
 			this.$emit("mark-as-modified", e.target.selectionStart);

@@ -649,19 +649,50 @@ export default {
     // -------------------------------------------------------------------------
     async deleteTag(tag) {
       writeLog("[BEGIN FUNCTION]: deleteTag(tag)");
+      for (let i = 0; i < this.notes.length; i++) {
+        let noteTags = JSON.parse(this.notes[i].tags);
+        for (let j = 0; j < noteTags.length; j++) {
+          if (noteTags[j].name === tag.name) {
+            noteTags.splice(j, 1);
+            break;
+          }
+        }
+        this.notes[i].tags = JSON.stringify(noteTags);
+        await NoteService.updateNote(this.notes[i])
+      }
+      this.notes = await NoteService.getNotes();
       await TagService.deleteTag(tag);
       this.tags = await TagService.getTags();
       writeLog("[END FUNCTION]: deleteTag(tag)");
     },
 
     // -------------------------------------------------------------------------
-    async deleteNoteTag(data) {
+    async deleteNoteTag(tag) {
       writeLog("[BEGIN FUNCTION]: deleteNoteTag(tag)");
+      let noteTags = JSON.parse(this.selectedNote.tags);
+      for (let i = 0; i < noteTags.length; i++) {
+        if (tag.name === noteTags[i].name) {
+          noteTags.splice(i, 1);
+          break;
+        }
+      }
+      this.selectedNote.tags = JSON.stringify(noteTags);
+      await NoteService.updateNote(this.selectedNote);
+      this.notes = await NoteService.getNotes();
       writeLog("[END FUNCTION]: deleteNoteTag(tag)");
     },
     // -------------------------------------------------------------------------
     async handleUpdateTagName(updatedTag) {
       writeLog("[BEGIN FUNCTION]: handleUpdateTagName(updatedTag)");
+      for (let i = 0; i < this.notes.length; i++){
+        let noteTags = JSON.parse(this.notes[i].tags)
+        for (let j = 0; j < noteTags.length; j++){
+          noteTags[j].name = updatedTag.name
+        }
+        this.notes[i].tags = JSON.stringify(noteTags);
+        await NoteService.updateNote(this.notes[i])
+      }
+      this.notes = await NoteService.getNotes();
       await TagService.updateTag(updatedTag);
       this.tags = await TagService.getTags();
       writeLog("[END FUNCTION]: handleUpdateTagName(updatedTag)");
@@ -669,6 +700,17 @@ export default {
     // -------------------------------------------------------------------------
     async setColorTag(tag, color) {
       writeLog("[BEGIN FUNCTION]: setColorTag(tag, color)");
+      for (let i = 0; i < this.notes.length; i++){
+        let noteTags = JSON.parse(this.notes[i].tags)
+        for (let j = 0; j < noteTags.length; j++){
+          if (noteTags[j].name === tag.name){
+            noteTags[j].color = color;
+          }
+        }
+        this.notes[i].tags = JSON.stringify(noteTags);
+        await NoteService.updateNote(this.notes[i])
+      }
+      this.notes = await NoteService.getNotes();
       tag.color = color;
       await TagService.updateTag(tag);
       this.tags = await TagService.getTags();
