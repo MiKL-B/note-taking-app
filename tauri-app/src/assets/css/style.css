@@ -247,9 +247,12 @@ button:hover,
   background: var(--bg-hover-button);
 }
 button.danger {
-  border: 1px solid var(--red);
-  color: var(--lightgrey);
-  background: var(--red);
+  border:1px solid var(--red);
+  color: var(--red);
+}
+button.success{
+  border:1px solid var(--green);
+  color: var(--green);
 }
 button[disabled] {
   color: var(--text-color-button-disabled);

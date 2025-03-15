@@ -34,6 +34,16 @@
       </div>
     </div>
   </div>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <p>{{ modalMessage }}</p>
+      <div class="modal-footer">
+        <button class="success" id="confirm">Yes</button>
+        <button class="danger" id="cancel">No</button>
+      </div>
+    </div>
+
+  </div>
   <Notification :message="messageNotification" :color="colorNotification" :showNotification="isVisibleNotification" />
 </template>
 
@@ -58,7 +68,6 @@ import { writeLog } from "./service/log/index.js";
 
 // utils
 import { sortArrayByName } from "./utils/sort.js";
-
 // tauri api
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
@@ -103,6 +112,7 @@ export default {
       noteTags: [],
       currentPosition: 0,
       tagsNoteTemp: [],
+      modalMessage: ""
     };
   },
   async mounted() {
@@ -526,78 +536,88 @@ export default {
         writeLog("[END FUNCTION]: deleteNote(note)");
         return;
       }
-      let msgConfirm = this.$t("confirm_note_deleted", {
+      this.modalMessage = this.$t("confirm_note_deleted", {
         note_name: note.name,
-      });
-      const confirmed = await confirm(msgConfirm);
+      })
+      this.openModal().then(async (result) => {
+        if (result) {
+          try {
+            await NoteService.moveToTrash(note);
+            this.notes = await NoteService.getNotes();
+            let msgDeleted = this.$t("note_deleted", {
+              note_name: note.name,
+            });
+            this.showNotification(msgDeleted, "green");
+          } catch (error) {
+            this.showNotification(error, "red");
+            console.log("DEBUG", error);
+          }
+        }
+        else {
+          writeLog("[END FUNCTION]: deleteNote(note)");
+          return;
+        }
+      })
 
-      if (!confirmed) {
-        writeLog("[END FUNCTION]: deleteNote(note)");
-        return;
-      }
-
-      try {
-        await NoteService.moveToTrash(note);
-        this.notes = await NoteService.getNotes();
-        let msgDeleted = this.$t("note_deleted", {
-          note_name: note.name,
-        });
-        this.showNotification(msgDeleted, "green");
-      } catch (error) {
-        this.showNotification(error, "red");
-        console.log("DEBUG", error);
-      }
       writeLog("[END FUNCTION]: deleteNote(note)");
     },
     // -------------------------------------------------------------------------
     async restoreNote(note) {
       writeLog("[BEGIN FUNCTION]: restoreNote(note)");
-      let msgConfirm = this.$t("confirm_note_restored", {
+
+      this.modalMessage = this.$t("confirm_note_restored", {
         note_name: note.name,
       });
-      const confirmed = await confirm(msgConfirm);
 
-      if (!confirmed) {
-        writeLog("[END FUNCTION]: restoreNote(note)");
-        return;
-      }
+      this.openModal().then(async (result) => {
+        if (result) {
+          try {
+            await NoteService.restoreNote(note);
+            this.notes = await NoteService.getNotes();
+            let msgRestored = this.$t("note_restored", {
+              note_name: note.name,
+            });
+            this.showNotification(msgRestored, "green");
+          } catch (error) {
+            this.showNotification(error, "red");
+            console.log("DEBUG", error);
+          }
+        }
+        else {
+          writeLog("[END FUNCTION]: restoreNote(note)");
+          return;
+        }
+      })
 
-      try {
-        await NoteService.restoreNote(note);
-        this.notes = await NoteService.getNotes();
-        let msgRestored = this.$t("note_restored", {
-          note_name: note.name,
-        });
-        this.showNotification(msgRestored, "green");
-      } catch (error) {
-        this.showNotification(error, "red");
-        console.log("DEBUG", error);
-      }
       writeLog("[END FUNCTION]: restoreNote(note)");
     },
     // -------------------------------------------------------------------------
     async deleteNotePermanent(note) {
       writeLog("[BEGIN FUNCTION]: deleteNotePermanent(note)");
-      let msgConfirm = this.$t("confirm_note_deleted_permanent", {
+
+      this.modalMessage = this.$t("confirm_note_deleted_permanent", {
         note_name: note.name,
       });
-      const confirmed = await confirm(msgConfirm);
+      this.openModal().then(async (result) => {
+        if (result) {
+          try {
+            await NoteService.deleteNotePermanent(note);
+            this.notes = await NoteService.getNotes();
+            let msgDeleted = this.$t("note_deleted_permanent", {
+              note_name: note.name,
+            });
+            this.showNotification(msgDeleted, "green");
+          } catch (error) {
+            this.showNotification(error, "red");
+            console.log("DEBUG", error);
+          }
+        }
+        else {
+          writeLog("[END FUNCTION]: deleteNotePermanent(note)");
+          return;
+        }
+      })
 
-      if (!confirmed) {
-        writeLog("[END FUNCTION]: deleteNotePermanent(note)");
-        return;
-      }
-      try {
-        await NoteService.deleteNotePermanent(note);
-        this.notes = await NoteService.getNotes();
-        let msgDeleted = this.$t("note_deleted_permanent", {
-          note_name: note.name,
-        });
-        this.showNotification(msgDeleted, "green");
-      } catch (error) {
-        this.showNotification(error, "red");
-        console.log("DEBUG", error);
-      }
       writeLog("[END FUNCTION]: deleteNotePermanent(note)");
     },
     // -------------------------------------------------------------------------
@@ -787,6 +807,21 @@ export default {
       writeLog("[END FUNCTION]: importJSON()");
     },
     // -------------------------------------------------------------------------
+    openModal() {
+      return new Promise((resolve, reject) => {
+        const modal = document.getElementById('myModal');
+        modal.style.display = 'flex';
+        document.getElementById('confirm').onclick = function () {
+          modal.style.display = 'none';
+          resolve(true); // L'utilisateur a confirmé
+        };
+
+        document.getElementById('cancel').onclick = function () {
+          modal.style.display = 'none';
+          resolve(false); // L'utilisateur a annulé
+        };
+      });
+    },
   },
   beforeDestroy() {
     window.addEventListener("keydown", this.handleKeyDown);
@@ -881,5 +916,37 @@ export default {
   color: var(--text-color-button-disabled);
   cursor: not-allowed !important;
   user-select: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.modal-content {
+  background-color: var(--bg-body);
+  color: var(--text-color-button);
+  border: var(--border);
+  border-radius: 5px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 0.2rem;
+  justify-content: flex-end;
 }
 </style>
