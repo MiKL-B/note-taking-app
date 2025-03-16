@@ -4,7 +4,7 @@
     <!-- <ToolbarEdit @action-clicked="onSubMenuClick"/> -->
     <ToolbarView @select-view="selectView" :distractionFree="distractionFree"/>
     <ToolbarSettings />
-    <ToolbarAbout @action-clicked="onSubMenuClick" />
+    <ToolbarAbout @action-clicked="onSubMenuClick" @display-about="displayAbout"/>
   </div>
 </template>
 
@@ -24,13 +24,16 @@ export default {
     ToolbarAbout,
   },
   props:["distractionFree"],
-  emits: ["action-clicked","select-view"],
+  emits: ["action-clicked","select-view","display-about"],
   methods: {
     onSubMenuClick(action) {
       this.$emit("action-clicked", action);
     },
     selectView(newView){
       this.$emit("select-view",newView)
+    },
+    displayAbout(){
+      this.$emit("display-about")
     }
   },
 };

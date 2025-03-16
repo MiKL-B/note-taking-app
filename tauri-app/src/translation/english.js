@@ -136,4 +136,7 @@ export default {
   select_font_size: "Select font size",
   font_size_description:
     "This is the font size of the textarea which will be modified.",
+    yes:"Yes",
+    no:"No",
+    ok:"Ok",
 };

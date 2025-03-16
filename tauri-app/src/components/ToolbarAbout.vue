@@ -22,7 +22,7 @@ import MenuDropdown from "./MenuDropdown.vue";
 
 export default {
 	name: "ToolbarAbout",
-		emits:["action-clicked"],
+		emits:["action-clicked","display-about"],
 	components:{
 		MenuDropdown
 	},
@@ -31,8 +31,7 @@ export default {
 			this.$emit("action-clicked", action);
 		},
 		displayAbout() {
-			let msg = `Thoth 0.1.0\r\n${this.$t("developed")}`;
-			alert(msg + " Becquer Michaël.");
+			this.$emit("display-about")
 		},
 	},
 };

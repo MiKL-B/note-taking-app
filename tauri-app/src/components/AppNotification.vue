@@ -20,7 +20,7 @@
 <script>
 import AppIcon from "./AppIcon.vue";
 export default {
-  name: "Notification",
+  name: "AppNotification",
   components: {
     AppIcon,
   },

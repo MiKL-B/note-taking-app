@@ -139,4 +139,7 @@ export default {
   select_font_size: "Sélectionner la taille de la police",
   font_size_description:
     "Il s'agit de la taille de la zone de texte qui sera modifiée.",
+    yes:"Oui",
+    no:"Non",
+    ok:"Ok",
 };

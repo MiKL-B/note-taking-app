@@ -107,7 +107,7 @@ class NoteService {
 				note.important,
 				selected,
 				deleted,
-				tags,
+				note.tags,
 			];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
