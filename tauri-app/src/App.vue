@@ -813,12 +813,12 @@ export default {
         modal.style.display = 'flex';
         document.getElementById('confirm').onclick = function () {
           modal.style.display = 'none';
-          resolve(true); // L'utilisateur a confirmé
+          resolve(true); 
         };
 
         document.getElementById('cancel').onclick = function () {
           modal.style.display = 'none';
-          resolve(false); // L'utilisateur a annulé
+          resolve(false);
         };
       });
     },
