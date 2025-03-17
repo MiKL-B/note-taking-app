@@ -297,7 +297,10 @@ export default {
           this.openNoteDemo();
           break;
         case "save":
-          this.saveFile(this.selectedNote);
+          this.saveNote(this.selectedNote);
+          break;
+        case "exportpdf":
+          this.exportASPDF();
           break;
         case "exportjson":
           this.exportJSON();
@@ -388,15 +391,22 @@ export default {
       writeLog("[END FUNCTION]: createNote");
     },
     // -------------------------------------------------------------------------
-    async saveFile(note) {
-      writeLog("[BEGIN FUNCTION]: saveFile(note)");
+    async saveNote(note) {
+      writeLog("[BEGIN FUNCTION]: saveNote(note)");
+      if (this.selectedNote.isSaved === 1) {
+        this.showNotification(
+          this.$t("note_already_saved", { note_name: note.name }),
+          "green",
+        );
+        return;
+      }
       this.selectedNote.isSaved = 1;
       await NoteService.updateNote(note);
       this.showNotification(
         this.$t("note_saved", { note_name: note.name }),
         "green",
       );
-      writeLog("[END FUNCTION]: saveFile(note)");
+      writeLog("[END FUNCTION]: saveNote(note)");
     },
     // -------------------------------------------------------------------------
     handleKeyDown(event) {
@@ -416,7 +426,7 @@ export default {
       if (this.selectedNote) {
         if (event.ctrlKey && event.key.toLowerCase() === "s") {
           event.preventDefault();
-          this.saveFile(this.selectedNote);
+          this.saveNote(this.selectedNote);
         }
       }
 
@@ -668,15 +678,17 @@ export default {
     async deleteTag(tag) {
       writeLog("[BEGIN FUNCTION]: deleteTag(tag)");
       for (let i = 0; i < this.notes.length; i++) {
-        let noteTags = JSON.parse(this.notes[i].tags);
-        for (let j = 0; j < noteTags.length; j++) {
-          if (noteTags[j].name === tag.name) {
-            noteTags.splice(j, 1);
-            break;
+        if (this.notes[i].tags !== "") {
+          let noteTags = JSON.parse(this.notes[i].tags)
+          for (let j = 0; j < noteTags.length; j++) {
+            if (noteTags[j].name === tag.name) {
+              noteTags.splice(j, 1);
+              break;
+            }
           }
+          this.notes[i].tags = JSON.stringify(noteTags);
+          await NoteService.updateNote(this.notes[i])
         }
-        this.notes[i].tags = JSON.stringify(noteTags);
-        await NoteService.updateNote(this.notes[i])
       }
       this.notes = await NoteService.getNotes();
       await TagService.deleteTag(tag);
@@ -687,28 +699,33 @@ export default {
     // -------------------------------------------------------------------------
     async deleteNoteTag(tag) {
       writeLog("[BEGIN FUNCTION]: deleteNoteTag(tag)");
-      let noteTags = JSON.parse(this.selectedNote.tags);
-      for (let i = 0; i < noteTags.length; i++) {
-        if (tag.name === noteTags[i].name) {
-          noteTags.splice(i, 1);
-          break;
+      if (this.selectedNote.tags !== "") {
+        let noteTags = JSON.parse(this.selectedNote.tags);
+        for (let i = 0; i < noteTags.length; i++) {
+          if (tag.name === noteTags[i].name) {
+            noteTags.splice(i, 1);
+            break;
+          }
         }
+        this.selectedNote.tags = JSON.stringify(noteTags);
+        await NoteService.updateNote(this.selectedNote);
+        this.notes = await NoteService.getNotes();
       }
-      this.selectedNote.tags = JSON.stringify(noteTags);
-      await NoteService.updateNote(this.selectedNote);
-      this.notes = await NoteService.getNotes();
+
       writeLog("[END FUNCTION]: deleteNoteTag(tag)");
     },
     // -------------------------------------------------------------------------
     async handleUpdateTagName(updatedTag) {
       writeLog("[BEGIN FUNCTION]: handleUpdateTagName(updatedTag)");
       for (let i = 0; i < this.notes.length; i++) {
-        let noteTags = JSON.parse(this.notes[i].tags)
-        for (let j = 0; j < noteTags.length; j++) {
-          noteTags[j].name = updatedTag.name
+        if (this.notes[i].tags !== "") {
+          let noteTags = JSON.parse(this.notes[i].tags)
+          for (let j = 0; j < noteTags.length; j++) {
+            noteTags[j].name = updatedTag.name;
+          }
+          this.notes[i].tags = JSON.stringify(noteTags);
+          await NoteService.updateNote(this.notes[i])
         }
-        this.notes[i].tags = JSON.stringify(noteTags);
-        await NoteService.updateNote(this.notes[i])
       }
       this.notes = await NoteService.getNotes();
       await TagService.updateTag(updatedTag);
@@ -716,17 +733,19 @@ export default {
       writeLog("[END FUNCTION]: handleUpdateTagName(updatedTag)");
     },
     // -------------------------------------------------------------------------
-    async setColorTag(tag, color:string) {
+    async setColorTag(tag, color: string) {
       writeLog("[BEGIN FUNCTION]: setColorTag(tag, color)");
       for (let i = 0; i < this.notes.length; i++) {
-        let noteTags = JSON.parse(this.notes[i].tags)
-        for (let j = 0; j < noteTags.length; j++) {
-          if (noteTags[j].name === tag.name) {
-            noteTags[j].color = color;
+        if (this.notes[i].tags !== "") {
+          let noteTags = JSON.parse(this.notes[i].tags)
+          for (let j = 0; j < noteTags.length; j++) {
+            if (noteTags[j].name === tag.name) {
+              noteTags[j].color = color;
+            }
           }
+          this.notes[i].tags = JSON.stringify(noteTags);
+          await NoteService.updateNote(this.notes[i])
         }
-        this.notes[i].tags = JSON.stringify(noteTags);
-        await NoteService.updateNote(this.notes[i])
       }
       this.notes = await NoteService.getNotes();
       tag.color = color;
@@ -735,19 +754,10 @@ export default {
       writeLog("[END FUNCTION]: setColorTag(tag, color)");
     },
     // -------------------------------------------------------------------------
-    // exportASPDF() {
-    //   let name = this.selectedNote.name || "Untitled";
-    //   const element = document.querySelector(".contentToExport");
-    //   console.log(element);
-    //   const opt = {
-    //     filename: name,
-    //     image: { type: "jpeg", quality: 0.98 },
-    //     html2canvas: { scale: 2 },
-    //     jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
-    //   };
-
-    //   html2pdf().from(element).set(opt).save();
-    // },
+    exportASPDF() {
+      writeLog("[BEGIN FUNCTION]: exportASPDF()");
+      writeLog("[END FUNCTION]: exportASPDF()");
+    },
     // -------------------------------------------------------------------------
     async exportJSON() {
       writeLog("[BEGIN FUNCTION]: exportJSON()");
@@ -791,7 +801,7 @@ export default {
           await TagService.createTag(name, color)
         }
         this.tags = await TagService.getTags();
-
+ 
         for (let i = 0; i < data.notes.length; i++) {
           await NoteService.createNote(data.notes[i])
         }
@@ -922,4 +932,5 @@ export default {
   cursor: not-allowed !important;
   user-select: none;
 }
+
 </style>

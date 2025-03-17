@@ -75,7 +75,7 @@
             class="size-16"
             :class="selectedNote ? 'text-red' : ''"
           />
-          {{ $t("delete_note") }}
+          {{ $t("move_to_trash") }}
         </li>
         <li
           v-else
@@ -91,9 +91,7 @@
 
           {{ $t("restore_note") }}
         </li>
-        <!-- delete permanent context -->
         <li
-          v-if="selectedNote.deleted === 1"
           @click="deleteNotePermanentContext"
           class="flex align-center gap-4"
           :class="selectedNote ? '' : 'disabled'"

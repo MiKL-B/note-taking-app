@@ -35,27 +35,16 @@ class NoteService {
 	}
 	// -------------------------------------------------------------------------
 	async createNote(data) {
-		let name = "";
-		let content = "";
-		let timestamp = Date.now();
-		let isSaved = 1;
-		let status_ID = 1;
-		let pinned = 0;
-		let important = 0;
-		let selected = 0;
-		let deleted = 0;
-		let tags = "";
-		if (data !== undefined) {
-			name = data.name;
-			content = data.content;
-			timestamp = data.timestamp;
-			isSaved = data.isSaved;
-			status_ID = data.status_ID;
-			pinned = data.pinned;
-			important = data.important;
-			deleted = data.deleted;
-			tags = data.tags;
-		}
+		let name = (data && data.name) || "";
+		let content = (data && data.content) || "";
+		let timestamp = (data && data.timestamp) || Date.now();
+		let isSaved = (data && data.isSaved) || 1;
+		let status_ID = (data && data.status_ID) || 1;
+		let pinned = (data && data.pinned) || 0;
+		let important = (data && data.important) || 0;
+		let selected = (data && data.selected) || 0;
+		let deleted = (data && data.deleted) || 0;
+		let tags = (data && data.tags) || "";
 
 		try {
 			if (name === "") {

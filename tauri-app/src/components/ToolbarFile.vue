@@ -39,6 +39,10 @@ export default {
 					label: "save",
 					cmd: "Ctrl + S",
 				},
+				// {
+				// 	label:"exportpdf",
+				// 	cmd:"",
+				// },
 				{
 					label: "exportjson",
 					cmd: "",
