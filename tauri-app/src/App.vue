@@ -15,7 +15,6 @@
           <NoteSearch :modelValue="searchNote" @update:modelValue="$event => (searchNote = $event)" />
           <NoteCreator :canCreateNote="canCreateNote" @create-note="createNote" />
         </div>
-
         <Notelist :notes="filteredNotes" :selectedNote="selectedNote" @select-note="selectNote"
           @delete-note="deleteNote" @restore-note="restoreNote" @delete-note-permanent="deleteNotePermanent"
           @create-note="createNote" @duplicate-note="duplicateNote" @toggle-pin-note="togglePinNote"
@@ -35,10 +34,10 @@
       </div>
     </div>
   </div>
-  <AppModal :message="modalMessage" :isConfirm="isConfirm" :isVisible="isVisibleModal" @close="isVisibleModal = false"
+  <AppModal :message="modalMessage" :isModalConfirm="isModalConfirm" :isVisible="isModalVisible" @close="isModalVisible = false"
     @confirmed="handleConfirmed" @canceled="handleCanceled" />
-  <AppNotification :message="messageNotification" :color="colorNotification"
-    :showNotification="isVisibleNotification" />
+  <AppNotification :message="notificationMessage" :color="notificationColor"
+    :showNotification="isNotificationVisible" />
 </template>
 
 <script lang="ts">
@@ -52,8 +51,8 @@ import NoteSearch from "./components/NoteSearch.vue";
 import Notelist from "./components/Notelist.vue";
 import Notebar from "./components/Notebar.vue";
 import Note from "./components/Note.vue";
-import AppNotification from "./components/AppNotification.vue";
 import AppModal from "./components/AppModal.vue";
+import AppNotification from "./components/AppNotification.vue";
 // service
 import initializeDatabase from "./service/database/index.js";
 import NoteService from "./service/database/NoteService.js";
@@ -81,23 +80,18 @@ export default {
     Notelist,
     Notebar,
     Note,
-    AppNotification,
-    AppModal
+    AppModal,
+    AppNotification
   },
   data() {
     return {
       isPreviewMode: false,
       showBoth: false,
       notes: [],
-      color: "",
       searchNote: "",
       tags: [],
       noteCounters: {},
       filter: "",
-      timerNotification: null,
-      isVisibleNotification: false,
-      messageNotification: "",
-      colorNotification: "",
       sortedAsc: true,
       sortedDate: true,
       timerCreateNote: null,
@@ -110,9 +104,14 @@ export default {
       tagsNoteTemp: [],
       // modal
       modalMessage: "",
-      isConfirm: false,
-      isVisibleModal: false,
-      resolvePromise: null,
+      isModalConfirm: false,
+      isModalVisible: false,
+      modalResolvePromise: null,
+      // notification
+      notificationMessage: "",
+      notificationColor: "",
+      isNotificationVisible: false,
+      notificationTimer: null
     };
   },
   async mounted() {
@@ -516,12 +515,12 @@ export default {
     },
     // -------------------------------------------------------------------------
     showNotification(message: string, color: string) {
-      this.isVisibleNotification = true;
-      this.messageNotification = message;
-      this.colorNotification = color;
+      this.isNotificationVisible = true;
+      this.notificationMessage = message;
+      this.notificationColor = color;
       const duration = 4000;
-      this.timerNotification = setTimeout(() => {
-        this.isVisibleNotification = false;
+      this.notificationTimer = setTimeout(() => {
+        this.isNotificationVisible = false;
       }, duration);
     },
     // -------------------------------------------------------------------------
@@ -817,30 +816,30 @@ export default {
       await this.openConfirm(msg, false);
     },
     // -------------------------------------------------------------------------
-    openConfirm(message: string, isConfirm: boolean) {
+    openConfirm(message: string, isModalConfirm: boolean) {
       this.modalMessage = message;
-      this.isConfirm = isConfirm;
+      this.isModalConfirm = isModalConfirm;
 
       return new Promise((resolve) => {
-        this.resolvePromise = resolve;
-        this.isVisibleModal = true;
+        this.modalResolvePromise = resolve;
+        this.isModalVisible = true;
       });
     },
     // -------------------------------------------------------------------------
     handleConfirmed() {
-      this.isVisibleModal = false;
-      this.resolvePromise(true);
+      this.isModalVisible = false;
+      this.modalResolvePromise(true);
     },
     // -------------------------------------------------------------------------
     handleCanceled() {
-      this.isVisibleModal = false;
-      this.resolvePromise(false);
+      this.isModalVisible = false;
+      this.modalResolvePromise(false);
     }
     // -------------------------------------------------------------------------
   },
   beforeDestroy() {
     window.addEventListener("keydown", this.handleKeyDown);
-    clearTimeout(this.timerNotification);
+    clearTimeout(this.notificationTimer);
     clearTimeout(this.timerCreateNote);
   },
 };

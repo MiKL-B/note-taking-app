@@ -1,5 +1,5 @@
 <template>
-  <AppDropdown :title="$t('settings')" btn="toolbar-btn">
+  <AppDropdown :title="$t('settings')" btn="toolbar_btn">
     <template v-slot:content>
       <!-- language -->
       <p>{{ $t("language") }}</p>

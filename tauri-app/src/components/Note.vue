@@ -1,11 +1,7 @@
 <template>
 	<div class="column-note-content">
 		<div id="column-note-title">
-			<div
-				style="margin: auto 0"
-				class="color-circle"
-				:class="`bg-${getStatusColor(selectedNote.status_ID)}`"
-			></div>
+			<NoteStatusColor :status_ID="selectedNote.status_ID"/>
 			<input
 				id="input-note-name"
 				type="text"
@@ -81,7 +77,7 @@ import AppIcon from "./AppIcon.vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
-
+import NoteStatusColor from './NoteStatusColor.vue';
 export default {
 	name: "Note",
 	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
@@ -89,6 +85,7 @@ export default {
 	components: {
 		NoteStatusbar,
 		AppIcon,
+		NoteStatusColor
 	},
 	data() {
 		return {
@@ -150,24 +147,6 @@ export default {
 	methods: {
 		getPositionCursor(e) {
 			this.$emit("get-position-cursor", e.target.selectionStart);
-		},
-		getStatusColor(status_ID) {
-			let color = "";
-			switch (status_ID) {
-				case 1:
-					color = "red";
-					break;
-				case 2:
-					color = "yellow";
-					break;
-				case 3:
-					color = "green";
-					break;
-				case 4:
-					color = "grey";
-					break;
-			}
-			return color;
 		},
 		deleteNoteTag(tag) {
 			this.$emit("delete-note-tag", tag);

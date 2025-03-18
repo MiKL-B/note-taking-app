@@ -1,5 +1,5 @@
 <template>
-	<AppDropdown :title="$t('view')" btn="toolbar-btn">
+	<AppDropdown :title="$t('view')" btn="toolbar_btn">
 		<template v-slot:content>
 			<li
 				@click="selectView(view)"

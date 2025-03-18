@@ -35,7 +35,6 @@
     <ul v-if="tagsMenu">
       <li
         id="sidebar-tag"
-  
         :class="{ filterselected: selectedFilter === tag.name }"
         class="sidebar-sub-item"
         v-for="tag in tags"

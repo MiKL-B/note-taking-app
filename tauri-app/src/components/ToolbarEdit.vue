@@ -1,5 +1,5 @@
 <template>
-	<AppDropdown :title="$t('edit')" btn="toolbar-btn">
+	<AppDropdown :title="$t('edit')" btn="toolbar_btn">
 		<template v-slot:content>
 			<li
 				class="flex justify-between"

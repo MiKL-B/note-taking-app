@@ -7,6 +7,7 @@ import messages from "./translation/index.js";
 const app = createApp(App);
 
 const i18n = createI18n({
+  legacy:false,
   locale: "en",
   messages,
 });

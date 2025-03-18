@@ -2,7 +2,7 @@
   <div id="modal" v-if="isVisible">
     <div class="modal_content">
       <p>{{ message }}</p>
-      <div class="modal_footer" v-if="isConfirm">
+      <div class="modal_footer" v-if="isModalConfirm">
         <button class="success" @click="confirm">{{ $t('yes') }}</button>
         <button class="danger" @click="cancel">{{ $t('no') }}</button>
       </div>
@@ -20,7 +20,7 @@ const props = defineProps({
     default:"",
     required:true,
   },
-  isConfirm:{
+  isModalConfirm:{
     type:Boolean,
     default:false,
     required:true,

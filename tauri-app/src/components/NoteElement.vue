@@ -1,169 +1,111 @@
 <template>
 	<div id="note">
-		<AppIcon
-			iconName="Check"
-			v-if="note.isSaved"
-			class="note-saved size-16"
-		/>
-		<h4 class="note-title">
+		<AppIcon iconName="Check" v-if="note.isSaved" class="note_saved" />
+		<h4 class="note_title">
 			<span style="color: var(--red)" v-if="note.important">!</span>
-			<AppIcon
-				iconName="Pin"
-				v-if="note.pinned"
-				class="size-16 text-dark"
-			/>
-			<div
-				style="padding: 0 0.3rem"
-				class="color-circle"
-				:class="`bg-${getStatusColor(note.status_ID)}`"
-			></div>
-
-			<span
-				id="note-title-name"
-				:style="note.selected ? '' : 'color:var(--dark)'"
-			>
+			<AppIcon iconName="Pin" v-if="note.pinned" class="text-dark" />
+			<NoteStatusColor :status_ID="note.status_ID" />
+			<span class="note_title_name" :style="note.selected ? '' : 'color:var(--dark)'">
 				{{ note.name }}
 			</span>
 		</h4>
-		<div class="notelist-tag">
-			<span
-				v-for="tag in noteTags"
-				:style="`background: var(--${tag.color})`"
-				class="tag"
-			>
+		<div class="note_tags">
+			<span v-for="tag in noteTags" :style="`background: var(--${tag.color})`" class="tag">
 				{{ tag.name }}
 			</span>
 		</div>
-		<p class="note-content">
+		<p class="note_content">
 			{{ note.content }}
 		</p>
-		<div class="note-dates">
-			<span class="note-date">{{ timestamp }}</span>
+		<div class="note_dates">
+			<span class="note_date">{{ timestamp }}</span>
 		</div>
 	</div>
-	<AppIcon
-		iconName="Trash2"
-		v-if="note.deleted === 0"
-		width="20"
-		class="note-trash"
-		@click="deleteNote(note)"
-	/>
-	<AppIcon
-		iconName="RotateCcw"
-		v-else
-		width="20"
-		class="note-restore"
-		@click="restoreNote(note)"
-	/>
+	<AppIcon iconName="Trash2" v-if="note.deleted === 0" width="20" class="note_trash" @click="deleteNote(note)" />
+	<AppIcon iconName="RotateCcw" v-else width="20" class="note_restore" @click="restoreNote(note)" />
 </template>
-<script>
+
+<script lang="ts" setup>
 import AppIcon from "./AppIcon.vue";
-export default {
-	name: "NoteElement",
-	props: ["note"],
-	emits: ["delete-note", "restore-note"],
-	components: {
-		AppIcon,
-	},
-	data() {
-		return {
-			timestamp: -1,
-		};
-	},
-	async mounted() {
-		this.timestamp = new Date(this.note.timestamp).toLocaleString("fr-FR");
-	},
-	computed:{
-		noteTags(){
-			if (this.note.tags === "") return [];
-			return JSON.parse(this.note.tags)
-		}
-	},
-	methods: {
-		getStatusColor(status_ID) {
-			let color = "";
-			switch (status_ID) {
-				case 1:
-					color = "red";
-					break;
-				case 2:
-					color = "yellow";
-					break;
-				case 3:
-					color = "green";
-					break;
-				case 4:
-					color = "grey";
-					break;
-			}
-			return color;
-		},
-		deleteNote(note) {
-			this.$emit("delete-note", note);
-		},
-		restoreNote(note) {
-			this.$emit("restore-note", note);
-		},
-	},
-};
+import NoteStatusColor from "./NoteStatusColor.vue";
+import { ref, onMounted, computed } from 'vue';
+const props = defineProps(['note'])
+const emit = defineEmits(['delete-note', 'restore-note'])
+let timestamp = ref("");
+onMounted(() => {
+	timestamp.value = new Date(props.note.timestamp).toLocaleString("fr-FR");
+})
+const noteTags = computed(() => {
+	if (props.note.tags === "") return []
+	return JSON.parse(props.note.tags)
+})
+
+const deleteNote = (note) => { emit('delete-note', note) }
+const restoreNote = (note) => { emit('restore-note', note) }
 </script>
+
 <style>
-.note-content {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	color: var(--dark);
-}
-.note-saved {
+.note_saved {
 	color: var(--green);
 	position: absolute;
 	right: 0.5rem;
 	top: 0.5rem;
 }
-.note-title {
+.note_title {
 	display: flex;
 	align-items: center;
 	gap: 0.2rem;
 	color: var(--text-color-notelist);
 	margin-bottom: 0.2rem;
 }
-#note-title-name {
+
+.note_title_name {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	width: 200px;
 }
-.notelist-tag {
+.note_tags {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.2rem;
 }
-.note-restore {
-	color: var(--green);
-}
-.note-trash {
-	color: var(--red);
+
+.note_content {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: var(--dark);
 }
 
-.note-trash,
-.note-restore {
+.note_dates {
+	display: flex;
+	flex-direction: column;
+}
+
+.note_date {
+	color: var(--text-color-notelist);
+	font-size: 12px;
+	font-style: italic;
+}
+
+.note_trash {
+	color: var(--red);
+}
+.note_restore {
+	color: var(--green);
+}
+
+.note_trash,
+.note_restore {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
 	margin: auto;
 }
 
-.note-dates {
-	display: flex;
-	flex-direction: column;
-}
-.note-date {
-	color: var(--text-color-notelist);
-	font-size: 12px;
-	font-style: italic;
-}
-.note-trash:hover,
-.note-restore:hover {
+.note_trash:hover,
+.note_restore:hover {
 	cursor: pointer;
 }
 </style>

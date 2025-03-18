@@ -50,13 +50,13 @@ export default {
   color: var(--text-color-toolbar);
   height: 33px;
 }
-.toolbar-btn {
+.toolbar_btn {
   padding: 0.2rem 0.5rem;
   margin: 0.2rem 0;
   border-radius: 5px;
   user-select: none;
 }
-.toolbar-btn:hover {
+.toolbar_btn:hover {
   background: var(--bg-hover-toolbar);
   cursor: pointer;
 }
