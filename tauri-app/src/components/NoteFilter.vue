@@ -2,57 +2,41 @@
   <AppDropdown icon="Filter" btn="app-btn">
     <template v-slot:content>
       <li class="flex gap-4 align-center" @click="sortNotesAZ">
-        <AppIcon iconName="ArrowDownAZ" v-if="sortAZ" class="size-16" />
-        <AppIcon iconName="ArrowUpZA" v-else class="size-16" />
+        <AppIcon iconName="ArrowDownAZ" v-if="sortAZ" />
+        <AppIcon iconName="ArrowUpZA" v-else />
         {{ sortAZ ? $t("sortZA") : $t("sortAZ") }}
       </li>
       <li class="flex gap-4 align-center" @click="sortNotesByDate">
-        <AppIcon iconName="Calendar" class="size-16" />
+        <AppIcon iconName="Calendar" />
         {{ sortDate ? $t("sort_newest") : $t("sort_oldest") }}
       </li>
       <li class="flex gap-4 align-center" @click="clearFilterSort">
-        <AppIcon iconName="FilterX" class="size-16" />
+        <AppIcon iconName="FilterX" />
         {{ $t("clear_filter") }}
       </li>
     </template>
   </AppDropdown>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { ref } from "vue";
 import AppDropdown from "./AppDropdown.vue";
 import AppIcon from "./AppIcon.vue";
-export default {
-  name: "NoteFilter",
-  components: {
-    AppDropdown,
-    AppIcon,
-  },
+const emit = defineEmits(['sort-notes-AZ', 'sort-notes-date', 'sort-notes-clear'])
+let sortAZ = ref(true);
+let sortDate = ref(true);
 
-  emits: [
-    "sort-notes-AZ",
-    "sort-notes-date",
-    "sort-notes-clear",
-  ],
-  data() {
-    return {
-      sortAZ: true,
-      sortDate: true,
-    };
-  },
-  methods: {
-    sortNotesAZ() {
-      this.sortAZ = !this.sortAZ;
-      this.$emit("sort-notes-AZ");
-    },
-    sortNotesByDate() {
-      this.sortDate = !this.sortDate;
-      this.$emit("sort-notes-date");
-    },
-    clearFilterSort() {
-      this.sortAZ = true;
-      this.sortDate = true;
-      this.$emit("sort-notes-clear");
-    },
-  },
-};
+const sortNotesAZ = () => {
+  sortAZ.value = !sortAZ.value;
+  emit('sort-notes-AZ');
+}
+const sortNotesByDate = () => {
+  sortDate.value = !sortDate.value;
+  emit("sort-notes-date");
+}
+const clearFilterSort = () => {
+  sortAZ.value = true;
+  sortDate.value = true;
+  emit("sort-notes-clear");
+}
 </script>

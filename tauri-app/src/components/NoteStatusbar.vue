@@ -1,17 +1,25 @@
 <template>
   <div id="statusbar">
-    <span v-if="characterCount !== ''"
-      >{{ $t("characters") }}: {{ characterCount }}</span
+    <span v-if="characterCount !== 0"
+      >{{ $t("characters") }}: {{ characterCount.toString() }}</span
     >
-    <span>{{ $t("words") }}: {{ wordCount }}</span>
+    <span v-if="wordCount !== 0">{{ $t("words") }}: {{ wordCount.toString() }}</span>
   </div>
 </template>
 
-<script>
-export default {
-  name: "NoteStatusbar",
-  props: ["characterCount","wordCount"],
-};
+<script lang="ts" setup>
+const props = defineProps({
+  characterCount:{
+    type:Number,
+    default:0,
+    required:true,
+  },
+  wordCount:{
+    type:Number,
+    default:0,
+    required:true,
+  }
+})
 </script>
 <style>
 #statusbar {
