@@ -1,5 +1,5 @@
 <template>
-	<MenuDropdown :title="$t('view')" btn="toolbar-btn">
+	<AppDropdown :title="$t('view')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li
 				@click="selectView(view)"
@@ -17,18 +17,18 @@
 				{{ $t(view) }}
 			</li>
 		</template>
-	</MenuDropdown>
+	</AppDropdown>
 </template>
 
 <script>
 import AppIcon from "./AppIcon.vue";
-import MenuDropdown from "./MenuDropdown.vue";
+import AppDropdown from "./AppDropdown.vue";
 
 export default {
 	name: "ToolbarView",
 	components: {
 		AppIcon,
-		MenuDropdown,
+		AppDropdown,
 	},
 	props: ["distractionFree"],
 	emits: ["select-view"],

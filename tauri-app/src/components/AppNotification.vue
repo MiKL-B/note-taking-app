@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-if="showNotification"
-    id="notification"
-    :style="`background:var(--${color})`"
-  >
+  <div v-if="showNotification" id="notification" :style="`background:var(--${color})`">
     <span v-if="color === 'green'">
       <AppIcon iconName="CircleCheck" />
     </span>
@@ -17,28 +13,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import AppIcon from "./AppIcon.vue";
-export default {
-  name: "AppNotification",
-  components: {
-    AppIcon,
+const props = defineProps({
+  showNotification: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    showNotification: {
-      type: Boolean,
-      default: false,
-    },
-    message: {
-      type: String,
-      default: "",
-    },
-    color: {
-      type: String,
-      default: "",
-    },
+  message: {
+    type: String,
+    default: "",
   },
-};
+  color: {
+    type: String,
+    default: "",
+  },
+})
 </script>
 
 <style>

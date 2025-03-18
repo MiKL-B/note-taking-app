@@ -1,54 +1,28 @@
 <template>
-  <div data-tauri-drag-region id="titlebar" class="titlebar">
-    <span>{{ name }}</span>
+  <div data-tauri-drag-region id="titlebar">
+    <span>Thoth</span>
     <div>
-      <span class="titlebar-button" @click="minimize" v-if="minimizable">
-        <AppIcon iconName="Minus" class="size-16"/>
+      <span class="titlebar_button" @click="minimize">
+        <AppIcon iconName="Minus"/>
       </span>
-      <span class="titlebar-button" @click="maximize" v-if="maximizable">
-        <AppIcon iconName="Square" class="size-16"/>
+      <span class="titlebar_button" @click="maximize">
+        <AppIcon iconName="Square"/>
       </span>
-      <span class="titlebar-button titlebar-close-button" @click="close">
-        <AppIcon iconName="X" class="size-16"/>
+      <span class="titlebar_button titlebar_button--close" @click="close">
+        <AppIcon iconName="X"/>
       </span>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import AppIcon from "./AppIcon.vue";
 const appWindow = getCurrentWindow();
-export default {
-  name: "Titlebar",
-  props: {
-    name: {
-      type: String,
-      default: "Thoth",
-    },
-    minimizable: {
-      type: Boolean,
-      default: true,
-    },
-    maximizable: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: ["close-app"],
-  components: { AppIcon },
-  methods: {
-    minimize() {
-      appWindow.minimize();
-    },
-    maximize() {
-      appWindow.toggleMaximize();
-    },
-    close() {
-      this.$emit("close-app");
-    },
-  },
-};
+const emit = defineEmits(['close-app'])
+const minimize = () => appWindow.minimize();
+const maximize = () => appWindow.toggleMaximize();
+const close = () => emit("close-app");
 </script>
 
 <style>
@@ -64,19 +38,20 @@ export default {
   border-bottom: var(--border);
 }
 
-.titlebar-button {
+.titlebar_button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
+  width: 33px;
+  height: 33px;
 }
-.titlebar-button:hover {
+
+.titlebar_button:hover {
   background: var(--bg-hover-titlebar);
   cursor: pointer;
 }
 
-.titlebar-close-button:hover {
+.titlebar_button--close:hover {
   background: var(--red);
 }
 </style>

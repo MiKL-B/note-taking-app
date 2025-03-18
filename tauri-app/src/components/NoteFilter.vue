@@ -1,5 +1,5 @@
 <template>
-  <MenuDropdown title="" :icon="filter" btn="app-btn">
+  <AppDropdown icon="Filter" btn="app-btn">
     <template v-slot:content>
       <li class="flex gap-4 align-center" @click="sortNotesAZ">
         <AppIcon iconName="ArrowDownAZ" v-if="sortAZ" class="size-16" />
@@ -15,19 +15,17 @@
         {{ $t("clear_filter") }}
       </li>
     </template>
-  </MenuDropdown>
+  </AppDropdown>
 </template>
 
 <script>
-import MenuDropdown from "./MenuDropdown.vue";
+import AppDropdown from "./AppDropdown.vue";
 import AppIcon from "./AppIcon.vue";
-import { Filter } from "lucide-vue-next";
 export default {
   name: "NoteFilter",
   components: {
-    MenuDropdown,
+    AppDropdown,
     AppIcon,
-    Filter,
   },
 
   emits: [
@@ -39,7 +37,6 @@ export default {
     return {
       sortAZ: true,
       sortDate: true,
-      filter: Filter,
     };
   },
   methods: {

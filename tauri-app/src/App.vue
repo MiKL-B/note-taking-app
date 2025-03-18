@@ -110,7 +110,7 @@ export default {
       tagsNoteTemp: [],
       // modal
       modalMessage: "",
-      isConfirm: "",
+      isConfirm: false,
       isVisibleModal: false,
       resolvePromise: null,
     };

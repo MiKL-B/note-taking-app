@@ -1,5 +1,5 @@
 <template>
-  <MenuDropdown :title="$t('settings')" btn="toolbar-btn">
+  <AppDropdown :title="$t('settings')" btn="toolbar-btn">
     <template v-slot:content>
       <!-- language -->
       <p>{{ $t("language") }}</p>
@@ -67,17 +67,17 @@
         {{ $t("reset_settings") }}
       </li>
     </template>
-  </MenuDropdown>
+  </AppDropdown>
 </template>
 
 <script>
 import AppIcon from "./AppIcon.vue";
-import MenuDropdown from "./MenuDropdown.vue";
+import AppDropdown from "./AppDropdown.vue";
 export default {
   name: "ToolbarSettings",
   components: {
     AppIcon,
-    MenuDropdown,
+    AppDropdown,
   },
   data() {
     return {

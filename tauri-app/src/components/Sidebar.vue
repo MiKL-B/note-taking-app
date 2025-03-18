@@ -42,9 +42,8 @@
       >
       <!--       @click="selectFilter(tag.name)" -->
         <span class="flex align-center gap-4">
-          <MenuDropdown
-            title=""
-            :icon="tagIcon"
+          <AppDropdown
+            icon="Tag"
             :styleIcon="`color: var(--${tag.color})`"
           >
             <template v-slot:content>
@@ -57,7 +56,7 @@
                 <span>{{ color }}</span>
               </li>
             </template>
-          </MenuDropdown>
+          </AppDropdown>
 
           <input
             class="sidebar-input-tag"
@@ -79,9 +78,7 @@
 
 <script>
 import AppIcon from "./AppIcon.vue";
-import MenuDropdown from "./MenuDropdown.vue";
-import {Tag} from "lucide-vue-next";
-
+import AppDropdown from "./AppDropdown.vue";
 export default {
   name: "Sidebar",
   props: {
@@ -104,8 +101,7 @@ export default {
   emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
   components: {
     AppIcon,
-    MenuDropdown,
-    Tag
+    AppDropdown,
   },
   data() {
     return {
@@ -124,7 +120,6 @@ export default {
         "pink",
       ],
       tagsMenu: false,
-      tagIcon:Tag
     };
   },
 

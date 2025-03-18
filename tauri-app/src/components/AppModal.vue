@@ -1,37 +1,49 @@
 <template>
-  <div id="myModal" class="modal" v-if="isVisible">
-    <div class="modal-content">
+  <div id="modal" v-if="isVisible">
+    <div class="modal_content">
       <p>{{ message }}</p>
-      <div class="modal-footer" v-if="isConfirm">
+      <div class="modal_footer" v-if="isConfirm">
         <button class="success" @click="confirm">{{ $t('yes') }}</button>
         <button class="danger" @click="cancel">{{ $t('no') }}</button>
       </div>
-      <div class="modal-footer" v-else>
+      <div class="modal_footer" v-else>
         <button class="success" @click="confirm">{{ $t('ok') }}</button>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "AppModal",
-  props: ["message", "isConfirm", "isVisible"],
-  emits: ["confirmed","canceled","close"],
-  methods: {
-    confirm() {
-      this.$emit('confirmed');
-      this.$emit('close');
-    },
-    cancel() {
-      this.$emit('canceled');
-      this.$emit('close');
-    }
+<script lang="ts" setup>
+const props = defineProps({
+  message:{
+    type: String,
+    default:"",
+    required:true,
+  },
+  isConfirm:{
+    type:Boolean,
+    default:false,
+    required:true,
+  },
+  isVisible:{
+    type:Boolean,
+    default:false,
+    required:true,
   }
+})
+const emit = defineEmits(['confirmed','canceled','close'])
+const confirm = ()=>{
+  emit('confirmed')
+  emit('close')
 }
+const cancel = () =>{
+  emit('canceled')
+  emit('close')
+}
+
 </script>
 <style>
-.modal {
+#modal {
   display: flex;
   position: fixed;
   z-index: 1;
@@ -44,7 +56,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.modal-content {
+.modal_content {
   background-color: var(--bg-body);
   color: var(--text-color-button);
   border: var(--border);
@@ -57,7 +69,7 @@ export default {
   gap: 1rem;
 }
 
-.modal-footer {
+.modal_footer {
   display: flex;
   gap: 0.2rem;
   justify-content: flex-end;

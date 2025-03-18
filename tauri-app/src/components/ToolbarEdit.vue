@@ -1,5 +1,5 @@
 <template>
-	<MenuDropdown :title="$t('edit')" btn="toolbar-btn">
+	<AppDropdown :title="$t('edit')" btn="toolbar-btn">
 		<template v-slot:content>
 			<li
 				class="flex justify-between"
@@ -14,15 +14,15 @@
 				<span class="text-dark">{{ item.cmd }}</span>
 			</li>
 		</template>
-	</MenuDropdown>
+	</AppDropdown>
 </template>
 <script>
-import MenuDropdown from "./MenuDropdown.vue";
+import AppDropdown from "./AppDropdown.vue";
 
 export default {
 	name: "ToolbarEdit",
 	components: {
-		MenuDropdown,
+		AppDropdown,
 	},
 	emits: ["action-clicked"],
 	data() {
