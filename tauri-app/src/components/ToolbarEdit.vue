@@ -1,13 +1,7 @@
 <template>
 	<AppDropdown :title="$t('edit')" btn="toolbar_btn">
 		<template v-slot:content>
-			<li
-				class="flex justify-between"
-				v-for="item in menuItems"
-				:key="item"
-				@click="onSubMenuClick(item.label)"
-
-			>
+			<li class="flex justify-between" v-for="item in menuItems" :key="item" @click="onSubMenuClick(item.label)">
 				<span>
 					{{ $t(item.label) }}
 				</span>

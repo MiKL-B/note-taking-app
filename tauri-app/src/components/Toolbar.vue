@@ -8,35 +8,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import ToolbarFile from "./ToolbarFile.vue";
 // import ToolbarEdit from "./ToolbarEdit.vue";
 import ToolbarView from "./ToolbarView.vue";
 import ToolbarSettings from "./ToolbarSettings.vue";
 import ToolbarAbout from "./ToolbarAbout.vue";
-export default {
-  name: "Toolbar",
-  components: {
-    ToolbarFile,
-    // ToolbarEdit,
-    ToolbarView,
-    ToolbarSettings,
-    ToolbarAbout,
-  },
-  props:["distractionFree"],
-  emits: ["action-clicked","select-view","display-about"],
-  methods: {
-    onSubMenuClick(action) {
-      this.$emit("action-clicked", action);
-    },
-    selectView(newView){
-      this.$emit("select-view",newView)
-    },
-    displayAbout(){
-      this.$emit("display-about")
-    }
-  },
-};
+const props = defineProps(['distraction-Free'])
+const emit = defineEmits(['action-clicked','select-view','display-about'])
+const onSubMenuClick = (action: MouseEvent) => emit('action-clicked',action)
+const selectView = (newView:String) => emit("select-view",newView)
+const displayAbout = () => emit("display-about");
 </script>
 
 <style>

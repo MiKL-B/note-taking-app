@@ -1,20 +1,11 @@
 <template>
 	<div class="column-note-content">
 		<div id="column-note-title">
-			<NoteStatusColor :status_ID="selectedNote.status_ID"/>
-			<input
-				id="input-note-name"
-				type="text"
-				v-model="selectedNote.name"
-				:placeholder="$t('note_name_here')"
-			/>
+			<NoteStatusColor :status_ID="selectedNote.status_ID" />
+			<input id="input-note-name" type="text" v-model="selectedNote.name" :placeholder="$t('note_name_here')" />
 		</div>
 		<div class="note-tag-list">
-			<span
-				v-for="tag in noteTags"
-				:style="`background: var(--${tag.color})`"
-				class="tag"
-			>
+			<span v-for="tag in noteTags" :style="`background: var(--${tag.color})`" class="tag">
 				{{ tag.name }}
 				<span class="delete-tag-btn" @click="deleteNoteTag(tag)">
 					<AppIcon iconName="X" class="size-16" />
@@ -24,51 +15,23 @@
 
 		<div id="bothColumns" v-show="showBoth">
 			<div>
-				<textarea
-					@click="getPositionCursor"
-					id="textContent"
-					:placeholder="$t('enter_text_here')"
-					v-model="selectedNote.content"
-					@scroll="syncScroll('div1')"
-					spellcheck="false"
-					:style="dynamicStyle"
-					@input="markAsModified"
-					ref="div1"
-				></textarea>
+				<textarea @click="getPositionCursor" id="textContent" :placeholder="$t('enter_text_here')"
+					v-model="selectedNote.content" @scroll="syncScroll('div1')" spellcheck="false" :style="dynamicStyle"
+					@input="markAsModified" ref="div1"></textarea>
 			</div>
 
 			<hr class="separator-column" />
-			<div
-				id="markdown-container"
-				v-html="getMarkdownHtml"
-				ref="div2"
-				@scroll="syncScroll('div2')"
-			></div>
+			<div id="markdown-container" v-html="getMarkdownHtml" ref="div2" @scroll="syncScroll('div2')"></div>
 		</div>
 		<div id="oneView" v-show="!showBoth">
 			<div v-show="!isPreviewMode">
-				<textarea
-					@click="getPositionCursor"
-					id="textContent"
-					:placeholder="$t('enter_text_here')"
-					v-model="selectedNote.content"
-					spellcheck="false"
-					:style="dynamicStyle"
-					@input="markAsModified"
-					ref="editor"
-				></textarea>
+				<textarea @click="getPositionCursor" id="textContent" :placeholder="$t('enter_text_here')"
+					v-model="selectedNote.content" spellcheck="false" :style="dynamicStyle" @input="markAsModified"
+					ref="editor"></textarea>
 			</div>
-			<div
-				v-show="isPreviewMode"
-				id="markdown-container"
-				class="oneViewMarkdown"
-				v-html="getMarkdownHtml"
-			></div>
+			<div v-show="isPreviewMode" id="markdown-container" class="oneViewMarkdown" v-html="getMarkdownHtml"></div>
 		</div>
-		<NoteStatusbar
-			:characterCount="getCharacterNoteCount"
-			:wordCount="getWordNoteCount"
-		/>
+		<NoteStatusbar :characterCount="getCharacterNoteCount" :wordCount="getWordNoteCount" />
 	</div>
 </template>
 
@@ -95,7 +58,7 @@ export default {
 	},
 
 	computed: {
-		noteTags(){
+		noteTags() {
 			if (this.selectedNote.tags === "") return [];
 			return JSON.parse(this.selectedNote.tags)
 		},
@@ -175,17 +138,20 @@ export default {
 	color: var(--text-color-note);
 	min-width: 50%;
 }
+
 #column-note-title {
 	display: flex;
 	padding: 0 0.2rem;
 	width: 100%;
 }
+
 #input-note-name {
 	width: 100%;
 	border: none;
 	box-shadow: none;
 	font-size: 20px;
 }
+
 .note-tag-list {
 	flex-wrap: wrap;
 	overflow-y: scroll;
@@ -195,11 +161,13 @@ export default {
 	gap: 0.2rem;
 	padding-left: 0.2rem;
 }
+
 #bothColumns {
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
 	height: calc(100vh - 200px);
 }
+
 .separator-column {
 	border-left: none;
 	border-right: 1px solid var(--grey);
@@ -210,12 +178,15 @@ export default {
 #oneView {
 	height: calc(100vh - 200px);
 }
+
 #oneView div {
 	height: 100%;
 }
+
 #bothColumns div {
 	height: 100%;
 }
+
 .delete-tag-btn {
 	cursor: pointer;
 	color: var(--dark2);
@@ -234,10 +205,12 @@ export default {
 }
 
 .markdown-emphasis {
-	color: rgba(221, 160, 221, 0.4); /* Couleur pour l'emphase */
+	color: rgba(221, 160, 221, 0.4);
+	/* Couleur pour l'emphase */
 }
 
 .markdown-strong {
-	color: rgba(255, 160, 122, 0.4); /* Couleur pour le gras */
+	color: rgba(255, 160, 122, 0.4);
+	/* Couleur pour le gras */
 }
 </style>
