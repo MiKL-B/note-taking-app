@@ -1,7 +1,7 @@
 <template>
   <div id="toolbar">
     <AppDropdown :title="$t('file')" :items="itemsFile" btn="toolbar_btn" />
-    <AppDropdown :title="$t('edit')" :items="itemsEdit" btn="toolbar_btn" />
+    <!-- <AppDropdown :title="$t('edit')" :items="itemsEdit" btn="toolbar_btn" /> -->
 
     <AppDropdown :title="$t('view')" :items="itemsView" btn="toolbar_btn" />
     <AppDropdown :title="$t('settings')" :items="itemsSettings" btn="toolbar_btn" />
@@ -214,6 +214,12 @@ const itemsSettings = ref([
       },
     ]
   },
+  {
+    id:"reset_settings",
+    text:t('reset_settings'),
+    action: () => resetSettings(),
+    items:[]
+  }
 ])
 const itemsAbout = ref([
   {
@@ -250,6 +256,7 @@ const selectLanguage = (newLanguage: string) => {
   locale.value = currentLanguage.value;
   itemsSettings.value.forEach((item) => {
     item.items.forEach((i) => {
+   
       if (item.id === 'language') {
         i.check = t(i.label) === t(currentLanguage.value)
       }
@@ -285,6 +292,7 @@ const updateMenuItems = () => {
   itemsSettings.value[1].items[1].text = t('dark');
   itemsSettings.value[2].text = t('font');
   itemsSettings.value[3].text = t('font_size');
+  itemsSettings.value[4].text = t('reset_settings');
   // about
   itemsAbout.value[0].text = t('opennotedemo')
   itemsAbout.value[1].text = t('website')
