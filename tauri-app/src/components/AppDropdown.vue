@@ -5,7 +5,10 @@
       <AppIcon v-if="title === ''" :iconName="icon" :style="styleIcon" />
     </span>
     <ul class="details_menu" v-if="isOpen" @click="toggleDropdown">
-      <slot name="content"></slot>
+      <!-- <slot name="content"></slot> -->
+      <template v-for="item in items" :key="item.id">
+        <AppDropdownItem :item="item" @select="item.action" />
+      </template>
     </ul>
   </div>
 </template>
@@ -13,31 +16,21 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import AppIcon from './AppIcon.vue';
+import AppDropdownItem from './AppDropdownItem.vue';
 
 let isOpen = ref(false);
 const dropdown = ref();
 const props = defineProps({
-  title: {
-    type: String,
-    default: "",
-  },
-  btn: {
-    type: String,
-    default: ""
-  },
-  icon: {
-    type: String,
-    default: ""
-  },
-  styleIcon: {
-    type: String,
-    default: ""
-  }
+  title: { type: String, default: "", },
+  btn: { type: String, default: "" },
+  icon: { type: String, default: "" },
+  styleIcon: { type: String, default: "" },
+  items: { type: Array, required: false, }
 })
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 })
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
 })
 const handleClickOutside = (event: MouseEvent) => {
@@ -45,7 +38,7 @@ const handleClickOutside = (event: MouseEvent) => {
     isOpen.value = false;
   }
 }
-const toggleDropdown = () =>{
+const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 }
 </script>
