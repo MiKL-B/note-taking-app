@@ -39,24 +39,8 @@
         class="sidebar-sub-item"
         v-for="tag in tags"
       >
-      <!--       @click="selectFilter(tag.name)" -->
-        <span class="flex align-center gap-4">
-          <AppDropdown
-            icon="Tag"
-            :styleIcon="`color: var(--${tag.color})`"
-          >
-            <template v-slot:content>
-              <li
-                class="flex gap-4 align-center"
-                v-for="color in colors"
-                @click="setColor(tag, color)"
-              >
-                <div class="color-circle" :class="`bg-${color}`"></div>
-                <span>{{ color }}</span>
-              </li>
-            </template>
-          </AppDropdown>
-
+        <span class="flex align-center gap-4" @click="selectFilter(tag.name)">
+          <AppIcon iconName="Tag" :style="`color: var(--${tag.color}); width:20px`"/>
           <input
             class="sidebar-input-tag"
             type="text"
@@ -65,7 +49,7 @@
           />
           <AppIcon
             iconName="Trash2"
-            width="20"
+            style="width:20px;"
             class="tag-trash"
             @click="deleteTag(tag)"
           />
@@ -97,7 +81,7 @@ export default {
       }),
     },
   },
-  emits: ["select-filter", "set-color", "delete-tag", "update-tag-name"],
+  emits: ["select-filter", "delete-tag", "update-tag-name"],
   components: {
     AppIcon,
     AppDropdown,
@@ -107,17 +91,6 @@ export default {
       showDetails: false,
       noteCounters: {},
       selectedFilter: "allnotes",
-      colors: [
-        "brown",
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "cyan",
-        "blue",
-        "purple",
-        "pink",
-      ],
       tagsMenu: false,
     };
   },
@@ -178,13 +151,14 @@ export default {
   },
 
   methods: {
+ 
     selectFilter(filter) {
       this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
-    setColor(tag, color) {
-      this.$emit("set-color", tag, color);
-    },
+    // setColor(tag, color) {
+    //   this.$emit("set-color", tag, color);
+    // },
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
     },

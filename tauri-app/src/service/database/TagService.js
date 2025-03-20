@@ -28,12 +28,26 @@ class TagService {
 		}
 	}
 	// -------------------------------------------------------------------------
-	async createTag(name,color="blue") {
+	async createTag(name) {
+		let colors = [
+			"brown",
+			"red",
+			"orange",
+			"yellow",
+			"green",
+			"cyan",
+			"blue",
+			"purple",
+			"pink",
+		];
+
+		let randomIndex = Math.floor(Math.random() * colors.length);
+		let defaultColor = colors[randomIndex]
 		try {
 			const query = `
 	      INSERT OR IGNORE INTO Tag (name, color)
 	      VALUES (?,?);`;
-			let params = [name, color];
+			let params = [name, defaultColor];
 			await this.dbService.executeQuery(query, params);
 		} catch (error) {
 			throw error;

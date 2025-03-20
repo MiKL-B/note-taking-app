@@ -6,7 +6,7 @@
     <div class="row">
       <div id="column-left" class="col-3" v-if="currentView !== 'distraction_free'">
         <Sidebar :tags="tags" :counters="getCountNotes" @delete-tag="deleteTag" @update-tag-name="handleUpdateTagName"
-          @select-filter="handleFilter" @set-color="setColorTag" />
+          @select-filter="handleFilter" />
       </div>
       <div id="column-middle" class="col-3" v-if="currentView !== 'distraction_free'">
         <div id="column-middle-header">
@@ -34,8 +34,8 @@
       </div>
     </div>
   </div>
-  <AppModal :message="modalMessage" :isModalConfirm="isModalConfirm" :isVisible="isModalVisible" @close="isModalVisible = false"
-    @confirmed="handleConfirmed" @canceled="handleCanceled" />
+  <AppModal :message="modalMessage" :isModalConfirm="isModalConfirm" :isVisible="isModalVisible"
+    @close="isModalVisible = false" @confirmed="handleConfirmed" @canceled="handleCanceled" />
   <AppNotification :message="notificationMessage" :color="notificationColor"
     :showNotification="isNotificationVisible" />
 </template>
@@ -127,6 +127,7 @@ export default {
     },
     // -------------------------------------------------------------------------
     filteredNotes() {
+      console.log(this.filter)
       switch (this.filter) {
         case "todo":
           return this.notes.filter(
@@ -163,12 +164,22 @@ export default {
           );
         case "":
         case "allnotes":
-        default:
           return this.notes.filter((note) => {
             return (
               note.name.toLowerCase().includes(this.searchNote.toLowerCase()) &&
               note.deleted === 0
             );
+          });
+        default:
+          return this.notes.filter((note) => {
+            if (note.tags !== "") {
+              let tags = JSON.parse(note.tags)
+              for (let i = 0; i < tags.length; i++){
+                if (tags[i].name === this.filter){
+                  return note;
+                }
+              }
+            }
           });
       }
     },
@@ -796,11 +807,10 @@ export default {
         const data = JSON.parse(content);
         for (let i = 0; i < data.tags.length; i++) {
           let name = data.tags[i].name;
-          let color = data.tags[i].color;
-          await TagService.createTag(name, color)
+          await TagService.createTag(name)
         }
         this.tags = await TagService.getTags();
- 
+
         for (let i = 0; i < data.notes.length; i++) {
           await NoteService.createNote(data.notes[i])
         }
@@ -931,5 +941,4 @@ export default {
   cursor: not-allowed !important;
   user-select: none;
 }
-
 </style>

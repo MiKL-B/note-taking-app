@@ -3,13 +3,13 @@
     <span>Thoth</span>
     <div>
       <span class="titlebar_button" @click="minimize">
-        <AppIcon iconName="Minus"/>
+        <AppIcon iconName="Minus" class="size-16"/>
       </span>
       <span class="titlebar_button" @click="maximize">
-        <AppIcon iconName="Square"/>
+        <AppIcon iconName="Square" class="size-16"/>
       </span>
       <span class="titlebar_button titlebar_button--close" @click="close">
-        <AppIcon iconName="X"/>
+        <AppIcon iconName="X" class="size-16"/>
       </span>
     </div>
   </div>

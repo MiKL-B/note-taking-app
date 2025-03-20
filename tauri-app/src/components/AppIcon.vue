@@ -1,5 +1,5 @@
 <template>
-	<component :is="icon" class="size-16" />
+	<component :is="icon" />
 </template>
 
 <script lang="ts" setup>
@@ -81,3 +81,7 @@ const icon = computed(() => {
 	return icons[props.iconName] || null;
 })
 </script>
+<style>
+.size-20{
+	width:20px;
+}</style>

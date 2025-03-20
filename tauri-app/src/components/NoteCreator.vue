@@ -1,6 +1,6 @@
 <template>
     <button :disabled="!canCreateNote" @click="createNote" :title="$t('create_note')">
-        <AppIcon iconName="Plus" />
+        <AppIcon iconName="Plus" class="size-16"/>
     </button>
 </template>
 

@@ -1,9 +1,9 @@
 <template>
 	<div id="note">
-		<AppIcon iconName="Check" v-if="note.isSaved" class="note_saved" />
+		<AppIcon iconName="Check" v-if="note.isSaved" class="note_saved size-16" />
 		<h4 class="note_title">
 			<span style="color: var(--red)" v-if="note.important">!</span>
-			<AppIcon iconName="Pin" v-if="note.pinned" class="text-dark" />
+			<AppIcon iconName="Pin" v-if="note.pinned" class="text-dark size-16" />
 			<NoteStatusColor :status_ID="note.status_ID" />
 			<span class="note_title_name" :style="note.selected ? '' : 'color:var(--dark)'">
 				{{ note.name }}
@@ -21,8 +21,13 @@
 			<span class="note_date">{{ timestamp }}</span>
 		</div>
 	</div>
-	<AppIcon iconName="Trash2" v-if="note.deleted === 0" width="20" class="note_trash" @click="deleteNote(note)" />
-	<AppIcon iconName="RotateCcw" v-else width="20" class="note_restore" @click="restoreNote(note)" />
+	<span v-if="note.deleted === 0" @click="deleteNote(note)" >
+		<AppIcon iconName="Trash2" class="note_trash size-20"  />
+	</span>
+	<span v-else @click="restoreNote(note)">
+		<AppIcon iconName="RotateCcw" style="width:20px" class="note_restore size-20"  />
+	</span>
+	
 </template>
 
 <script lang="ts" setup>
@@ -108,4 +113,5 @@ const restoreNote = (note) => { emit('restore-note', note) }
 .note_restore:hover {
 	cursor: pointer;
 }
+
 </style>

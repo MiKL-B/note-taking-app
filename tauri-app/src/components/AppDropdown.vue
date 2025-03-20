@@ -2,10 +2,9 @@
   <div class="details" ref="dropdown">
     <span @click="toggleDropdown" :class="btn">
       {{ title }}
-      <AppIcon v-if="title === ''" :iconName="icon" :style="styleIcon" />
+      <AppIcon v-if="title === ''" :iconName="icon" :style="styleIcon" class="size-16"/>
     </span>
     <ul class="details_menu" v-if="isOpen" @click="toggleDropdown">
-      <!-- <slot name="content"></slot> -->
       <template v-for="item in items" :key="item.id">
         <AppDropdownItem :item="item" @select="item.action" />
       </template>

@@ -228,14 +228,15 @@ export default {
   cursor: pointer;
 }
 
-.note-container:hover .note-trash {
+.note-container:hover .note_trash {
   opacity: 1;
   pointer-events: auto;
 }
-.note-container:hover .note-restore {
+.note-container:hover .note_restore {
   opacity: 1;
   pointer-events: auto;
 }
+
 #notelist-nonotes {
   padding: 0.5rem;
   color: var(--grey);
