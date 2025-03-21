@@ -151,14 +151,10 @@ export default {
   },
 
   methods: {
- 
     selectFilter(filter) {
       this.selectedFilter = filter;
       this.$emit("select-filter", filter);
     },
-    // setColor(tag, color) {
-    //   this.$emit("set-color", tag, color);
-    // },
     deleteTag(tag) {
       this.$emit("delete-tag", tag);
     },

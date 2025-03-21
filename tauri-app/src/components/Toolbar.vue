@@ -193,6 +193,7 @@ const itemsSettings = ref([
   {
     id: "font_size",
     text: t('font_size'),
+    separator:true,
     items: [
       {
         text: "16",
@@ -243,7 +244,6 @@ const selectView = (newView: string) => {
     return;
   }
   currentView.value = newView;
-  console.log(currentView)
   localStorage.setItem("view", currentView.value)
   emit('select-view', currentView)
   itemsView.value.forEach(item => {
@@ -256,7 +256,6 @@ const selectLanguage = (newLanguage: string) => {
   locale.value = currentLanguage.value;
   itemsSettings.value.forEach((item) => {
     item.items.forEach((i) => {
-   
       if (item.id === 'language') {
         i.check = t(i.label) === t(currentLanguage.value)
       }

@@ -192,7 +192,6 @@ class NoteService {
 		try {
 			const query = "SELECT * FROM Note;";
 			const result = await this.dbService.selectQuery(query);
-			console.log(result)
 			return result;
 		} catch (error) {
 			throw error;

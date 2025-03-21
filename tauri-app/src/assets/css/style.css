@@ -97,6 +97,9 @@
   --text-color-markdown: var(--dark);
   /* statusbar */
   --text-color-statusbar: var(--dark2);
+  /* editor */
+  --activeLine:var(--lightgrey2);
+  --lineNumbers:var(--dark)
 }
 [data-theme="dark"] {
   /* body */
@@ -152,6 +155,9 @@
   --text-color-markdown: var(--lightgrey);
   /* statusbar */
   --text-color-statusbar: var(--lightgrey);
+    /* editor */
+    --activeLine:var(--dark);
+    --lineNumbers:var(--grey)
 }
 
 * {

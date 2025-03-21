@@ -14,20 +14,17 @@
 		</div>
 
 		<div id="bothColumns" v-show="showBoth">
-			<div>
-				<textarea @click="getPositionCursor" id="textContent" :placeholder="$t('enter_text_here')"
-					v-model="selectedNote.content" @scroll="syncScroll('div1')" spellcheck="false" :style="dynamicStyle"
-					@input="markAsModified" ref="div1"></textarea>
-			</div>
+			<codemirror ref="myCodeMirror" v-model="selectedNote.content" @change="markAsModified"
+				:style="{ height: 'calc(100vh - 200px);' }"></codemirror>
 
 			<hr class="separator-column" />
-			<div id="markdown-container" v-html="getMarkdownHtml" ref="div2" @scroll="syncScroll('div2')"></div>
+			<div id="markdown-container" v-html="getMarkdownHtml"></div>
 		</div>
 		<div id="oneView" v-show="!showBoth">
 			<div v-show="!isPreviewMode">
-				<textarea @click="getPositionCursor" id="textContent" :placeholder="$t('enter_text_here')"
-					v-model="selectedNote.content" spellcheck="false" :style="dynamicStyle" @input="markAsModified"
-					ref="editor"></textarea>
+				<codemirror ref="myCodeMirror" v-model="selectedNote.content"
+					:style="{ height: 'calc(100vh - 200px);' }" @change="markAsModified">
+				</codemirror>
 			</div>
 			<div v-show="isPreviewMode" id="markdown-container" class="oneViewMarkdown" v-html="getMarkdownHtml"></div>
 		</div>
@@ -36,6 +33,7 @@
 </template>
 
 <script>
+import { Codemirror } from 'vue-codemirror'
 import AppIcon from "./AppIcon.vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
@@ -44,11 +42,12 @@ import NoteStatusColor from './NoteStatusColor.vue';
 export default {
 	name: "Note",
 	props: ["selectedNote", "isPreviewMode", "showBoth", "notes"],
-	emits: ["delete-note-tag", "mark-as-modified", "get-position-cursor"],
+	emits: ["delete-note-tag", "mark-as-modified"],
 	components: {
 		NoteStatusbar,
 		AppIcon,
-		NoteStatusColor
+		NoteStatusColor,
+		Codemirror,
 	},
 	data() {
 		return {
@@ -107,26 +106,15 @@ export default {
 				: "";
 		},
 	},
+
 	methods: {
-		getPositionCursor(e) {
-			this.$emit("get-position-cursor", e.target.selectionStart);
-		},
+
 		deleteNoteTag(tag) {
 			this.$emit("delete-note-tag", tag);
 		},
-		markAsModified(e) {
-			this.$emit("mark-as-modified", e.target.selectionStart);
-		},
+		markAsModified() {
 
-		syncScroll(source) {
-			const div1 = this.$refs.div1;
-			const div2 = this.$refs.div2;
-
-			if (source === "div1") {
-				div2.scrollTop = div1.scrollTop;
-			} else {
-				div1.scrollTop = div2.scrollTop;
-			}
+			this.$emit("mark-as-modified");
 		},
 	},
 };
@@ -175,42 +163,39 @@ export default {
 	margin: 0 1rem;
 }
 
-#oneView {
-	height: calc(100vh - 200px);
+.cm-focused {
+	outline: none !important;
 }
 
-#oneView div {
-	height: 100%;
+.cm-activeLine,
+.cm-gutter {
+	background: var(--activeLine) !important;
 }
 
-#bothColumns div {
-	height: 100%;
+.cm-lineNumbers {
+	color: var(--lineNumbers) !important;
+}
+
+.cm-activeLineGutter {
+	background: none !important;
+}
+
+#bothColumns .cm-editor {
+	min-width: 200px;
+	max-width: 900px;
+}
+
+#oneView .cm-editor {
+	width: calc(100% - 2px);
+}
+
+.cm-line {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
 }
 
 .delete-tag-btn {
 	cursor: pointer;
 	color: var(--dark2);
-}
-
-.markdown-header {
-	color: var(--blue);
-}
-
-.markdown-list {
-	color: var(--pink);
-}
-
-.markdown-link {
-	color: var(--green);
-}
-
-.markdown-emphasis {
-	color: rgba(221, 160, 221, 0.4);
-	/* Couleur pour l'emphase */
-}
-
-.markdown-strong {
-	color: rgba(255, 160, 122, 0.4);
-	/* Couleur pour le gras */
 }
 </style>

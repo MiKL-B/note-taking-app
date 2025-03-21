@@ -27,7 +27,7 @@
           @toggle-important-note="toggleImportantNote" :isPinned="selectedNote.pinned"
           :isImportant="selectedNote.important" v-model.modelValue="selectedNote.status_ID" @insert-item="insertItem" />
         <Note :isPreviewMode="isPreviewMode" :showBoth="showBoth" :selectedNote="selectedNote" :notes="notes"
-          @delete-note-tag="deleteNoteTag" @mark-as-modified="markAsModified" @get-position-cursor="getCursor" />
+          @delete-note-tag="deleteNoteTag" @mark-as-modified="markAsModified" />
       </div>
       <div id="column-img" v-else>
         <img class="img" src="/image-no-notes.png" />
@@ -100,7 +100,6 @@ export default {
       noteCount: 0,
       jsonData: {},
       noteTags: [],
-      currentPosition: 0,
       tagsNoteTemp: [],
       // modal
       modalMessage: "",
@@ -127,7 +126,6 @@ export default {
     },
     // -------------------------------------------------------------------------
     filteredNotes() {
-      console.log(this.filter)
       switch (this.filter) {
         case "todo":
           return this.notes.filter(
@@ -174,8 +172,8 @@ export default {
           return this.notes.filter((note) => {
             if (note.tags !== "") {
               let tags = JSON.parse(note.tags)
-              for (let i = 0; i < tags.length; i++){
-                if (tags[i].name === this.filter){
+              for (let i = 0; i < tags.length; i++) {
+                if (tags[i].name === this.filter) {
                   return note;
                 }
               }
@@ -224,25 +222,12 @@ export default {
       this.currentView = newView;
     },
     // -------------------------------------------------------------------------
-    getCursor(position) {
-      this.currentPosition = position;
-    },
-    // -------------------------------------------------------------------------
     insertItem(item: string) {
       writeLog(`[BEGIN FUNCTION]: insertItem(item: ${item})`);
-      let textarea = document.getElementById("textContent");
-      let cursorPosition = this.currentPosition;
-      if (cursorPosition === 0) {
-        textarea.value += "\r\n";
-        cursorPosition = textarea.value.length;
-      }
-
-      textarea.value =
-        textarea.value.slice(0, cursorPosition) +
-        item +
-        textarea.value.slice(cursorPosition);
-      this.selectedNote.content = textarea.value;
-      this.currentPosition = 0;
+      let activeLine = document.querySelector(".cm-content");
+      let element = document.createElement("div");
+      element.innerText = item;
+      activeLine.appendChild(element)
       this.selectedNote.isSaved = 0;
       writeLog(`[END FUNCTION]: insertItem(item: ${item})`);
     },
@@ -376,9 +361,8 @@ export default {
       writeLog("[END FUNCTION]: openNoteDemo()");
     },
     // -------------------------------------------------------------------------
-    markAsModified(position) {
+    markAsModified() {
       writeLog("[BEGIN FUNCTION]: markAsModified(position)");
-      this.currentPosition = position;
       this.selectedNote.isSaved = 0;
       writeLog("[END FUNCTION]: markAsModified(position)");
     },
@@ -543,7 +527,6 @@ export default {
       }
 
       await NoteService.unselectNotes();
-      console.log("selected", this.selectedNote);
       await NoteService.selectNote(note);
 
       this.notes = await NoteService.getNotes();

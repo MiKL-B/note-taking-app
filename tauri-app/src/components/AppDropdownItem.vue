@@ -3,10 +3,10 @@
         <span class="menu_item_span">
             <span>{{ item.text }}</span>
             <span style="display:flex; justify-content: flex-end;" v-if="item.items && item.items.length > 0">
-                <AppIcon iconName="ChevronRight" class="text-dark" />
+                <AppIcon iconName="ChevronRight" class="text-dark size-16" />
             </span>
             <span style="display:flex; justify-content: flex-end;" v-else-if="item.check" class="size-16 text-dark">
-                <AppIcon iconName="Check" />
+                <AppIcon iconName="Check" class="size-16" />
             </span>
             <span v-if="item.cmd !== ''" class="text-dark">{{ item.cmd }}</span>
         </span>
