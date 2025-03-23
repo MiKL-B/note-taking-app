@@ -14,14 +14,17 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@codemirror/lang-markdown": "^6.3.2",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "^2.2.0",
     "@tauri-apps/plugin-fs": "^2.2.0",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-sql": "^2.2.0",
+    "codemirror": "^6.0.1",
     "dompurify": "^3.2.4",
     "lucide-vue-next": "^0.474.0",
     "marked": "^15.0.7",
+    "thememirror": "^2.0.1",
     "vue": "^3.5.13",
     "vue-codemirror": "^6.1.1",
     "vue-i18n": "^10.0.5"

@@ -140,6 +140,7 @@ export default {
         "link",
         "date",
         "time",
+        "italic",
       ],
     };
   },
@@ -238,6 +239,9 @@ export default {
           break;
         case "time":
           text = new Date().toLocaleString("fr-FR").split(" ")[1];
+          break;
+        case "italic":
+          text = "*text*";
           break;
       }
       this.$emit("insert-item", text);

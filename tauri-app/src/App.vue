@@ -121,7 +121,7 @@ export default {
   },
   computed: {
     selectedNote() {
-      const selectedNote = this.notes.find((note: Note) => note.selected);
+      const selectedNote = this.notes.find((note) => note.selected);
       return selectedNote ? selectedNote : "";
     },
     // -------------------------------------------------------------------------
@@ -227,7 +227,10 @@ export default {
       let activeLine = document.querySelector(".cm-content");
       let element = document.createElement("div");
       element.innerText = item;
-      activeLine.appendChild(element)
+      if (activeLine){
+
+        activeLine.appendChild(element)
+      }
       this.selectedNote.isSaved = 0;
       writeLog(`[END FUNCTION]: insertItem(item: ${item})`);
     },

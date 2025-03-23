@@ -147,6 +147,13 @@ export default {
 
   methods: {
     selectNote(note) {
+      // let lines = document.querySelectorAll(".cm-line");
+      // lines.forEach((line) => {
+      //   console.log(line);
+      //   if (line.innerHTML.startsWith("#")){
+      //     line.classList.add("text-red")
+      //   }
+      // });
       this.$emit("select-note", note);
       this.showMenu = false;
     },

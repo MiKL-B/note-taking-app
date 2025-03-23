@@ -83,6 +83,7 @@ export default {
   link: "Lien",
   date: "Date",
   time: "Heure",
+  italic:"Italic",
   // note
   note_name_here: "Nom de la note ici...",
   status: "Statut",
