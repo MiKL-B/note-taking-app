@@ -65,7 +65,6 @@
 <script>
 import { Codemirror } from "vue-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
-// import { basicLight } from "../assets/cm6-themes/packages/basic-light/src";
 import { basicLight } from "../assets/index.ts";
 
 import AppIcon from "./AppIcon.vue";

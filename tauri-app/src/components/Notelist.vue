@@ -42,7 +42,7 @@
           />
           {{ $t("duplicate_note") }}
         </li>
-        <hr class="separator-x" />
+        <hr v-if="selectedNote.deleted === 0" class="separator-x" />
         <li
           v-if="selectedNote.deleted === 0"
           @click="togglePinNote"
@@ -147,13 +147,6 @@ export default {
 
   methods: {
     selectNote(note) {
-      // let lines = document.querySelectorAll(".cm-line");
-      // lines.forEach((line) => {
-      //   console.log(line);
-      //   if (line.innerHTML.startsWith("#")){
-      //     line.classList.add("text-red")
-      //   }
-      // });
       this.$emit("select-note", note);
       this.showMenu = false;
     },
@@ -191,19 +184,28 @@ export default {
       this.$emit("toggle-pin-note");
     },
 
-    // to move
     showContextMenu(event, note) {
+      let menuHeight = 140;
+      let posY = event.clientY;
+      if (window.innerHeight - posY < menuHeight) {
+        posY -= menuHeight; 
+      }
       this.menuStyle = {
         left: `${event.clientX}px`,
-        top: `${event.clientY}px`,
+        top: `${posY}px`,
       };
       this.showMenu = true;
       this.selectNote(note);
     },
     showContextMenuOnNotelist(event) {
+      let menuHeight = 140;
+      let posY = event.clientY;
+      if (window.innerHeight - posY < menuHeight) {
+        posY -= menuHeight; 
+      }
       this.menuStyle = {
         left: `${event.clientX}px`,
-        top: `${event.clientY}px`,
+        top: `${posY}px`,
       };
       this.showMenu = true;
     },
@@ -259,6 +261,7 @@ export default {
   border-radius: 5px;
   min-width: 100px;
   user-select: none;
+  min-height:100px;
 }
 .context-menu li {
   list-style-type: none;
