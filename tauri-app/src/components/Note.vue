@@ -65,7 +65,8 @@
 <script>
 import { Codemirror } from "vue-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
-import { basicLight } from "../assets/cm6-themes/packages/basic-light/src";
+// import { basicLight } from "../assets/cm6-themes/packages/basic-light/src";
+import { basicLight } from "../assets/index.ts";
 
 import AppIcon from "./AppIcon.vue";
 import { marked } from "marked";
@@ -237,7 +238,8 @@ export default {
 
 .cm-activeLine,
 .cm-gutter {
-  background: var(--activeLine) !important;
+  background:none !important;
+  background:var(--lightgrey2) !important;
 }
 
 .cm-lineNumbers {
@@ -246,6 +248,10 @@ export default {
 
 .cm-activeLineGutter {
   background: none !important;
+}
+.ͼ4 .cm-line::selection,
+.ͼo .cm-content ::selection {
+  background:rgb(215, 233, 240) !important;
 }
 
 #bothColumns .cm-editor {

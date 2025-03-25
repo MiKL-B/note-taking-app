@@ -278,6 +278,7 @@ export default {
   padding: 0.5rem 0.2rem;
   min-width: 120px;
   user-select: none;
+  z-index: 3;
 }
 #suggestion-list li {
   padding: 0.2rem;
