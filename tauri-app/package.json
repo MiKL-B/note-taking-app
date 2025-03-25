@@ -27,7 +27,8 @@
     "thememirror": "^2.0.1",
     "vue": "^3.5.13",
     "vue-codemirror": "^6.1.1",
-    "vue-i18n": ">=10.0.6"
+    "vue-i18n": ">=10.0.6",
+    "esbuild": ">=0.25.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
