@@ -66,9 +66,8 @@
 import { Codemirror } from "vue-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { basicLight } from "../assets/index.ts";
-
-import AppIcon from "./AppIcon.vue";
 import { marked } from "marked";
+import AppIcon from "./AppIcon.vue";
 import DOMPurify from "dompurify";
 import NoteStatusbar from "./NoteStatusbar.vue";
 import NoteStatusColor from "./NoteStatusColor.vue";
@@ -96,7 +95,6 @@ export default {
   },
 
   computed: {
-
     noteTags() {
       if (this.selectedNote.tags === "") return [];
       return JSON.parse(this.selectedNote.tags);
@@ -108,7 +106,7 @@ export default {
       };
     },
     getMarkdownHtml() {
-      let options = {
+      marked.setOptions({
         async: false,
         extensions: null,
         hooks: null,
@@ -117,12 +115,14 @@ export default {
         tokenizer: null,
         walkTokens: null,
         gfm: true,
-        sanitize: true,
+        sanitize: false,
         tables: true,
         breaks: true,
         smartLists: true,
         smartypants: false,
-      };
+        gfm: true,
+        breaks: true,
+      });
       const renderer = new marked.Renderer();
 
       renderer.link = (token) => {
@@ -130,8 +130,7 @@ export default {
       };
 
       marked.use({ renderer });
-
-      let dirtyHTML = marked(this.selectedNote.content, options);
+      const dirtyHTML = marked(this.selectedNote.content);
       return DOMPurify.sanitize(dirtyHTML);
     },
 
@@ -146,7 +145,6 @@ export default {
   },
 
   methods: {
-
     handleReady(payload) {
       this.view = payload.view;
     },
@@ -172,16 +170,6 @@ export default {
       this.$emit("delete-note-tag", tag);
     },
     markAsModified() {
-      // Sélecteur des lignes dans l'éditeur Codemirror
-      const lineElements = document.querySelectorAll(".cm-line");
-
-      lineElements.forEach((lineEl) => {
-        if (lineEl.textContent.startsWith("#")) {
-          lineEl.classList.add("text-red"); // Ajouter la classe
-        } else {
-          lineEl.classList.remove("text-red"); // Retirer la classe
-        }
-      });
       this.$emit("mark-as-modified");
     },
   },
@@ -237,8 +225,8 @@ export default {
 
 .cm-activeLine,
 .cm-gutter {
-  background:none !important;
-  background:var(--lightgrey2) !important;
+  background: none !important;
+  background: var(--lightgrey2) !important;
 }
 
 .cm-lineNumbers {
@@ -250,9 +238,17 @@ export default {
 }
 .ͼ4 .cm-line::selection,
 .ͼo .cm-content ::selection {
-  background:rgb(215, 233, 240) !important;
+  background: rgb(215, 233, 240) !important;
 }
-
+.ͼ1j {
+  font-weight: bold;
+}
+.ͼt {
+  font-style: italic;
+}
+.ͼ18 {
+  text-decoration: none;
+}
 #bothColumns .cm-editor {
   min-width: 200px;
   max-width: 900px;
@@ -266,7 +262,8 @@ export default {
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
-.cm-content,.cm-gutters{
+.cm-content,
+.cm-gutters {
   font-size: 18px;
 }
 
@@ -274,5 +271,4 @@ export default {
   cursor: pointer;
   color: var(--dark2);
 }
-
 </style>

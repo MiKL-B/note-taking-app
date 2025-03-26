@@ -1,7 +1,7 @@
 <template>
   <div
     id="notelist"
-    @contextmenu.prevent="showContextMenuOnNotelist"
+    @contextmenu.prevent="getPositionMenu"
     @click="showMenu = false"
   >
     <span id="notelist-nonotes" v-if="notes.length <= 0">{{
@@ -183,8 +183,7 @@ export default {
     togglePinNote() {
       this.$emit("toggle-pin-note");
     },
-
-    showContextMenu(event, note) {
+    getPositionMenu(event){
       let menuHeight = 140;
       let posY = event.clientY;
       if (window.innerHeight - posY < menuHeight) {
@@ -195,19 +194,10 @@ export default {
         top: `${posY}px`,
       };
       this.showMenu = true;
-      this.selectNote(note);
     },
-    showContextMenuOnNotelist(event) {
-      let menuHeight = 140;
-      let posY = event.clientY;
-      if (window.innerHeight - posY < menuHeight) {
-        posY -= menuHeight; 
-      }
-      this.menuStyle = {
-        left: `${event.clientX}px`,
-        top: `${posY}px`,
-      };
-      this.showMenu = true;
+    showContextMenu(event, note) {
+      this.getPositionMenu(event);
+      this.selectNote(note);
     },
     closeMenu() {
       this.showMenu = false;
