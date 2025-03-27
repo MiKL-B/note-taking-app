@@ -385,6 +385,10 @@ export default {
         "green",
       );
       this.setDelayCreationNote();
+      let notelist = document.querySelector("#notelist")
+      if (notelist){
+        notelist.scrollTop = notelist.scrollHeight;
+      }
       writeLog("[END FUNCTION]: createNote");
     },
     // -------------------------------------------------------------------------

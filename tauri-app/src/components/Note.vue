@@ -28,7 +28,7 @@
         :style="{ height: 'calc(100vh - 200px);' }"
         @change="markAsModified"
         v-model="selectedNote.content"
-        :extensions="extensions"
+        :extensions="extensionsList"
         :options="options"
         @ready="handleReady"
       />
@@ -43,7 +43,7 @@
           :style="{ height: 'calc(100vh - 200px);' }"
           @change="markAsModified"
           v-model="selectedNote.content"
-          :extensions="extensions"
+          :extensions="extensionsList"
           :options="options"
           @ready="handleReady"
         />
@@ -66,6 +66,7 @@
 import { Codemirror } from "vue-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { basicLight } from "../assets/index.ts";
+import {everforest } from '../assets/everforest.ts';
 import { marked } from "marked";
 import AppIcon from "./AppIcon.vue";
 import DOMPurify from "dompurify";
@@ -86,8 +87,8 @@ export default {
     return {
       font: localStorage.getItem("font") || "Inter",
       fontSize: localStorage.getItem("font-size") || 16,
+      theme:localStorage.getItem("theme") || "light",
       view: null,
-      extensions: [markdown(), basicLight],
       options: {
         highlightFormatting: true,
       },
@@ -95,6 +96,10 @@ export default {
   },
 
   computed: {
+    extensionsList(){
+      let extension = this.theme === "dark" ? everforest : basicLight
+      return [markdown(),extension]
+    },
     noteTags() {
       if (this.selectedNote.tags === "") return [];
       return JSON.parse(this.selectedNote.tags);
