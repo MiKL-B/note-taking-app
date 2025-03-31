@@ -38,7 +38,7 @@ It is essential whether it is for my technology watch or for simple note-taking.
 
 # Features to implement
 ## File
-- Export / import PDF, file...
+- Export PDF, file...
 - Print
 
 ## View
