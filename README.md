@@ -1,5 +1,4 @@
-# Note-taking app: Thoth
-Website project of the app: [Thoth](https://github.com/MiKL-B/thoth)
+# Note-taking app
 
 # Image of the app
 ![Image of the app Thoth](./tauri-app/public/thoth_app.png)
